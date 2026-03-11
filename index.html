@@ -1,647 +1,164 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#1f2937">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Umphlette Dinner Planner</title>
+
 <style>
-  :root{
-    --bg:#f6f7fb;
-    --card:#ffffff;
-    --ink:#18212f;
-    --muted:#5c6777;
-    --line:#d8deea;
-    --accent:#2f6fed;
-    --accent2:#eff4ff;
-    --ok:#1f8f55;
-    --warn:#b26a00;
-    --takeout:#fff4e5;
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-    background:var(--bg);
-    color:var(--ink);
-  }
-  .wrap{
-    max-width:980px;
-    margin:0 auto;
-    padding:18px 14px 28px;
-  }
-  h1{
-    margin:6px 0 4px;
-    font-size:1.55rem;
-    line-height:1.15;
-  }
-  .sub{
-    color:var(--muted);
-    margin:0 0 16px;
-    font-size:.98rem;
-  }
-  .toolbar{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:10px;
-    margin-bottom:12px;
-  }
-  @media (min-width:760px){
-    .toolbar{grid-template-columns:repeat(4,minmax(0,1fr));}
-  }
-  button, select, input, textarea{
-    font:inherit;
-  }
-  button{
-    appearance:none;
-    border:1px solid var(--line);
-    background:var(--card);
-    color:var(--ink);
-    padding:12px 14px;
-    border-radius:12px;
-    cursor:pointer;
-    font-weight:600;
-  }
-  button.primary{
-    background:var(--accent);
-    color:#fff;
-    border-color:var(--accent);
-  }
-  button:active{transform:translateY(1px)}
-  .grid{
-    display:grid;
-    gap:12px;
-  }
-  @media (min-width:860px){
-    .grid{grid-template-columns:1.4fr .9fr;}
-  }
-  .card{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:16px;
-    padding:14px;
-    box-shadow:0 1px 1px rgba(10,25,50,.03);
-  }
-  .card h2{
-    margin:0 0 12px;
-    font-size:1.05rem;
-  }
-  .row{
-    display:grid;
-    gap:8px;
-    grid-template-columns:1.15fr 1.5fr 1.1fr .85fr;
-    align-items:start;
-    padding:10px 0;
-    border-top:1px solid #eef1f7;
-  }
-  .row:first-of-type{border-top:0;padding-top:0}
-  .day{
-    font-weight:700;
-  }
-  .hint{
-    font-size:.85rem;
-    color:var(--muted);
-    margin-top:2px;
-  }
-  .mealCell,.sideCell,.notesCell{
-    width:100%;
-    min-height:44px;
-    border:1px solid var(--line);
-    border-radius:10px;
-    padding:10px 11px;
-    background:#fff;
-  }
-  .takeout{
-    background:var(--takeout);
-    border-color:#f2d3a2;
-    font-weight:700;
-  }
-  .small{
-    font-size:.9rem;color:var(--muted);
-  }
-  .meta{
-    display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;
-  }
-  .pill{
-    background:var(--accent2);
-    border:1px solid #dbe6ff;
-    color:#25458a;
-    border-radius:999px;
-    padding:7px 10px;
-    font-size:.88rem;
-    font-weight:600;
-  }
-  .sectionLabel{
-    font-weight:700;
-    margin:8px 0 8px;
-    font-size:.95rem;
-  }
-  .list{
-    display:grid;
-    gap:6px;
-  }
-  .item{
-    display:flex;justify-content:space-between;gap:10px;
-    border:1px solid var(--line);
-    border-radius:10px;
-    padding:9px 10px;
-  }
-  .muted{color:var(--muted)}
-  .footer{
-    color:var(--muted);
-    font-size:.88rem;
-    margin-top:12px;
-  }
-  details{
-    border-top:1px solid #eef1f7;
-    margin-top:12px;
-    padding-top:10px;
-  }
-  summary{
-    cursor:pointer;
-    font-weight:700;
-  }
-  .bankWrap{
-    display:grid; gap:12px;
-  }
-  @media (min-width:860px){
-    .bankWrap{grid-template-columns:1fr 1fr;}
-  }
-  .bankList{
-    max-height:250px; overflow:auto; border:1px solid var(--line); border-radius:10px; padding:8px;
-    background:#fbfcff;
-  }
-  .bankList div{padding:7px 8px; border-radius:8px}
-  .bankList div:nth-child(odd){background:#fff}
-  .install{
-    background:#f9fbff;
-  }
-  .ok{color:var(--ok);font-weight:700}
+
+body{
+font-family:-apple-system,system-ui;
+background:#f6f7fb;
+padding:16px;
+}
+
+button{
+padding:14px;
+font-size:16px;
+margin-bottom:16px;
+width:100%;
+border-radius:10px;
+border:none;
+background:#2f6fed;
+color:white;
+}
+
+.day{
+background:white;
+border-radius:12px;
+padding:14px;
+margin-bottom:14px;
+border:1px solid #e1e4ea;
+}
+
+.day h3{
+margin:0 0 6px 0;
+}
+
+.label{
+font-size:13px;
+color:#666;
+margin-top:6px;
+}
+
+.meal{
+font-size:18px;
+font-weight:600;
+}
+
+.side{
+font-size:16px;
+color:#444;
+margin-top:4px;
+}
+
+#grocery{
+background:white;
+border-radius:12px;
+padding:16px;
+border:1px solid #e1e4ea;
+margin-top:20px;
+}
+
 </style>
 </head>
+
 <body>
-<div class="wrap">
-  <h1>Umphlette Dinner Planner</h1>
-  <p class="sub">Built for Bobby and Erica — Tuesday takeout, quick or slow-cooker Monday, bigger meals on the weekend.</p>
 
-  <div class="toolbar">
-    <button class="primary" id="generateBtn">Generate New Week</button>
-    <button id="saveBtn">Save This Week</button>
-    <button id="resetBtn">Clear Week</button>
-    <button id="copyBtn">Copy Grocery List</button>
-  </div>
+<h2>Umphlette Dinner Planner</h2>
 
-  <div class="meta">
-    <div class="pill">4 people</div>
-    <div class="pill">1 grocery trip per week</div>
-    <div class="pill">Tuesday = takeout</div>
-    <div class="pill">Weekend = bigger meals</div>
-  </div>
+<button onclick="generate()">Generate Week</button>
 
-  <div class="grid">
-    <div class="card">
-      <h2>Weekly Plan</h2>
-      <div id="planner"></div>
-      <div class="footer">Tip: You can change any meal, side, or note manually. Your saved week stays put until you generate a new one.</div>
-    </div>
+<div id="planner"></div>
 
-    <div class="card">
-      <h2>Shopping List</h2>
-      <div id="grocery"></div>
+<h3>Shopping List</h3>
 
-      <details open>
-        <summary>How it works</summary>
-        <div class="small" style="margin-top:10px">
-          Generate a week, review it, then save it. The shopping list updates from the meals on the plan. Tuesday is always takeout. Monday favors quicker meals or slow-cooker meals. Saturday and Sunday favor bigger meals.
-        </div>
-      </details>
-
-      <details>
-        <summary>Install on iPhone</summary>
-        <div class="small" style="margin-top:10px">
-          Open this file in Safari, tap the Share button, then choose <b>Add to Home Screen</b>. It will act like a simple app and keep your saved week on the phone.
-        </div>
-      </details>
-    </div>
-  </div>
-
-  <div class="card" style="margin-top:12px">
-    <h2>Meal Banks</h2>
-    <div class="bankWrap">
-      <div>
-        <div class="sectionLabel">Weekday / Quick / Monday-Friendly</div>
-        <div class="bankList" id="weekdayBank"></div>
-      </div>
-      <div>
-        <div class="sectionLabel">Bigger Weekend Meals</div>
-        <div class="bankList" id="weekendBank"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="card install" style="margin-top:12px">
-    <h2>What this fixes</h2>
-    <div class="small">
-      <div class="ok">✓ No spreadsheet formulas to break</div>
-      <div class="ok">✓ No dropdown conversion issues</div>
-      <div class="ok">✓ Editing one meal does not change the rest of the week</div>
-      <div class="ok">✓ Works well on iPhone</div>
-    </div>
-  </div>
-</div>
+<div id="grocery"></div>
 
 <script>
-const weekdayMeals = [
-  {
-    name:"Roast (Slow Cooker)", sides:["Mashed Potatoes","Green Beans w/ Bacon","Biscuits","Collard Greens"],
-    groceries:["Beef roast","Potatoes","Carrots","Onion","Beef broth","Biscuits"]
-  },
-  {
-    name:"Chicken Quesadillas", sides:["Mexican Rice","Garden Salad","Cucumber & Tomato Salad"],
-    groceries:["Chicken","Flour tortillas","Shredded cheese","Sour cream","Salsa","Rice"]
-  },
-  {
-    name:"Tacos", sides:["Mexican Rice","Garden Salad","Cucumber & Tomato Salad"],
-    groceries:["Ground beef","Taco seasoning","Taco shells","Shredded lettuce","Tomatoes","Cheese","Sour cream"]
-  },
-  {
-    name:"Sloppy Joes", sides:["Coleslaw","Southern Potato Salad","Buttered Corn"],
-    groceries:["Ground beef","Sloppy joe sauce","Burger buns","Coleslaw mix","Potatoes","Corn"]
-  },
-  {
-    name:"Grilled Chicken Sandwiches", sides:["Pasta Salad","Coleslaw","Baked Beans"],
-    groceries:["Chicken breast","Sandwich buns","Lettuce","Tomatoes","Pasta salad","Baked beans"]
-  },
-  {
-    name:"Hamburger Helper", sides:["Garden Salad","Buttered Corn"],
-    groceries:["Ground beef","Hamburger Helper","Milk","Butter","Salad mix","Corn"]
-  },
-  {
-    name:"Philly Cheesesteaks", sides:["Pasta Salad","Garden Salad","Southern Potato Salad"],
-    groceries:["Steak or shaved beef","Hoagie rolls","Bell peppers","Onion","Provolone","Pasta salad"]
-  },
-  {
-    name:"Fajitas", sides:["Mexican Rice","Garden Salad","Cucumber & Tomato Salad"],
-    groceries:["Chicken or steak","Bell peppers","Onion","Flour tortillas","Sour cream","Rice"]
-  },
-  {
-    name:"BLTs", sides:["Pasta Salad","Garden Salad","Southern Potato Salad"],
-    groceries:["Bacon","Bread","Lettuce","Tomatoes","Mayonnaise","Pasta salad"]
-  },
-  {
-    name:"Buffalo Chicken", sides:["Mac & Cheese","Garden Salad","Coleslaw"],
-    groceries:["Chicken","Buffalo sauce","Ranch or blue cheese","Mac & cheese","Salad mix"]
-  },
-  {
-    name:"Chicken & Yellow Rice", sides:["Green Beans w/ Bacon","Biscuits","Garden Salad"],
-    groceries:["Chicken","Yellow rice","Green beans","Bacon","Biscuits"]
-  },
-  {
-    name:"Spaghetti w/ Meat Sauce", sides:["Garden Salad","Biscuits","Stewed Tomatoes"],
-    groceries:["Ground beef","Spaghetti noodles","Pasta sauce","Salad mix","Bread or biscuits"]
-  },
-  {
-    name:"Spaghetti w/ Meatballs", sides:["Garden Salad","Biscuits","Stewed Tomatoes"],
-    groceries:["Meatballs","Spaghetti noodles","Pasta sauce","Salad mix","Bread or biscuits"]
-  },
-  {
-    name:"Chef Salads", sides:["Biscuits","Buttered Corn"],
-    groceries:["Salad mix","Ham","Turkey","Cheese","Eggs","Tomatoes","Cucumbers"]
-  },
-  {
-    name:"Caesar Salad w/ Grilled Chicken", sides:["Biscuits","Pasta Salad"],
-    groceries:["Chicken breast","Romaine","Caesar dressing","Parmesan","Croutons","Biscuits"]
-  },
-  {
-    name:"Veggie Soup", sides:["Cornbread","Biscuits","Grilled cheese"],
-    groceries:["Mixed vegetables","Broth","Potatoes","Carrots","Onion","Cornbread mix"]
-  },
-  {
-    name:"Chicken Alfredo", sides:["Garden Salad","Biscuits","Stewed Tomatoes"],
-    groceries:["Chicken","Fettuccine","Alfredo sauce","Parmesan","Salad mix","Bread or biscuits"]
-  }
-];
 
-const weekendMeals = [
-  {
-    name:"Ribs", sides:["Baked Beans","Mac & Cheese","Coleslaw","Cornbread"],
-    groceries:["Ribs","BBQ sauce","Baked beans","Mac & cheese","Coleslaw mix","Cornbread mix"]
-  },
-  {
-    name:"Shrimp Boil", sides:["Cornbread","Coleslaw","Hush Puppies"],
-    groceries:["Shrimp","Sausage","Corn","Potatoes","Boil seasoning","Cornbread mix"]
-  },
-  {
-    name:"Steak", sides:["Baked Beans","Southern Potato Salad","Buttered Corn","Garden Salad"],
-    groceries:["Steak","Potatoes","Corn","Salad mix","Baked beans"]
-  },
-  {
-    name:"BBQ Pork", sides:["Collard Greens","Mac & Cheese","Baked Beans","Cornbread"],
-    groceries:["Pork shoulder","BBQ sauce","Collard greens","Mac & cheese","Baked beans","Cornbread mix"]
-  },
-  {
-    name:"Pork Chops", sides:["Fried Okra","Mac & Cheese","Rice & Gravy","Garden Salad"],
-    groceries:["Pork chops","Okra","Mac & cheese","Rice","Gravy mix","Salad mix"]
-  },
-  {
-    name:"Pork Tenderloin", sides:["Sweet Potato Casserole","Green Beans w/ Bacon","Biscuits","Garden Salad"],
-    groceries:["Pork tenderloin","Sweet potatoes","Green beans","Bacon","Biscuits"]
-  },
-  {
-    name:"Meatloaf", sides:["Mashed Potatoes","Green Beans w/ Bacon","Biscuits","Stewed Tomatoes"],
-    groceries:["Ground beef","Breadcrumbs","Eggs","Ketchup","Potatoes","Green beans","Biscuits"]
-  },
-  {
-    name:"Hamburger Steaks", sides:["Rice & Gravy","Fried Cabbage","Buttered Corn","Biscuits"],
-    groceries:["Ground beef","Rice","Gravy mix","Cabbage","Corn","Biscuits"]
-  },
-  {
-    name:"Cubed Steak", sides:["Mashed Potatoes","Green Beans w/ Bacon","Biscuits","Stewed Tomatoes"],
-    groceries:["Cubed steak","Potatoes","Green beans","Bacon","Biscuits"]
-  },
-  {
-    name:"Chicken Parm", sides:["Pasta Salad","Garden Salad","Biscuits"],
-    groceries:["Chicken","Marinara","Mozzarella","Parmesan","Pasta","Salad mix","Bread or biscuits"]
-  },
-  {
-    name:"Alice Springs Chicken", sides:["Mashed Potatoes","Garden Salad","Green Beans w/ Bacon"],
-    groceries:["Chicken","Bacon","Mushrooms","Honey mustard","Cheese","Potatoes","Salad mix","Green beans"]
-  },
-  {
-    name:"French Onion Chicken", sides:["Rice & Gravy","Garden Salad","Biscuits"],
-    groceries:["Chicken","Onion soup mix","Mozzarella or Swiss","Rice","Salad mix","Biscuits"]
-  },
-  {
-    name:"Chicken Pot Pie", sides:["Garden Salad","Stewed Tomatoes","Buttered Corn"],
-    groceries:["Chicken","Pie crust","Mixed vegetables","Cream soup","Salad mix","Corn"]
-  },
-  {
-    name:"Chili", sides:["Cornbread","Cheesy Grits","Garden Salad"],
-    groceries:["Ground beef","Beans","Tomato sauce","Chili seasoning","Cornbread mix","Grits"]
-  },
-  {
-    name:"Chicken & Dumplings", sides:["Collard Greens","Buttered Corn","Biscuits"],
-    groceries:["Chicken","Dumplings","Broth","Cream soup","Collard greens","Corn"]
-  },
-  {
-    name:"Hot Dogs", sides:["Baked Beans","Southern Potato Salad","Coleslaw"],
-    groceries:["Hot dogs","Buns","Baked beans","Potatoes","Coleslaw mix"]
-  }
-];
+const weekdayMeals=[
+{meal:"Tacos",side:"Mexican Rice",items:["Ground beef","Taco shells","Lettuce","Tomatoes"]},
+{meal:"Chicken Alfredo",side:"Garden Salad",items:["Chicken breast","Fettuccine","Alfredo sauce","Salad mix"]},
+{meal:"Sloppy Joes",side:"Coleslaw",items:["Ground beef","Sloppy joe sauce","Burger buns","Coleslaw mix"]},
+{meal:"Chicken Quesadillas",side:"Mexican Rice",items:["Chicken","Tortillas","Cheese","Rice"]},
+{meal:"Spaghetti",side:"Garlic Bread",items:["Ground beef","Spaghetti","Pasta sauce","Bread"]},
+{meal:"Fajitas",side:"Mexican Rice",items:["Chicken","Peppers","Tortillas","Rice"]}
+]
 
-const allSides = [
-  "Mashed Potatoes","Mac & Cheese","Collard Greens","Fried Okra","Cornbread",
-  "Green Beans w/ Bacon","Southern Potato Salad","Coleslaw","Baked Beans",
-  "Buttered Corn","Hush Puppies","Sweet Potato Casserole","Rice & Gravy",
-  "Fried Cabbage","Biscuits","Cheesy Grits","Cucumber & Tomato Salad",
-  "Pasta Salad","Garden Salad","Stewed Tomatoes","Mexican Rice","Grilled cheese"
-];
+const weekendMeals=[
+{meal:"Steak",side:"Baked Beans",items:["Steak","Baked beans"]},
+{meal:"Ribs",side:"Mac & Cheese",items:["Ribs","BBQ sauce","Mac & cheese"]},
+{meal:"Roast (Slow Cooker)",side:"Mashed Potatoes",items:["Roast","Potatoes","Carrots"]},
+{meal:"Chicken & Dumplings",side:"Cornbread",items:["Chicken","Dumplings","Cornbread mix"]},
+{meal:"Pork Chops",side:"Fried Okra",items:["Pork chops","Okra"]},
+{meal:"Shrimp Boil",side:"Hush Puppies",items:["Shrimp","Sausage","Corn","Potatoes"]},
+{meal:"Meatloaf",side:"Green Beans",items:["Ground beef","Green beans","Breadcrumbs"]},
+{meal:"Chili",side:"Cornbread",items:["Ground beef","Beans","Tomato sauce","Cornbread mix"]},
+{meal:"Cubed Steak",side:"Green Beans",items:["Cubed steak","Green beans"]}
+]
 
-const days = [
-  {label:"Monday", hint:"Quick meal or slow cooker", type:"monday"},
-  {label:"Tuesday", hint:"Takeout night", type:"takeout"},
-  {label:"Wednesday", hint:"Cook", type:"weekday"},
-  {label:"Thursday", hint:"Cook", type:"weekday"},
-  {label:"Friday", hint:"Cook", type:"weekday"},
-  {label:"Saturday", hint:"Bigger meal", type:"weekend"},
-  {label:"Sunday", hint:"Bigger meal", type:"weekend"}
-];
-
-function sample(arr, used = new Set()){
-  const pool = arr.filter(x => !used.has(x.name || x));
-  if (!pool.length) return null;
-  return pool[Math.floor(Math.random()*pool.length)];
-}
-function pickSide(meal){
-  const pool = meal.sides && meal.sides.length ? meal.sides : allSides;
-  return pool[Math.floor(Math.random()*pool.length)];
+function r(arr){
+return arr[Math.floor(Math.random()*arr.length)]
 }
 
-function generateWeek(){
-  const used = new Set();
-  const week = [];
-  for (const d of days){
-    if (d.type === "takeout"){
-      week.push({day:d.label, hint:d.hint, meal:"TAKEOUT", side:"—", notes:"Erica works late", type:d.type, groceries:[]});
-      continue;
-    }
-    const source = d.type === "weekend" ? weekendMeals : weekdayMeals;
-    let choice = sample(source, used);
-    if (!choice) choice = source[Math.floor(Math.random()*source.length)];
-    used.add(choice.name);
-    week.push({
-      day:d.label,
-      hint:d.hint,
-      meal:choice.name,
-      side:pickSide(choice),
-      notes:"",
-      type:d.type,
-      groceries:choice.groceries || []
-    });
-  }
-  return week;
+function generate(){
+
+let grocery=new Set()
+
+let plan=[]
+
+plan.push({day:"Monday",note:"Quick meal or slow cooker",data:r(weekdayMeals)})
+plan.push({day:"Tuesday",note:"Takeout night",takeout:true})
+plan.push({day:"Wednesday",note:"Cook",data:r(weekdayMeals)})
+plan.push({day:"Thursday",note:"Cook",data:r(weekdayMeals)})
+plan.push({day:"Friday",note:"Weekend meal",data:r(weekendMeals)})
+plan.push({day:"Saturday",note:"Weekend meal",data:r(weekendMeals)})
+plan.push({day:"Sunday",note:"Weekend meal",data:r(weekendMeals)})
+
+let html=""
+
+plan.forEach(d=>{
+
+html+="<div class='day'>"
+html+="<h3>"+d.day+"</h3>"
+html+="<div class='label'>"+d.note+"</div>"
+
+if(d.takeout){
+
+html+="<div class='meal'>TAKEOUT</div>"
+
+}else{
+
+html+="<div class='label'>Meal</div>"
+html+="<div class='meal'>"+d.data.meal+"</div>"
+
+html+="<div class='label'>Side</div>"
+html+="<div class='side'>"+d.data.side+"</div>"
+
+d.data.items.forEach(i=>grocery.add(i))
+
 }
 
-function getMealObject(name){
-  return [...weekdayMeals, ...weekendMeals].find(m => m.name === name);
+html+="</div>"
+
+})
+
+document.getElementById("planner").innerHTML=html
+
+let list="<ul>"
+
+grocery.forEach(i=>{
+list+="<li>"+i+"</li>"
+})
+
+list+="</ul>"
+
+document.getElementById("grocery").innerHTML=list
+
 }
 
-function saveState(){
-  const state = days.map((d, idx) => {
-    const meal = document.querySelector(`#meal-${idx}`).value.trim();
-    const side = document.querySelector(`#side-${idx}`).value.trim();
-    const notes = document.querySelector(`#notes-${idx}`).value.trim();
-    return {day:d.label, hint:d.hint, meal, side, notes, type:d.type};
-  });
-  localStorage.setItem("umphlette_dinner_planner", JSON.stringify(state));
-  renderGrocery();
-  flash("Saved");
-}
-function loadState(){
-  const raw = localStorage.getItem("umphlette_dinner_planner");
-  if (!raw) return null;
-  try { return JSON.parse(raw); } catch(e){ return null; }
-}
-function clearState(){
-  localStorage.removeItem("umphlette_dinner_planner");
-}
-function renderPlanner(state){
-  const el = document.getElementById("planner");
-  el.innerHTML = "";
-  state.forEach((row, idx) => {
-    const wrap = document.createElement("div");
-    wrap.className = "row";
-    const mealDisabled = row.type === "takeout" ? "readonly" : "";
-    const sideDisabled = row.type === "takeout" ? "readonly" : "";
-    const mealClass = row.type === "takeout" ? "mealCell takeout" : "mealCell";
-    const sideClass = row.type === "takeout" ? "sideCell takeout" : "sideCell";
-    wrap.innerHTML = `
-      <div>
-        <div class="day">${row.day}</div>
-        <div class="hint">${row.hint}</div>
-      </div>
-      <div><input id="meal-${idx}" class="${mealClass}" list="${row.type === 'weekend' ? 'weekendMealsList' : 'weekdayMealsList'}" value="${escapeHtml(row.meal || '')}" ${mealDisabled}></div>
-      <div><input id="side-${idx}" class="${sideClass}" list="sidesList" value="${escapeHtml(row.side || '')}" ${sideDisabled}></div>
-      <div><input id="notes-${idx}" class="notesCell" value="${escapeHtml(row.notes || '')}" ${row.type === "takeout" ? "" : ""}></div>
-    `;
-    el.appendChild(wrap);
-  });
-  renderGrocery();
-}
-function escapeHtml(str){
-  return String(str)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;");
-}
-function renderGrocery(){
-  const rows = days.map((d, idx) => ({
-    type:d.type,
-    meal:document.querySelector(`#meal-${idx}`)?.value?.trim() || "",
-    side:document.querySelector(`#side-${idx}`)?.value?.trim() || ""
-  }));
-  const buckets = {
-    "Proteins": new Set(),
-    "Produce": new Set(),
-    "Dairy / Refrigerated": new Set(),
-    "Bakery / Bread": new Set(),
-    "Pantry / Dry Goods": new Set(),
-    "Frozen / Other": new Set()
-  };
-
-  function classify(item){
-    const s = item.toLowerCase();
-    if (/(beef|chicken|pork|shrimp|steak|ribs|sausage|meatballs|bacon|hot dogs|turkey|ham)/.test(s)) return "Proteins";
-    if (/(potatoes|carrots|onion|lettuce|tomatoes|corn|okra|green beans|cabbage|sweet potatoes|mushrooms|salad mix|romaine|cucumbers|bell peppers|collard greens|coleslaw mix|mixed vegetables)/.test(s)) return "Produce";
-    if (/(milk|butter|cheese|mozzarella|parmesan|provolone|swiss|alfredo|cream soup|eggs|sour cream|caesar dressing|ranch)/.test(s)) return "Dairy / Refrigerated";
-    if (/(buns|bread|hoagie rolls|pie crust|biscuits|burger buns|sandwich buns)/.test(s)) return "Bakery / Bread";
-    if (/(rice|pasta|spaghetti|fettuccine|gravy mix|seasoning|sauce|beans|breadcrumbs|cornbread mix|grits|taco shells|tortillas|croutons|broth|dumplings|yellow rice|hamburger helper)/.test(s)) return "Pantry / Dry Goods";
-    return "Frozen / Other";
-  }
-
-  rows.forEach(r => {
-    const obj = getMealObject(r.meal);
-    if (obj && obj.groceries){
-      obj.groceries.forEach(g => buckets[classify(g)].add(g));
-    }
-    if (r.side && r.side !== "—"){
-      const sideMap = {
-        "Mashed Potatoes":["Potatoes","Butter","Milk"],
-        "Mac & Cheese":["Mac & cheese"],
-        "Collard Greens":["Collard greens"],
-        "Fried Okra":["Okra"],
-        "Cornbread":["Cornbread mix"],
-        "Green Beans w/ Bacon":["Green beans","Bacon"],
-        "Southern Potato Salad":["Potatoes","Mayonnaise","Eggs"],
-        "Coleslaw":["Coleslaw mix"],
-        "Baked Beans":["Baked beans"],
-        "Buttered Corn":["Corn"],
-        "Hush Puppies":["Hush puppies"],
-        "Sweet Potato Casserole":["Sweet potatoes"],
-        "Rice & Gravy":["Rice","Gravy mix"],
-        "Fried Cabbage":["Cabbage"],
-        "Biscuits":["Biscuits"],
-        "Cheesy Grits":["Grits","Cheese"],
-        "Cucumber & Tomato Salad":["Cucumbers","Tomatoes"],
-        "Pasta Salad":["Pasta salad"],
-        "Garden Salad":["Salad mix","Tomatoes"],
-        "Stewed Tomatoes":["Tomatoes"],
-        "Mexican Rice":["Rice"],
-        "Grilled cheese":["Bread","Cheese"]
-      };
-      (sideMap[r.side] || []).forEach(g => buckets[classify(g)].add(g));
-    }
-  });
-
-  const grocery = document.getElementById("grocery");
-  grocery.innerHTML = "";
-  Object.entries(buckets).forEach(([k,v]) => {
-    const items = [...v].sort();
-    if (!items.length) return;
-    const sec = document.createElement("div");
-    sec.innerHTML = `<div class="sectionLabel">${k}</div>`;
-    const list = document.createElement("div");
-    list.className = "list";
-    items.forEach(item => {
-      const row = document.createElement("div");
-      row.className = "item";
-      row.innerHTML = `<span>${item}</span><span class="muted">□</span>`;
-      list.appendChild(row);
-    });
-    sec.appendChild(list);
-    grocery.appendChild(sec);
-  });
-  if (!grocery.innerHTML.trim()){
-    grocery.innerHTML = `<div class="small">Generate or enter meals to build your shopping list.</div>`;
-  }
-}
-function flash(text){
-  const btn = document.getElementById("saveBtn");
-  const old = btn.textContent;
-  btn.textContent = text;
-  setTimeout(() => btn.textContent = old, 1000);
-}
-function copyGrocery(){
-  const lines = [];
-  document.querySelectorAll("#grocery .sectionLabel").forEach(label => {
-    lines.push(label.textContent + ":");
-    let next = label.nextElementSibling;
-    if (next){
-      next.querySelectorAll(".item span:first-child").forEach(item => lines.push("- " + item.textContent));
-    }
-    lines.push("");
-  });
-  const text = lines.join("\n").trim() || "No grocery items yet.";
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById("copyBtn");
-    const old = btn.textContent;
-    btn.textContent = "Copied";
-    setTimeout(() => btn.textContent = old, 1000);
-  });
-}
-function renderBanks(){
-  document.getElementById("weekdayBank").innerHTML = weekdayMeals.map(m => `<div>${m.name}</div>`).join("");
-  document.getElementById("weekendBank").innerHTML = weekendMeals.map(m => `<div>${m.name}</div>`).join("");
-}
-function addDatalists(){
-  const d1 = document.createElement("datalist");
-  d1.id = "weekdayMealsList";
-  d1.innerHTML = weekdayMeals.map(m => `<option value="${escapeHtml(m.name)}"></option>`).join("");
-  document.body.appendChild(d1);
-
-  const d2 = document.createElement("datalist");
-  d2.id = "weekendMealsList";
-  d2.innerHTML = weekendMeals.map(m => `<option value="${escapeHtml(m.name)}"></option>`).join("");
-  document.body.appendChild(d2);
-
-  const d3 = document.createElement("datalist");
-  d3.id = "sidesList";
-  d3.innerHTML = allSides.map(s => `<option value="${escapeHtml(s)}"></option>`).join("");
-  document.body.appendChild(d3);
-}
-
-document.getElementById("generateBtn").addEventListener("click", () => {
-  const state = generateWeek();
-  renderPlanner(state);
-  saveState();
-});
-document.getElementById("saveBtn").addEventListener("click", saveState);
-document.getElementById("resetBtn").addEventListener("click", () => {
-  const empty = days.map(d => ({
-    day:d.label, hint:d.hint, meal:d.type === "takeout" ? "TAKEOUT" : "",
-    side:d.type === "takeout" ? "—" : "", notes:d.type === "takeout" ? "Erica works late" : "", type:d.type
-  }));
-  renderPlanner(empty);
-  saveState();
-});
-document.getElementById("copyBtn").addEventListener("click", copyGrocery);
-
-addDatalists();
-renderBanks();
-const saved = loadState() || generateWeek();
-renderPlanner(saved);
-saveState();
 </script>
+
 </body>
 </html>
