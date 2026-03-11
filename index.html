@@ -17,7 +17,7 @@ padding:14px;
 font-size:16px;
 margin-bottom:16px;
 width:100%;
-border-radius:10px;
+border-radius:12px;
 border:none;
 background:#2f6fed;
 color:white;
@@ -25,10 +25,11 @@ color:white;
 
 .day{
 background:white;
-border-radius:12px;
-padding:14px;
+border-radius:14px;
+padding:16px;
 margin-bottom:14px;
 border:1px solid #e1e4ea;
+box-shadow:0 4px 10px rgba(0,0,0,.05);
 }
 
 .day h3{
@@ -47,12 +48,19 @@ color:#444;
 margin-top:4px;
 }
 
+.lock{
+font-size:12px;
+color:#888;
+margin-top:4px;
+}
+
 #grocery{
 background:white;
-border-radius:12px;
+border-radius:14px;
 padding:16px;
 border:1px solid #e1e4ea;
 margin-top:20px;
+box-shadow:0 4px 10px rgba(0,0,0,.05);
 }
 
 </style>
@@ -83,26 +91,28 @@ const takeout=[
 
 const weekdayMeals=[
 {meal:"Tacos",side:"Mexican Rice",items:["Ground beef","Taco shells","Lettuce","Tomatoes"]},
-{meal:"Chicken Alfredo",side:"Garden Salad",items:["Chicken breast","Fettuccine","Alfredo sauce","Salad mix"]},
-{meal:"Sloppy Joes",side:"Coleslaw",items:["Ground beef","Sloppy joe sauce","Burger buns","Coleslaw mix"]},
-{meal:"Chicken Quesadillas",side:"Mexican Rice",items:["Chicken","Tortillas","Cheese","Rice"]},
-{meal:"Spaghetti",side:"Garlic Bread",items:["Ground beef","Spaghetti","Pasta sauce","Bread"]},
-{meal:"Fajitas",side:"Mexican Rice",items:["Chicken","Peppers","Tortillas","Rice"]},
-{meal:"BLTs",side:"Pasta Salad",items:["Bacon","Bread","Lettuce","Tomatoes","Pasta salad"]},
-{meal:"Hamburger Helper",side:"Garden Salad",items:["Ground beef","Hamburger helper","Salad mix"]}
+{meal:"Chicken Alfredo",side:"Garden Salad",items:["Chicken breast","Fettuccine","Alfredo sauce"]},
+{meal:"Sloppy Joes",side:"Coleslaw",items:["Ground beef","Sloppy joe sauce","Burger buns"]},
+{meal:"Chicken Quesadillas",side:"Mexican Rice",items:["Chicken","Tortillas","Cheese"]},
+{meal:"Spaghetti",side:"Garlic Bread",items:["Ground beef","Spaghetti","Pasta sauce"]},
+{meal:"Fajitas",side:"Mexican Rice",items:["Chicken","Peppers","Tortillas"]},
+{meal:"BLTs",side:"Pasta Salad",items:["Bacon","Bread","Lettuce","Tomatoes"]},
+{meal:"Hamburger Steaks",side:"Mashed Potatoes",items:["Ground beef","Potatoes"]}
 ]
 
 const weekendMeals=[
 {meal:"Steak",side:"Baked Beans",items:["Steak","Baked beans"]},
-{meal:"Ribs",side:"Mac & Cheese",items:["Ribs","BBQ sauce","Mac & cheese"]},
-{meal:"Roast (Slow Cooker)",side:"Mashed Potatoes",items:["Roast","Potatoes","Carrots"]},
+{meal:"Ribs",side:"Mac & Cheese",items:["Ribs","Mac & cheese"]},
+{meal:"Roast",side:"Mashed Potatoes",items:["Roast","Potatoes","Carrots"]},
 {meal:"Chicken & Dumplings",side:"Cornbread",items:["Chicken","Dumplings","Cornbread mix"]},
 {meal:"Pork Chops",side:"Fried Okra",items:["Pork chops","Okra"]},
 {meal:"Shrimp Boil",side:"Hush Puppies",items:["Shrimp","Sausage","Corn","Potatoes"]},
-{meal:"Meatloaf",side:"Green Beans",items:["Ground beef","Green beans","Breadcrumbs"]},
-{meal:"Chili",side:"Cornbread",items:["Ground beef","Beans","Tomato sauce","Cornbread mix"]},
+{meal:"Meatloaf",side:"Green Beans",items:["Ground beef","Green beans"]},
+{meal:"Chili",side:"Cornbread",items:["Ground beef","Beans","Tomato sauce"]},
 {meal:"Cubed Steak",side:"Green Beans",items:["Cubed steak","Green beans"]}
 ]
+
+let locked={}
 
 function r(arr){
 return arr[Math.floor(Math.random()*arr.length)]
@@ -112,22 +122,25 @@ function getHistory(){
 return JSON.parse(localStorage.getItem("mealHistory")||"[]")
 }
 
-function saveHistory(history){
-localStorage.setItem("mealHistory",JSON.stringify(history))
+function saveHistory(h){
+localStorage.setItem("mealHistory",JSON.stringify(h))
 }
 
-function pickMeal(pool,history,used){
+function pick(pool,history,used){
 
-let filtered=pool.filter(m=>
-!history.includes(m.meal) && !used.includes(m.meal)
+let options=pool.filter(m=>
+!history.includes(m.meal)&&!used.includes(m.meal)
 )
 
-if(filtered.length===0){
-filtered=pool
+if(options.length===0) options=pool
+
+return r(options)
+
 }
 
-return r(filtered)
-
+function toggleLock(day){
+locked[day]=!locked[day]
+generate()
 }
 
 function categorize(item){
@@ -157,44 +170,36 @@ let grocery={}
 
 let plan=[]
 
-let mon=pickMeal(weekdayMeals,history,used)
-used.push(mon.meal)
+function add(day,type){
 
-let wed=pickMeal(weekdayMeals,history,used)
-used.push(wed.meal)
+if(locked[day] && plan.find(d=>d.day===day)) return
 
-let thu=pickMeal(weekdayMeals,history,used)
-used.push(thu.meal)
+let data
 
-let fri=pickMeal(weekendMeals,history,used)
-used.push(fri.meal)
+if(type==="weekday") data=pick(weekdayMeals,history,used)
+if(type==="weekend") data=pick(weekendMeals,history,used)
 
-let sat=pickMeal(weekendMeals,history,used)
-used.push(sat.meal)
+used.push(data.meal)
 
-let sun=pickMeal(weekendMeals,history,used)
-used.push(sun.meal)
+plan.push({day,data})
 
-plan=[
-{day:"Monday",data:mon},
-{day:"Tuesday",takeout:r(takeout)},
-{day:"Wednesday",data:wed},
-{day:"Thursday",data:thu},
-{day:"Friday",data:fri},
-{day:"Saturday",data:sat},
-{day:"Sunday",data:sun}
-]
+}
 
-used.forEach(m=>history.push(m))
-history=history.slice(-28)
+add("Thursday","weekday")
+add("Friday","weekend")
+add("Saturday","weekend")
+add("Sunday","weekend")
+add("Monday","weekday")
 
-saveHistory(history)
+plan.push({day:"Tuesday",takeout:r(takeout)})
+
+add("Wednesday","weekday")
 
 let html=""
 
 plan.forEach(d=>{
 
-html+="<div class='day'>"
+html+="<div class='day' onclick='toggleLock(\""+d.day+"\")'>"
 html+="<h3>"+d.day+"</h3>"
 
 if(d.takeout){
@@ -218,6 +223,8 @@ grocery[cat].push(i)
 
 }
 
+if(locked[d.day]) html+="<div class='lock'>🔒 Locked</div>"
+
 html+="</div>"
 
 })
@@ -231,9 +238,7 @@ for(let cat in grocery){
 list+="<h4>"+cat+"</h4><ul>"
 
 grocery[cat].forEach(i=>{
-
 list+="<li>"+i+"</li>"
-
 })
 
 list+="</ul>"
@@ -241,6 +246,12 @@ list+="</ul>"
 }
 
 document.getElementById("grocery").innerHTML=list
+
+history.push(...used)
+
+history=history.slice(-28)
+
+saveHistory(history)
 
 }
 
