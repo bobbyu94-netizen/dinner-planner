@@ -3,280 +3,571 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Umphlette Dinner Planner</title>
-
 <style>
-
 body{
-font-family:-apple-system,system-ui;
-background:#f6f7fb;
-padding:16px;
+  font-family:-apple-system,system-ui;
+  background:#f6f7fb;
+  padding:16px;
+  color:#1f2937;
 }
-
+h1,h2,h3,h4{
+  margin:0 0 10px 0;
+}
 button{
-padding:14px;
-font-size:16px;
-margin-bottom:16px;
-width:100%;
-border-radius:12px;
-border:none;
-background:#2f6fed;
-color:white;
+  padding:14px;
+  font-size:16px;
+  margin-bottom:12px;
+  width:100%;
+  border-radius:12px;
+  border:none;
+  background:#2f6fed;
+  color:white;
 }
-
+button.secondary{
+  background:#ffffff;
+  color:#1f2937;
+  border:1px solid #d1d5db;
+}
+.topActions{
+  display:grid;
+  gap:10px;
+}
 .day{
-background:white;
-border-radius:14px;
-padding:16px;
-margin-bottom:14px;
-border:1px solid #e1e4ea;
-box-shadow:0 4px 10px rgba(0,0,0,.05);
-cursor:pointer;
+  background:white;
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:14px;
+  border:1px solid #e5e7eb;
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
+  cursor:pointer;
 }
-
 .day h3{
-margin:0;
+  margin:0;
 }
-
 .meal{
-font-size:18px;
-font-weight:600;
-margin-top:6px;
+  font-size:18px;
+  font-weight:600;
+  margin-top:6px;
 }
-
 .side{
-font-size:16px;
-color:#444;
-margin-top:4px;
+  font-size:16px;
+  color:#444;
+  margin-top:4px;
 }
-
 .lock{
-font-size:12px;
-color:#888;
-margin-top:6px;
+  font-size:12px;
+  color:#888;
+  margin-top:6px;
 }
-
-#grocery{
-background:white;
-border-radius:14px;
-padding:16px;
-border:1px solid #e1e4ea;
-margin-top:20px;
-box-shadow:0 4px 10px rgba(0,0,0,.05);
+.panel{
+  background:white;
+  border-radius:14px;
+  padding:16px;
+  border:1px solid #e5e7eb;
+  margin-top:20px;
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
 }
-
+.row{
+  display:grid;
+  gap:8px;
+  margin-bottom:10px;
+}
+input, select, textarea{
+  width:100%;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #d1d5db;
+  font-size:16px;
+}
+.small{
+  font-size:13px;
+  color:#6b7280;
+}
+.hidden{
+  display:none;
+}
+.badge{
+  display:inline-block;
+  background:#eef2ff;
+  color:#334155;
+  border:1px solid #dbeafe;
+  border-radius:999px;
+  padding:4px 10px;
+  font-size:12px;
+  margin-top:8px;
+}
+.listItem{
+  padding:10px 0;
+  border-bottom:1px solid #f1f5f9;
+}
+.flex{
+  display:flex;
+  gap:8px;
+}
+.flex > *{
+  flex:1;
+}
+.inlineBtn{
+  width:auto;
+  margin:0;
+  padding:10px 12px;
+}
+hr{
+  border:none;
+  border-top:1px solid #e5e7eb;
+  margin:18px 0;
+}
+.categoryTitle{
+  margin-top:14px;
+}
+.toggleRow{
+  display:flex;
+  gap:10px;
+  margin-bottom:12px;
+}
+.toggleRow button{
+  margin-bottom:0;
+}
+#grocery ul{
+  margin-top:6px;
+  padding-left:20px;
+}
+.note{
+  font-size:14px;
+  color:#6b7280;
+  margin-bottom:12px;
+}
 </style>
 </head>
-
 <body>
 
-<h2>Umphlette Dinner Planner</h2>
+<h1>Umphlette Dinner Planner</h1>
 
-<button onclick="generate()">Generate Week</button>
+<div class="topActions">
+  <button onclick="generate()">Generate Week</button>
+  <button class="secondary" onclick="toggleGroceryMode()">Toggle Grocery Mode</button>
+  <button class="secondary" onclick="toggleEditor()">Show / Hide Editor</button>
+</div>
 
 <div id="planner"></div>
 
-<h3>Shopping List</h3>
+<div class="panel">
+  <h2>Shopping List</h2>
+  <div class="note">Grouped for easier shopping. Toggle Grocery Mode for a simpler in-store view.</div>
+  <div id="grocery"></div>
+</div>
 
-<div id="grocery"></div>
+<div id="editorPanel" class="panel hidden">
+  <h2>Planner Editor</h2>
+  <div class="note">Add your own meals and takeout places right from your phone.</div>
+
+  <h3>Add Meal</h3>
+  <div class="row">
+    <input id="mealName" placeholder="Meal name (example: Alice Springs Chicken)">
+    <input id="mealSide" placeholder="Side (example: Mashed Potatoes)">
+    <div class="flex">
+      <select id="mealDayType">
+        <option value="weekday">Weekday</option>
+        <option value="weekend">Weekend</option>
+      </select>
+      <select id="mealStyle">
+        <option value="regular">Regular</option>
+        <option value="grill">Grill</option>
+        <option value="slowcooker">Slow Cooker</option>
+        <option value="quick">Quick</option>
+      </select>
+    </div>
+    <textarea id="mealItems" rows="3" placeholder="Ingredients, comma separated"></textarea>
+    <button onclick="addMeal()">Add Meal</button>
+  </div>
+
+  <hr>
+
+  <h3>Add Takeout Option</h3>
+  <div class="row">
+    <input id="takeoutName" placeholder="Takeout place (example: China Wok)">
+    <button onclick="addTakeout()">Add Takeout</button>
+  </div>
+
+  <hr>
+
+  <h3>Current Meals</h3>
+  <div class="small">Tap delete only if you really want to remove one.</div>
+  <div id="mealList"></div>
+
+  <hr>
+
+  <h3>Current Takeout Options</h3>
+  <div id="takeoutList"></div>
+</div>
 
 <script>
+const DEFAULT_MEALS = {
+  weekday: [
+    {meal:"Tacos",side:"Mexican Rice",style:"quick",items:["Ground beef","Taco shells","Lettuce","Tomatoes","Rice"]},
+    {meal:"Chicken Alfredo",side:"Garden Salad",style:"regular",items:["Chicken breast","Fettuccine","Alfredo sauce","Salad mix"]},
+    {meal:"Sloppy Joes",side:"Coleslaw",style:"quick",items:["Ground beef","Sloppy joe sauce","Burger buns","Coleslaw mix"]},
+    {meal:"Chicken Quesadillas",side:"Mexican Rice",style:"quick",items:["Chicken","Tortillas","Cheese","Rice"]},
+    {meal:"Spaghetti",side:"Garlic Bread",style:"regular",items:["Ground beef","Spaghetti","Pasta sauce","Bread"]},
+    {meal:"Fajitas",side:"Mexican Rice",style:"regular",items:["Chicken","Peppers","Tortillas","Rice"]},
+    {meal:"BLTs",side:"Pasta Salad",style:"quick",items:["Bacon","Bread","Lettuce","Tomatoes","Pasta salad"]},
+    {meal:"Hamburger Steaks",side:"Mashed Potatoes",style:"regular",items:["Ground beef","Potatoes"]},
+    {meal:"Veggie Soup",side:"Cornbread",style:"slowcooker",items:["Mixed vegetables","Broth","Potatoes","Cornbread mix"]},
+    {meal:"Grilled Chicken Sandwiches",side:"Pasta Salad",style:"grill",items:["Chicken breast","Sandwich buns","Lettuce","Tomatoes","Pasta salad"]},
+    {meal:"Chicken & Yellow Rice",side:"Green Beans",style:"regular",items:["Chicken","Yellow rice","Green beans"]},
+    {meal:"Chef Salads",side:"Biscuits",style:"quick",items:["Salad mix","Ham","Turkey","Cheese","Eggs","Biscuits"]}
+  ],
+  weekend: [
+    {meal:"Steak",side:"Baked Beans",style:"grill",items:["Steak","Baked beans"]},
+    {meal:"Ribs",side:"Mac & Cheese",style:"grill",items:["Ribs","Mac & cheese","BBQ sauce"]},
+    {meal:"Roast",side:"Mashed Potatoes",style:"slowcooker",items:["Roast","Potatoes","Carrots"]},
+    {meal:"Chicken & Dumplings",side:"Cornbread",style:"slowcooker",items:["Chicken","Dumplings","Cornbread mix"]},
+    {meal:"Pork Chops",side:"Fried Okra",style:"grill",items:["Pork chops","Okra"]},
+    {meal:"Shrimp Boil",side:"Hush Puppies",style:"regular",items:["Shrimp","Sausage","Corn","Potatoes","Hush puppies"]},
+    {meal:"Meatloaf",side:"Green Beans",style:"regular",items:["Ground beef","Green beans","Breadcrumbs"]},
+    {meal:"Chili",side:"Cornbread",style:"slowcooker",items:["Ground beef","Beans","Tomato sauce","Cornbread mix"]},
+    {meal:"Cubed Steak",side:"Green Beans",style:"regular",items:["Cubed steak","Green beans"]},
+    {meal:"Pork Tenderloin",side:"Sweet Potato Casserole",style:"regular",items:["Pork tenderloin","Sweet potatoes"]},
+    {meal:"Chicken Parm",side:"Garden Salad",style:"regular",items:["Chicken","Pasta sauce","Mozzarella","Salad mix"]},
+    {meal:"Hot Dogs",side:"Baked Beans",style:"grill",items:["Hot dogs","Buns","Baked beans"]}
+  ]
+};
 
-const takeout=[
-"Chinese",
-"Pizza",
-"Wendy's",
-"Mexican",
-"BBQ",
-"Subs"
-]
+const DEFAULT_TAKEOUT = [
+  "Chinese",
+  "Pizza",
+  "Wendy's",
+  "Mexican",
+  "BBQ",
+  "Subs"
+];
 
-const weekdayMeals=[
-{meal:"Tacos",side:"Mexican Rice",items:["Ground beef","Taco shells","Lettuce","Tomatoes"]},
-{meal:"Chicken Alfredo",side:"Garden Salad",items:["Chicken breast","Fettuccine","Alfredo sauce"]},
-{meal:"Sloppy Joes",side:"Coleslaw",items:["Ground beef","Sloppy joe sauce","Burger buns"]},
-{meal:"Chicken Quesadillas",side:"Mexican Rice",items:["Chicken","Tortillas","Cheese"]},
-{meal:"Spaghetti",side:"Garlic Bread",items:["Ground beef","Spaghetti","Pasta sauce"]},
-{meal:"Fajitas",side:"Mexican Rice",items:["Chicken","Peppers","Tortillas"]},
-{meal:"BLTs",side:"Pasta Salad",items:["Bacon","Bread","Lettuce","Tomatoes"]},
-{meal:"Hamburger Steaks",side:"Mashed Potatoes",items:["Ground beef","Potatoes"]}
-]
+let locked = {};
+let currentPlan = [];
+let groceryModeSimple = false;
 
-const weekendMeals=[
-{meal:"Steak",side:"Baked Beans",items:["Steak","Baked beans"]},
-{meal:"Ribs",side:"Mac & Cheese",items:["Ribs","Mac & cheese"]},
-{meal:"Roast",side:"Mashed Potatoes",items:["Roast","Potatoes","Carrots"]},
-{meal:"Chicken & Dumplings",side:"Cornbread",items:["Chicken","Dumplings","Cornbread mix"]},
-{meal:"Pork Chops",side:"Fried Okra",items:["Pork chops","Okra"]},
-{meal:"Shrimp Boil",side:"Hush Puppies",items:["Shrimp","Sausage","Corn","Potatoes"]},
-{meal:"Meatloaf",side:"Green Beans",items:["Ground beef","Green beans"]},
-{meal:"Chili",side:"Cornbread",items:["Ground beef","Beans","Tomato sauce"]},
-{meal:"Cubed Steak",side:"Green Beans",items:["Cubed steak","Green beans"]}
-]
-
-let locked={}
-let currentPlan=[]
-
-function r(arr){
-return arr[Math.floor(Math.random()*arr.length)]
+function loadMeals(){
+  return JSON.parse(localStorage.getItem("plannerMeals") || JSON.stringify(DEFAULT_MEALS));
 }
-
+function saveMeals(meals){
+  localStorage.setItem("plannerMeals", JSON.stringify(meals));
+}
+function loadTakeout(){
+  return JSON.parse(localStorage.getItem("plannerTakeout") || JSON.stringify(DEFAULT_TAKEOUT));
+}
+function saveTakeout(takeout){
+  localStorage.setItem("plannerTakeout", JSON.stringify(takeout));
+}
 function getHistory(){
-return JSON.parse(localStorage.getItem("mealHistory")||"[]")
+  return JSON.parse(localStorage.getItem("mealHistory") || "[]");
 }
-
 function saveHistory(h){
-localStorage.setItem("mealHistory",JSON.stringify(h))
+  localStorage.setItem("mealHistory", JSON.stringify(h));
 }
-
-function pick(pool,history,used){
-
-let options=pool.filter(m=>
-!history.includes(m.meal)&&!used.includes(m.meal)
-)
-
-if(options.length===0) options=pool
-
-return r(options)
-
-}
-
-function toggleLock(day){
-
-locked[day]=!locked[day]
-
-render()
-
+function r(arr){
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
 function categorize(item){
+  const s = item.toLowerCase();
 
-item=item.toLowerCase()
+  if (
+    s.includes("beef") || s.includes("chicken") || s.includes("pork") ||
+    s.includes("steak") || s.includes("shrimp") || s.includes("ribs") ||
+    s.includes("sausage") || s.includes("ham") || s.includes("turkey") ||
+    s.includes("hot dogs")
+  ) return "Meat";
 
-if(item.includes("beef")||item.includes("chicken")||item.includes("pork")||item.includes("steak")||item.includes("shrimp"))
-return "Meat"
+  if (
+    s.includes("lettuce") || s.includes("tomato") || s.includes("potato") ||
+    s.includes("carrot") || s.includes("pepper") || s.includes("okra") ||
+    s.includes("corn") || s.includes("green beans") || s.includes("salad") ||
+    s.includes("sweet potatoes") || s.includes("mixed vegetables") ||
+    s.includes("coleslaw") || s.includes("onion")
+  ) return "Produce";
 
-if(item.includes("lettuce")||item.includes("tomato")||item.includes("potato")||item.includes("carrot")||item.includes("pepper"))
-return "Produce"
+  if (
+    s.includes("cheese") || s.includes("mozzarella") || s.includes("eggs") ||
+    s.includes("alfredo")
+  ) return "Dairy";
 
-if(item.includes("sauce")||item.includes("mix")||item.includes("pasta")||item.includes("rice")||item.includes("bread"))
-return "Pantry"
+  if (
+    s.includes("bread") || s.includes("buns") || s.includes("biscuits") ||
+    s.includes("tortillas") || s.includes("cornbread")
+  ) return "Bakery";
 
-return "Other"
+  if (
+    s.includes("rice") || s.includes("pasta") || s.includes("spaghetti") ||
+    s.includes("sauce") || s.includes("mix") || s.includes("beans") ||
+    s.includes("broth") || s.includes("breadcrumbs") || s.includes("shells") ||
+    s.includes("dumplings") || s.includes("hush puppies")
+  ) return "Pantry";
 
+  return "Other";
+}
+
+function pick(pool, history, used, preferredStyles = []){
+  let options = pool.filter(m => !history.includes(m.meal) && !used.includes(m.meal));
+
+  if (preferredStyles.length){
+    let styled = options.filter(m => preferredStyles.includes(m.style));
+    if (styled.length) options = styled;
+  }
+
+  if (!options.length){
+    options = pool.filter(m => !used.includes(m.meal));
+  }
+
+  if (preferredStyles.length){
+    let styled = options.filter(m => preferredStyles.includes(m.style));
+    if (styled.length) options = styled;
+  }
+
+  if (!options.length){
+    options = pool;
+  }
+
+  return r(options);
+}
+
+function toggleLock(day){
+  locked[day] = !locked[day];
+  render();
 }
 
 function generate(){
+  const meals = loadMeals();
+  const takeout = loadTakeout();
+  let history = getHistory();
+  let used = [];
+  let plan = [];
 
-let history=getHistory()
-let used=[]
+  function add(day, type, preferredStyles = []){
+    if (locked[day] && currentPlan.length){
+      const existing = currentPlan.find(d => d.day === day);
+      if (existing){
+        plan.push(existing);
+        if (existing.data) used.push(existing.data.meal);
+        return;
+      }
+    }
 
-function add(day,type){
+    const pool = meals[type];
+    const data = pick(pool, history, used, preferredStyles);
+    used.push(data.meal);
+    plan.push({day, data});
+  }
 
-if(locked[day] && currentPlan.length){
+  add("Thursday", "weekday", ["quick","regular"]);
+  add("Friday", "weekend", ["grill","slowcooker","regular"]);
+  add("Saturday", "weekend", ["grill","regular","slowcooker"]);
+  add("Sunday", "weekend", ["slowcooker","regular","grill"]);
+  add("Monday", "weekday", ["slowcooker","quick"]);
+  
+  if (locked["Tuesday"] && currentPlan.length){
+    const existingTuesday = currentPlan.find(d => d.day === "Tuesday");
+    if (existingTuesday){
+      plan.push(existingTuesday);
+    } else {
+      plan.push({day:"Tuesday", takeout:r(takeout)});
+    }
+  } else {
+    plan.push({day:"Tuesday", takeout:r(takeout)});
+  }
 
-let existing=currentPlan.find(d=>d.day===day)
+  add("Wednesday", "weekday", ["quick","regular"]);
 
-if(existing){
-plan.push(existing)
-return
-}
+  currentPlan = plan;
 
-}
+  const mealsUsedThisWeek = used.slice();
+  history.push(...mealsUsedThisWeek);
+  history = history.slice(-24);
+  saveHistory(history);
 
-let data
-
-if(type==="weekday") data=pick(weekdayMeals,history,used)
-if(type==="weekend") data=pick(weekendMeals,history,used)
-
-used.push(data.meal)
-
-plan.push({day,data})
-
-}
-
-let plan=[]
-
-add("Thursday","weekday")
-add("Friday","weekend")
-add("Saturday","weekend")
-add("Sunday","weekend")
-add("Monday","weekday")
-
-plan.push({day:"Tuesday",takeout:r(takeout)})
-
-add("Wednesday","weekday")
-
-currentPlan=plan
-
-history.push(...used)
-history=history.slice(-28)
-
-saveHistory(history)
-
-render()
-
+  render();
 }
 
 function render(){
+  let grocery = {};
+  let html = "";
 
-let grocery={}
-let html=""
+  currentPlan.forEach(d => {
+    html += `<div class="day" onclick="toggleLock('${d.day}')">`;
+    html += `<h3>${d.day}</h3>`;
 
-currentPlan.forEach(d=>{
+    if (d.takeout){
+      html += `<div class="meal">🍔 ${d.takeout}</div>`;
+      html += `<div class="badge">Takeout</div>`;
+    } else {
+      html += `<div class="meal">🍽 ${d.data.meal}</div>`;
+      html += `<div class="side">🥗 ${d.data.side}</div>`;
+      html += `<div class="badge">${labelStyle(d.data.style)}</div>`;
 
-html+="<div class='day' onclick='toggleLock(\""+d.day+"\")'>"
-html+="<h3>"+d.day+"</h3>"
+      d.data.items.forEach(i => {
+        const cat = categorize(i);
+        if (!grocery[cat]) grocery[cat] = [];
+        grocery[cat].push(i);
+      });
+    }
 
-if(d.takeout){
+    if (locked[d.day]) html += `<div class="lock">🔒 Locked</div>`;
+    html += `</div>`;
+  });
 
-html+="<div class='meal'>🍔 "+d.takeout+"</div>"
+  document.getElementById("planner").innerHTML = html;
 
-}else{
-
-html+="<div class='meal'>🍽 "+d.data.meal+"</div>"
-html+="<div class='side'>🥗 "+d.data.side+"</div>"
-
-d.data.items.forEach(i=>{
-
-let cat=categorize(i)
-
-if(!grocery[cat]) grocery[cat]=[]
-
-grocery[cat].push(i)
-
-})
-
+  renderGrocery(grocery);
+  renderEditorLists();
 }
 
-if(locked[d.day]) html+="<div class='lock'>🔒 Locked</div>"
-
-html+="</div>"
-
-})
-
-document.getElementById("planner").innerHTML=html
-
-let list=""
-
-for(let cat in grocery){
-
-list+="<h4>"+cat+"</h4><ul>"
-
-grocery[cat].forEach(i=>{
-list+="<li>"+i+"</li>"
-})
-
-list+="</ul>"
-
+function labelStyle(style){
+  if (style === "grill") return "Grill";
+  if (style === "slowcooker") return "Slow Cooker";
+  if (style === "quick") return "Quick";
+  return "Regular";
 }
 
-document.getElementById("grocery").innerHTML=list
-
+function uniqueSorted(arr){
+  return [...new Set(arr)].sort((a,b) => a.localeCompare(b));
 }
 
-generate()
+function renderGrocery(grocery){
+  const order = groceryModeSimple
+    ? ["Produce","Meat","Dairy","Bakery","Pantry","Other"]
+    : ["Produce","Meat","Dairy","Bakery","Pantry","Other"];
 
+  let html = "";
+
+  order.forEach(cat => {
+    if (!grocery[cat] || !grocery[cat].length) return;
+    html += `<h4 class="categoryTitle">${cat}</h4><ul>`;
+    uniqueSorted(grocery[cat]).forEach(i => {
+      html += `<li>${i}</li>`;
+    });
+    html += `</ul>`;
+  });
+
+  if (!html){
+    html = `<div class="small">Generate a week to build your shopping list.</div>`;
+  }
+
+  document.getElementById("grocery").innerHTML = html;
+}
+
+function toggleGroceryMode(){
+  groceryModeSimple = !groceryModeSimple;
+  render();
+}
+
+function toggleEditor(){
+  document.getElementById("editorPanel").classList.toggle("hidden");
+}
+
+function addMeal(){
+  const name = document.getElementById("mealName").value.trim();
+  const side = document.getElementById("mealSide").value.trim();
+  const dayType = document.getElementById("mealDayType").value;
+  const style = document.getElementById("mealStyle").value;
+  const itemsRaw = document.getElementById("mealItems").value.trim();
+
+  if (!name || !side || !itemsRaw){
+    alert("Please fill in meal name, side, and ingredients.");
+    return;
+  }
+
+  const items = itemsRaw.split(",").map(x => x.trim()).filter(Boolean);
+  const meals = loadMeals();
+
+  meals[dayType].push({
+    meal:name,
+    side:side,
+    style:style,
+    items:items
+  });
+
+  saveMeals(meals);
+
+  document.getElementById("mealName").value = "";
+  document.getElementById("mealSide").value = "";
+  document.getElementById("mealItems").value = "";
+
+  renderEditorLists();
+  alert("Meal added.");
+}
+
+function addTakeout(){
+  const name = document.getElementById("takeoutName").value.trim();
+  if (!name){
+    alert("Enter a takeout option first.");
+    return;
+  }
+
+  const takeout = loadTakeout();
+  takeout.push(name);
+  saveTakeout(takeout);
+  document.getElementById("takeoutName").value = "";
+  renderEditorLists();
+  alert("Takeout option added.");
+}
+
+function deleteMeal(dayType, index){
+  const meals = loadMeals();
+  meals[dayType].splice(index, 1);
+  saveMeals(meals);
+  renderEditorLists();
+}
+
+function deleteTakeout(index){
+  const takeout = loadTakeout();
+  takeout.splice(index, 1);
+  saveTakeout(takeout);
+  renderEditorLists();
+}
+
+function renderEditorLists(){
+  const meals = loadMeals();
+  const takeout = loadTakeout();
+
+  let mealHtml = `<h4>Weekday Meals</h4>`;
+  meals.weekday.forEach((m, i) => {
+    mealHtml += `
+      <div class="listItem">
+        <strong>${m.meal}</strong><br>
+        <span class="small">Side: ${m.side} · ${labelStyle(m.style)}</span><br>
+        <span class="small">Ingredients: ${m.items.join(", ")}</span><br>
+        <button class="secondary inlineBtn" onclick="event.stopPropagation(); deleteMeal('weekday', ${i})">Delete</button>
+      </div>
+    `;
+  });
+
+  mealHtml += `<h4 class="categoryTitle">Weekend Meals</h4>`;
+  meals.weekend.forEach((m, i) => {
+    mealHtml += `
+      <div class="listItem">
+        <strong>${m.meal}</strong><br>
+        <span class="small">Side: ${m.side} · ${labelStyle(m.style)}</span><br>
+        <span class="small">Ingredients: ${m.items.join(", ")}</span><br>
+        <button class="secondary inlineBtn" onclick="event.stopPropagation(); deleteMeal('weekend', ${i})">Delete</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("mealList").innerHTML = mealHtml;
+
+  let takeoutHtml = "";
+  takeout.forEach((t, i) => {
+    takeoutHtml += `
+      <div class="listItem">
+        <strong>${t}</strong><br>
+        <button class="secondary inlineBtn" onclick="event.stopPropagation(); deleteTakeout(${i})">Delete</button>
+      </div>
+    `;
+  });
+
+  document.getElementById("takeoutList").innerHTML = takeoutHtml || `<div class="small">No takeout options yet.</div>`;
+}
+
+generate();
 </script>
-
 </body>
 </html>
