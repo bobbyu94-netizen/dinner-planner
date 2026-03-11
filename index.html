@@ -203,34 +203,78 @@ hr{
 
 <script>
 const DEFAULT_MEALS = {
-  weekday: [
-    {meal:"Tacos",side:"Mexican Rice",style:"quick",items:["Ground beef","Taco shells","Lettuce","Tomatoes","Rice"]},
-    {meal:"Chicken Alfredo",side:"Garden Salad",style:"regular",items:["Chicken breast","Fettuccine","Alfredo sauce","Salad mix"]},
-    {meal:"Sloppy Joes",side:"Coleslaw",style:"quick",items:["Ground beef","Sloppy joe sauce","Burger buns","Coleslaw mix"]},
-    {meal:"Chicken Quesadillas",side:"Mexican Rice",style:"quick",items:["Chicken","Tortillas","Cheese","Rice"]},
-    {meal:"Spaghetti",side:"Garlic Bread",style:"regular",items:["Ground beef","Spaghetti","Pasta sauce","Bread"]},
-    {meal:"Fajitas",side:"Mexican Rice",style:"regular",items:["Chicken","Peppers","Tortillas","Rice"]},
-    {meal:"BLTs",side:"Pasta Salad",style:"quick",items:["Bacon","Bread","Lettuce","Tomatoes","Pasta salad"]},
-    {meal:"Hamburger Steaks",side:"Mashed Potatoes",style:"regular",items:["Ground beef","Potatoes"]},
-    {meal:"Veggie Soup",side:"Cornbread",style:"slowcooker",items:["Mixed vegetables","Broth","Potatoes","Cornbread mix"]},
-    {meal:"Grilled Chicken Sandwiches",side:"Pasta Salad",style:"grill",items:["Chicken breast","Sandwich buns","Lettuce","Tomatoes","Pasta salad"]},
-    {meal:"Chicken & Yellow Rice",side:"Green Beans",style:"regular",items:["Chicken","Yellow rice","Green beans"]},
-    {meal:"Chef Salads",side:"Biscuits",style:"quick",items:["Salad mix","Ham","Turkey","Cheese","Eggs","Biscuits"]}
-  ],
-  weekend: [
-    {meal:"Steak",side:"Baked Beans",style:"grill",items:["Steak","Baked beans"]},
-    {meal:"Ribs",side:"Mac & Cheese",style:"grill",items:["Ribs","Mac & cheese","BBQ sauce"]},
-    {meal:"Roast",side:"Mashed Potatoes",style:"slowcooker",items:["Roast","Potatoes","Carrots"]},
-    {meal:"Chicken & Dumplings",side:"Cornbread",style:"slowcooker",items:["Chicken","Dumplings","Cornbread mix"]},
-    {meal:"Pork Chops",side:"Fried Okra",style:"grill",items:["Pork chops","Okra"]},
-    {meal:"Shrimp Boil",side:"Hush Puppies",style:"regular",items:["Shrimp","Sausage","Corn","Potatoes","Hush puppies"]},
-    {meal:"Meatloaf",side:"Green Beans",style:"regular",items:["Ground beef","Green beans","Breadcrumbs"]},
-    {meal:"Chili",side:"Cornbread",style:"slowcooker",items:["Ground beef","Beans","Tomato sauce","Cornbread mix"]},
-    {meal:"Cubed Steak",side:"Green Beans",style:"regular",items:["Cubed steak","Green beans"]},
-    {meal:"Pork Tenderloin",side:"Sweet Potato Casserole",style:"regular",items:["Pork tenderloin","Sweet potatoes"]},
-    {meal:"Chicken Parm",side:"Garden Salad",style:"regular",items:["Chicken","Pasta sauce","Mozzarella","Salad mix"]},
-    {meal:"Hot Dogs",side:"Baked Beans",style:"grill",items:["Hot dogs","Buns","Baked beans"]}
-  ]
+
+weekday: [
+
+{meal:"Tacos",side:"Mexican Rice",style:"quick",items:["Ground beef","Taco shells","Lettuce","Tomatoes","Rice"]},
+
+{meal:"Chicken Alfredo",side:"Garden Salad",style:"regular",items:["Chicken breast","Fettuccine","Alfredo sauce","Salad mix"]},
+
+{meal:"Sloppy Joes",side:"Coleslaw",style:"quick",items:["Ground beef","Sloppy joe sauce","Burger buns","Coleslaw mix"]},
+
+{meal:"Chicken Quesadillas",side:"Mexican Rice",style:"quick",items:["Chicken","Tortillas","Cheese","Rice"]},
+
+{meal:"BLTs",side:"Pasta Salad",style:"quick",items:["Bacon","Bread","Lettuce","Tomatoes","Pasta salad"]},
+
+{meal:"Spaghetti w/ Meat Sauce",side:"Garlic Bread",style:"regular",items:["Ground beef","Spaghetti","Pasta sauce","Bread"]},
+
+{meal:"Spaghetti w/ Meatballs",side:"Garlic Bread",style:"regular",items:["Meatballs","Spaghetti","Pasta sauce","Bread"]},
+
+{meal:"Fajitas",side:"Mexican Rice",style:"regular",items:["Chicken","Peppers","Tortillas","Rice"]},
+
+{meal:"Hibachi",side:"Fried Rice",style:"regular",items:["Chicken","Rice","Soy sauce","Vegetables"]},
+
+{meal:"Chicken & Yellow Rice",side:"Green Beans",style:"regular",items:["Chicken","Yellow rice","Green beans"]},
+
+{meal:"Chef Salad",side:"Biscuits",style:"quick",items:["Salad mix","Ham","Turkey","Eggs","Cheese","Biscuits"]},
+
+{meal:"Caesar Salad w/ Grilled Chicken",side:"Breadsticks",style:"quick",items:["Chicken breast","Caesar dressing","Salad mix","Breadsticks"]},
+
+{meal:"Hamburger Helper",side:"Garden Salad",style:"quick",items:["Ground beef","Hamburger helper","Salad mix"]},
+
+{meal:"Grilled Chicken Sandwiches",side:"Pasta Salad",style:"grill",items:["Chicken breast","Sandwich buns","Lettuce","Tomatoes","Pasta salad"]},
+
+{meal:"Philly Cheesesteaks",side:"French Fries",style:"regular",items:["Steak","Hoagie rolls","Onions","Cheese","Potatoes"]}
+
+],
+
+weekend: [
+
+{meal:"Steak",side:"Baked Beans",style:"grill",items:["Steak","Baked beans"]},
+
+{meal:"Ribs",side:"Mac & Cheese",style:"grill",items:["Ribs","Mac & cheese","BBQ sauce"]},
+
+{meal:"Shrimp Boil",side:"Hush Puppies",style:"regular",items:["Shrimp","Sausage","Corn","Potatoes","Hush puppies"]},
+
+{meal:"Roast (Slow Cooker)",side:"Mashed Potatoes",style:"slowcooker",items:["Roast","Potatoes","Carrots"]},
+
+{meal:"Chicken & Dumplings",side:"Cornbread",style:"slowcooker",items:["Chicken","Dumplings","Cornbread mix"]},
+
+{meal:"Pork Chops",side:"Fried Okra",style:"grill",items:["Pork chops","Okra"]},
+
+{meal:"Pork Tenderloin",side:"Sweet Potato Casserole",style:"regular",items:["Pork tenderloin","Sweet potatoes"]},
+
+{meal:"Meatloaf",side:"Green Beans",style:"regular",items:["Ground beef","Green beans","Breadcrumbs"]},
+
+{meal:"Hamburger Steaks",side:"Mashed Potatoes",style:"regular",items:["Ground beef","Potatoes"]},
+
+{meal:"Cubed Steak",side:"Green Beans",style:"regular",items:["Cubed steak","Green beans"]},
+
+{meal:"Chicken Parm",side:"Garden Salad",style:"regular",items:["Chicken","Pasta sauce","Mozzarella","Salad mix"]},
+
+{meal:"Alice Springs Chicken",side:"Baked Potatoes",style:"regular",items:["Chicken breast","Bacon","Cheese","Potatoes"]},
+
+{meal:"French Onion Chicken",side:"Rice",style:"regular",items:["Chicken breast","Onion soup mix","Rice"]},
+
+{meal:"Chicken Pot Pie",side:"Biscuits",style:"regular",items:["Chicken","Pie crust","Mixed vegetables"]},
+
+{meal:"Chili",side:"Cornbread",style:"slowcooker",items:["Ground beef","Beans","Tomato sauce","Cornbread mix"]},
+
+{meal:"BBQ Pork",side:"Coleslaw",style:"slowcooker",items:["Pork shoulder","BBQ sauce","Coleslaw mix"]}
+
+]
+
+
 };
 
 const DEFAULT_TAKEOUT = [
