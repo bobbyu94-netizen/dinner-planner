@@ -122,7 +122,7 @@ plan.forEach(d=>{
 
 html+="<div class='day'>"
 html+="<h3>"+d.day+"</h3>"
-html+="<div class='label'>"+d.note+"</div>"
+
 
 if(d.takeout){
 
@@ -130,11 +130,8 @@ html+="<div class='meal'>TAKEOUT</div>"
 
 }else{
 
-html+="<div class='label'>Meal</div>"
-html+="<div class='meal'>"+d.data.meal+"</div>"
-
-html+="<div class='label'>Side</div>"
-html+="<div class='side'>"+d.data.side+"</div>"
+html+="<div class='meal'>🍽 "+d.data.meal+"</div>"
+html+="<div class='side'>🥗 "+d.data.side+"</div>"
 
 d.data.items.forEach(i=>grocery.add(i))
 
