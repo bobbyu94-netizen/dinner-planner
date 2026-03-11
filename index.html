@@ -112,7 +112,6 @@ border:1px solid #ddd;
 <hr>
 
 <h3>Existing Meals</h3>
-
 <div id="mealList"></div>
 
 <hr>
@@ -128,47 +127,31 @@ border:1px solid #ddd;
 
 <script>
 
-const DEFAULT_MEALS = {
+const DEFAULT_MEALS={
 
-weekday: [
-
+weekday:[
 {meal:"Tacos",side:"Mexican Rice",items:["Ground beef","Taco shells","Lettuce","Tomatoes","Rice"]},
-
-{meal:"Chicken Alfredo",side:"Garden Salad",items:["Chicken breast","Fettuccine","Alfredo sauce","Salad mix"]},
-
-{meal:"Sloppy Joes",side:"Coleslaw",items:["Ground beef","Sloppy joe sauce","Burger buns","Coleslaw mix"]},
-
-{meal:"Chicken Quesadillas",side:"Mexican Rice",items:["Chicken","Tortillas","Cheese","Rice"]},
-
+{meal:"Chicken Alfredo",side:"Garden Salad",items:["Chicken breast","Fettuccine","Alfredo sauce"]},
+{meal:"Sloppy Joes",side:"Coleslaw",items:["Ground beef","Sloppy joe sauce","Burger buns"]},
+{meal:"Chicken Quesadillas",side:"Mexican Rice",items:["Chicken","Tortillas","Cheese"]},
 {meal:"BLTs",side:"Pasta Salad",items:["Bacon","Bread","Lettuce","Tomatoes"]},
-
-{meal:"Spaghetti w/ Meat Sauce",side:"Garlic Bread",items:["Ground beef","Spaghetti","Pasta sauce","Bread"]},
-
-{meal:"Fajitas",side:"Mexican Rice",items:["Chicken","Peppers","Tortillas","Rice"]}
-
+{meal:"Spaghetti",side:"Garlic Bread",items:["Ground beef","Spaghetti","Pasta sauce"]},
+{meal:"Fajitas",side:"Mexican Rice",items:["Chicken","Peppers","Tortillas"]}
 ],
 
-weekend: [
-
+weekend:[
 {meal:"Steak",side:"Baked Beans",items:["Steak","Baked beans"]},
-
 {meal:"Ribs",side:"Mac & Cheese",items:["Ribs","Mac & cheese"]},
-
 {meal:"Roast",side:"Mashed Potatoes",items:["Roast","Potatoes","Carrots"]},
-
-{meal:"Chicken & Dumplings",side:"Cornbread",items:["Chicken","Dumplings","Cornbread mix"]},
-
+{meal:"Chicken & Dumplings",side:"Cornbread",items:["Chicken","Dumplings"]},
 {meal:"Pork Chops",side:"Fried Okra",items:["Pork chops","Okra"]},
-
 {meal:"Meatloaf",side:"Green Beans",items:["Ground beef","Green beans"]},
-
 {meal:"Chili",side:"Cornbread",items:["Ground beef","Beans","Tomato sauce"]}
-
 ]
 
 }
 
-const DEFAULT_TAKEOUT = [
+const DEFAULT_TAKEOUT=[
 "Chinese",
 "Pizza",
 "Wendy's",
@@ -184,16 +167,16 @@ function loadMeals(){
 return JSON.parse(localStorage.getItem("plannerMeals")||JSON.stringify(DEFAULT_MEALS))
 }
 
-function saveMeals(meals){
-localStorage.setItem("plannerMeals",JSON.stringify(meals))
+function saveMeals(m){
+localStorage.setItem("plannerMeals",JSON.stringify(m))
 }
 
 function loadTakeout(){
 return JSON.parse(localStorage.getItem("plannerTakeout")||JSON.stringify(DEFAULT_TAKEOUT))
 }
 
-function saveTakeout(list){
-localStorage.setItem("plannerTakeout",JSON.stringify(list))
+function saveTakeout(t){
+localStorage.setItem("plannerTakeout",JSON.stringify(t))
 }
 
 function r(arr){
@@ -210,35 +193,36 @@ function generate(){
 let meals=loadMeals()
 let takeout=loadTakeout()
 
-let usedMeals=[]
+let used=[]
 let plan=[]
 
 function pickUnique(pool){
 
-let available=pool.filter(m=>!usedMeals.includes(m.meal))
+let available=pool.filter(m=>!used.includes(m.meal))
 
 if(available.length===0) available=pool
 
 let chosen=r(available)
 
-usedMeals.push(chosen.meal)
+used.push(chosen.meal)
 
 return chosen
+
 }
 
-function addDay(day,type){
+function add(day,type){
 
-if(locked[day] && currentPlan.length){
+if(locked[day]&&currentPlan.length){
 
 let existing=currentPlan.find(d=>d.day===day)
 
 if(existing){
 plan.push(existing)
-if(existing.data) usedMeals.push(existing.data.meal)
+if(existing.data) used.push(existing.data.meal)
 return
 }
 
-
+}
 
 let data
 
@@ -249,40 +233,15 @@ plan.push({day,data})
 
 }
 
-addDay("Thursday","weekday")
-addDay("Friday","weekend")
-addDay("Saturday","weekend")
-addDay("Sunday","weekend")
-addDay("Monday","weekday")
-
-if(locked["Tuesday"] && currentPlan.length){
-
-let existing=currentPlan.find(d=>d.day==="Tuesday")
-
-if(existing) plan.push(existing)
-else plan.push({day:"Tuesday",takeout:r(takeout)})
-
-}else{
+add("Thursday","weekday")
+add("Friday","weekend")
+add("Saturday","weekend")
+add("Sunday","weekend")
+add("Monday","weekday")
 
 plan.push({day:"Tuesday",takeout:r(takeout)})
 
-}
-
-addDay("Wednesday","weekday")
-
-currentPlan=plan
-
-render()
-
-}
-
-plan.push({day:"Thursday",data:pick(meals.weekday)})
-plan.push({day:"Friday",data:pick(meals.weekend)})
-plan.push({day:"Saturday",data:pick(meals.weekend)})
-plan.push({day:"Sunday",data:pick(meals.weekend)})
-plan.push({day:"Monday",data:pick(meals.weekday)})
-plan.push({day:"Tuesday",takeout:r(takeout)})
-plan.push({day:"Wednesday",data:pick(meals.weekday)})
+add("Wednesday","weekday")
 
 currentPlan=plan
 
@@ -299,9 +258,6 @@ return "Meat"
 
 if(item.includes("lettuce")||item.includes("tomato")||item.includes("potato"))
 return "Produce"
-
-if(item.includes("rice")||item.includes("pasta")||item.includes("bread"))
-return "Pantry"
 
 return "Other"
 
@@ -380,7 +336,7 @@ let side=document.getElementById("mealSide").value
 let type=document.getElementById("mealType").value
 let items=document.getElementById("mealItems").value.split(",")
 
-if(editingMeal){
+if(editingMeal!=null){
 
 meals[type][editingMeal].meal=name
 meals[type][editingMeal].side=side
@@ -390,11 +346,7 @@ editingMeal=null
 
 }else{
 
-meals[type].push({
-meal:name,
-side:side,
-items:items
-})
+meals[type].push({meal:name,side:side,items:items})
 
 }
 
