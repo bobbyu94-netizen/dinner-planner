@@ -30,6 +30,7 @@ padding:16px;
 margin-bottom:14px;
 border:1px solid #e1e4ea;
 box-shadow:0 4px 10px rgba(0,0,0,.05);
+cursor:pointer;
 }
 
 .day h3{
@@ -51,7 +52,7 @@ margin-top:4px;
 .lock{
 font-size:12px;
 color:#888;
-margin-top:4px;
+margin-top:6px;
 }
 
 #grocery{
@@ -113,6 +114,7 @@ const weekendMeals=[
 ]
 
 let locked={}
+let currentPlan=[]
 
 function r(arr){
 return arr[Math.floor(Math.random()*arr.length)]
@@ -139,8 +141,11 @@ return r(options)
 }
 
 function toggleLock(day){
+
 locked[day]=!locked[day]
-generate()
+
+render()
+
 }
 
 function categorize(item){
@@ -163,16 +168,20 @@ return "Other"
 function generate(){
 
 let history=getHistory()
-
 let used=[]
-
-let grocery={}
-
-let plan=[]
 
 function add(day,type){
 
-if(locked[day] && plan.find(d=>d.day===day)) return
+if(locked[day] && currentPlan.length){
+
+let existing=currentPlan.find(d=>d.day===day)
+
+if(existing){
+plan.push(existing)
+return
+}
+
+}
 
 let data
 
@@ -185,6 +194,8 @@ plan.push({day,data})
 
 }
 
+let plan=[]
+
 add("Thursday","weekday")
 add("Friday","weekend")
 add("Saturday","weekend")
@@ -195,9 +206,23 @@ plan.push({day:"Tuesday",takeout:r(takeout)})
 
 add("Wednesday","weekday")
 
+currentPlan=plan
+
+history.push(...used)
+history=history.slice(-28)
+
+saveHistory(history)
+
+render()
+
+}
+
+function render(){
+
+let grocery={}
 let html=""
 
-plan.forEach(d=>{
+currentPlan.forEach(d=>{
 
 html+="<div class='day' onclick='toggleLock(\""+d.day+"\")'>"
 html+="<h3>"+d.day+"</h3>"
@@ -247,13 +272,9 @@ list+="</ul>"
 
 document.getElementById("grocery").innerHTML=list
 
-history.push(...used)
-
-history=history.slice(-28)
-
-saveHistory(history)
-
 }
+
+generate()
 
 </script>
 
