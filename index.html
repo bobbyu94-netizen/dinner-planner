@@ -210,10 +210,70 @@ function generate(){
 let meals=loadMeals()
 let takeout=loadTakeout()
 
+let usedMeals=[]
 let plan=[]
 
-function pick(pool){
-return r(pool)
+function pickUnique(pool){
+
+let available=pool.filter(m=>!usedMeals.includes(m.meal))
+
+if(available.length===0) available=pool
+
+let chosen=r(available)
+
+usedMeals.push(chosen.meal)
+
+return chosen
+}
+
+function addDay(day,type){
+
+if(locked[day] && currentPlan.length){
+
+let existing=currentPlan.find(d=>d.day===day)
+
+if(existing){
+plan.push(existing)
+if(existing.data) usedMeals.push(existing.data.meal)
+return
+}
+
+}
+
+let data
+
+if(type==="weekday") data=pickUnique(meals.weekday)
+if(type==="weekend") data=pickUnique(meals.weekend)
+
+plan.push({day,data})
+
+}
+
+addDay("Thursday","weekday")
+addDay("Friday","weekend")
+addDay("Saturday","weekend")
+addDay("Sunday","weekend")
+addDay("Monday","weekday")
+
+if(locked["Tuesday"] && currentPlan.length){
+
+let existing=currentPlan.find(d=>d.day==="Tuesday")
+
+if(existing) plan.push(existing)
+else plan.push({day:"Tuesday",takeout:r(takeout)})
+
+}else{
+
+plan.push({day:"Tuesday",takeout:r(takeout)})
+
+}
+
+addDay("Wednesday","weekday")
+
+currentPlan=plan
+
+render()
+
 }
 
 plan.push({day:"Thursday",data:pick(meals.weekday)})
