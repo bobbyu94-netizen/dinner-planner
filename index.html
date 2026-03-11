@@ -32,7 +32,7 @@ border:1px solid #e1e4ea;
 }
 
 .day h3{
-margin:0 0 6px 0;
+margin:0;
 }
 
 .meal{
@@ -72,6 +72,15 @@ margin-top:20px;
 
 <script>
 
+const takeout=[
+"Chinese",
+"Pizza",
+"Wendy's",
+"Mexican",
+"BBQ",
+"Subs"
+]
+
 const weekdayMeals=[
 {meal:"Tacos",side:"Mexican Rice",items:["Ground beef","Taco shells","Lettuce","Tomatoes"]},
 {meal:"Chicken Alfredo",side:"Garden Salad",items:["Chicken breast","Fettuccine","Alfredo sauce","Salad mix"]},
@@ -95,15 +104,52 @@ const weekendMeals=[
 {meal:"Cubed Steak",side:"Green Beans",items:["Cubed steak","Green beans"]}
 ]
 
-function randomMeal(arr,used){
+function r(arr){
+return arr[Math.floor(Math.random()*arr.length)]
+}
 
-let available=arr.filter(m=>!used.includes(m.meal))
+function getHistory(){
+return JSON.parse(localStorage.getItem("mealHistory")||"[]")
+}
 
-return available[Math.floor(Math.random()*available.length)]
+function saveHistory(history){
+localStorage.setItem("mealHistory",JSON.stringify(history))
+}
+
+function pickMeal(pool,history,used){
+
+let filtered=pool.filter(m=>
+!history.includes(m.meal) && !used.includes(m.meal)
+)
+
+if(filtered.length===0){
+filtered=pool
+}
+
+return r(filtered)
+
+}
+
+function categorize(item){
+
+item=item.toLowerCase()
+
+if(item.includes("beef")||item.includes("chicken")||item.includes("pork")||item.includes("steak")||item.includes("shrimp"))
+return "Meat"
+
+if(item.includes("lettuce")||item.includes("tomato")||item.includes("potato")||item.includes("carrot")||item.includes("pepper"))
+return "Produce"
+
+if(item.includes("sauce")||item.includes("mix")||item.includes("pasta")||item.includes("rice")||item.includes("bread"))
+return "Pantry"
+
+return "Other"
 
 }
 
 function generate(){
+
+let history=getHistory()
 
 let used=[]
 
@@ -111,25 +157,38 @@ let grocery={}
 
 let plan=[]
 
-plan.push({day:"Monday",data:randomMeal(weekdayMeals,used)})
-used.push(plan[0].data.meal)
+let mon=pickMeal(weekdayMeals,history,used)
+used.push(mon.meal)
 
-plan.push({day:"Tuesday",takeout:true})
+let wed=pickMeal(weekdayMeals,history,used)
+used.push(wed.meal)
 
-plan.push({day:"Wednesday",data:randomMeal(weekdayMeals,used)})
-used.push(plan[2].data.meal)
+let thu=pickMeal(weekdayMeals,history,used)
+used.push(thu.meal)
 
-plan.push({day:"Thursday",data:randomMeal(weekdayMeals,used)})
-used.push(plan[3].data.meal)
+let fri=pickMeal(weekendMeals,history,used)
+used.push(fri.meal)
 
-plan.push({day:"Friday",data:randomMeal(weekendMeals,used)})
-used.push(plan[4].data.meal)
+let sat=pickMeal(weekendMeals,history,used)
+used.push(sat.meal)
 
-plan.push({day:"Saturday",data:randomMeal(weekendMeals,used)})
-used.push(plan[5].data.meal)
+let sun=pickMeal(weekendMeals,history,used)
+used.push(sun.meal)
 
-plan.push({day:"Sunday",data:randomMeal(weekendMeals,used)})
-used.push(plan[6].data.meal)
+plan=[
+{day:"Monday",data:mon},
+{day:"Tuesday",takeout:r(takeout)},
+{day:"Wednesday",data:wed},
+{day:"Thursday",data:thu},
+{day:"Friday",data:fri},
+{day:"Saturday",data:sat},
+{day:"Sunday",data:sun}
+]
+
+used.forEach(m=>history.push(m))
+history=history.slice(-28)
+
+saveHistory(history)
 
 let html=""
 
@@ -140,7 +199,7 @@ html+="<h3>"+d.day+"</h3>"
 
 if(d.takeout){
 
-html+="<div class='meal'>TAKEOUT</div>"
+html+="<div class='meal'>🍔 "+d.takeout+"</div>"
 
 }else{
 
@@ -149,16 +208,7 @@ html+="<div class='side'>🥗 "+d.data.side+"</div>"
 
 d.data.items.forEach(i=>{
 
-let cat="Other"
-
-if(i.includes("beef")||i.includes("chicken")||i.includes("pork")||i.includes("steak")||i.includes("shrimp"))
-cat="Meat"
-
-else if(i.includes("lettuce")||i.includes("tomatoes")||i.includes("potatoes")||i.includes("carrots")||i.includes("peppers"))
-cat="Produce"
-
-else if(i.includes("sauce")||i.includes("mix")||i.includes("pasta")||i.includes("rice"))
-cat="Pantry"
+let cat=categorize(i)
 
 if(!grocery[cat]) grocery[cat]=[]
 
