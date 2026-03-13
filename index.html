@@ -15,18 +15,12 @@ padding:16px;
 button{
 padding:14px;
 font-size:16px;
-margin-bottom:10px;
+margin-bottom:12px;
 width:100%;
 border-radius:12px;
 border:none;
 background:#2f6fed;
 color:white;
-}
-
-.secondary{
-background:white;
-color:black;
-border:1px solid #ddd;
 }
 
 .day{
@@ -184,8 +178,8 @@ const TAKEOUT=[
 
 ]
 
-let locked={}
 let currentPlan=[]
+let locked={}
 
 function r(arr){
 return arr[Math.floor(Math.random()*arr.length)]
@@ -196,12 +190,7 @@ locked[day]=!locked[day]
 render()
 }
 
-function generate(){
-
-let used=[]
-let plan=[]
-
-function pickMeal(){
+function pickMeal(used){
 
 let available=MEALS.filter(m=>!used.includes(m.meal))
 
@@ -215,7 +204,7 @@ return chosen
 
 }
 
-function add(day){
+function addDay(plan,used,day){
 
 if(locked[day] && currentPlan.length){
 
@@ -229,7 +218,7 @@ return
 
 }
 
-let meal=pickMeal()
+let meal=pickMeal(used)
 
 let side=null
 
@@ -237,19 +226,32 @@ if(!meal.complete){
 side=r(SIDES)
 }
 
-plan.push({day,meal:meal.meal,side,complete:meal.complete})
+plan.push({
+day:day,
+meal:meal.meal,
+side:side,
+complete:meal.complete
+})
 
 }
 
-add("Thursday")
-add("Friday")
-add("Saturday")
-add("Sunday")
-add("Monday")
+function generate(){
 
-plan.push({day:"Tuesday",takeout:r(TAKEOUT)})
+let plan=[]
+let used=[]
 
-add("Wednesday")
+addDay(plan,used,"Thursday")
+addDay(plan,used,"Friday")
+addDay(plan,used,"Saturday")
+addDay(plan,used,"Sunday")
+addDay(plan,used,"Monday")
+
+plan.push({
+day:"Tuesday",
+takeout:r(TAKEOUT)
+})
+
+addDay(plan,used,"Wednesday")
 
 currentPlan=plan
 
@@ -295,9 +297,6 @@ html+="</div>"
 
 document.getElementById("planner").innerHTML=html
 
-
-// BUILD SHOPPING LIST
-
 let list=""
 
 if(meals.length){
@@ -328,7 +327,9 @@ document.getElementById("grocery").innerHTML=list
 
 }
 
-
-// INITIALIZE PLANNER
-
 generate()
+
+</script>
+
+</body>
+</html>
