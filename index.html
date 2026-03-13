@@ -285,7 +285,9 @@ sides.push(d.side)
 
 }
 
-if(locked[d.day]) html+="<div class='lock'>🔒 Locked</div>"
+if(locked[d.day]){
+html+="<div class='lock'>🔒 Locked</div>"
+}
 
 html+="</div>"
 
@@ -296,13 +298,19 @@ document.getElementById("planner").innerHTML=html
 
 // BUILD SHOPPING LIST
 
-let list="<h4>Meals</h4><ul>"
+let list=""
+
+if(meals.length){
+
+list+="<h4>Meals</h4><ul>"
 
 meals.forEach(m=>{
 list+="<li>"+m+"</li>"
 })
 
 list+="</ul>"
+
+}
 
 if(sides.length){
 
@@ -321,24 +329,6 @@ document.getElementById("grocery").innerHTML=list
 }
 
 
-
-
-
-if(locked[d.day]) html+="<div class='lock'>🔒 Locked</div>"
-
-html+="</div>"
-
-})
-
-document.getElementById("planner").innerHTML=html
-
-document.getElementById("grocery").innerHTML="Generated with meals and sides."
-
-}
+// INITIALIZE PLANNER
 
 generate()
-
-</script>
-
-</body>
-</html>
