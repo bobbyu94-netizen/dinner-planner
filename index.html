@@ -259,6 +259,67 @@ render()
 
 function render(){
 
+let html=""
+let meals=[]
+let sides=[]
+
+currentPlan.forEach(d=>{
+
+html+="<div class='day' onclick='toggleLock(\""+d.day+"\")'>"
+html+="<h3>"+d.day+"</h3>"
+
+if(d.takeout){
+
+html+="<div class='meal'>🍔 "+d.takeout+"</div>"
+
+}else{
+
+html+="<div class='meal'>🍽 "+d.meal+"</div>"
+
+meals.push(d.meal)
+
+if(d.side){
+html+="<div class='side'>🥗 "+d.side+"</div>"
+sides.push(d.side)
+}
+
+}
+
+if(locked[d.day]) html+="<div class='lock'>🔒 Locked</div>"
+
+html+="</div>"
+
+})
+
+document.getElementById("planner").innerHTML=html
+
+
+// BUILD SHOPPING LIST
+
+let list="<h4>Meals</h4><ul>"
+
+meals.forEach(m=>{
+list+="<li>"+m+"</li>"
+})
+
+list+="</ul>"
+
+if(sides.length){
+
+list+="<h4>Sides</h4><ul>"
+
+sides.forEach(s=>{
+list+="<li>"+s+"</li>"
+})
+
+list+="</ul>"
+
+}
+
+document.getElementById("grocery").innerHTML=list
+
+}
+
 let grocery={}
 let html=""
 
