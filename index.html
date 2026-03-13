@@ -320,27 +320,9 @@ document.getElementById("grocery").innerHTML=list
 
 }
 
-let grocery={}
-let html=""
 
-currentPlan.forEach(d=>{
 
-html+="<div class='day' onclick='toggleLock(\""+d.day+"\")'>"
-html+="<h3>"+d.day+"</h3>"
 
-if(d.takeout){
-
-html+="<div class='meal'>🍔 "+d.takeout+"</div>"
-
-}else{
-
-html+="<div class='meal'>🍽 "+d.meal+"</div>"
-
-if(d.side){
-html+="<div class='side'>🥗 "+d.side+"</div>"
-}
-
-}
 
 if(locked[d.day]) html+="<div class='lock'>🔒 Locked</div>"
 
