@@ -2,11 +2,11 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Umphlette Dinner Planner</title>
+<title>Dinner Planner</title>
 
 <style>
 body{font-family:-apple-system;background:#f6f7fb;padding:16px;}
-button{padding:14px;font-size:16px;width:100%;margin-bottom:12px;border-radius:12px;border:none;background:#2f6fed;color:white;}
+button{padding:14px;width:100%;margin-bottom:12px;border:none;border-radius:12px;background:#2f6fed;color:white;font-size:16px;}
 .day{background:white;padding:16px;margin-bottom:12px;border-radius:12px;cursor:pointer;}
 .meal{font-weight:600;font-size:18px;}
 .side{color:#444;margin-top:4px;}
@@ -30,40 +30,121 @@ button{padding:14px;font-size:16px;width:100%;margin-bottom:12px;border-radius:1
 
 <script>
 
-// ===================== DATA =====================
+// ================= MEALS =================
 
 const MEALS=[
+
+// Core meats
 {meal:"Meatloaf",items:["Ground beef","Breadcrumbs"],complete:false},
-{meal:"Tacos",items:["Ground beef","Taco shells"],complete:false},
+{meal:"Cubed Steak",items:["Cubed steak"],complete:false},
+{meal:"Hamburger Steaks",items:["Ground beef"],complete:false},
+{meal:"Smash Burgers",items:["Ground beef","Buns"],complete:false},
+{meal:"Hamburgers",items:["Ground beef","Buns"],complete:false},
+
+// Chicken
+{meal:"Chicken Wings",items:["Chicken wings"],complete:false},
+{meal:"Chicken Parm",items:["Chicken","Marinara","Cheese"],complete:false},
+{meal:"Grilled Chicken",items:["Chicken"],complete:false},
+{meal:"Grilled Chicken Sandwiches",items:["Chicken","Buns"],complete:false},
+{meal:"Alice Springs Chicken",items:["Chicken","Bacon","Cheese"],complete:false},
 {meal:"Chicken Alfredo",items:["Chicken","Pasta","Alfredo sauce"],complete:false},
-{meal:"Shrimp Boil",items:["Shrimp","Corn","Potatoes"],complete:true},
-{meal:"Steak",items:["Steak"],complete:false},
-{meal:"BLTs",items:["Bacon","Bread","Lettuce","Tomatoes"],complete:false},
+{meal:"Buffalo Chicken",items:["Chicken","Buffalo sauce"],complete:false},
+{meal:"Bruschetta Chicken",items:["Chicken","Tomatoes"],complete:false},
+{meal:"Lemon Pepper Chicken",items:["Chicken"],complete:false},
+{meal:"Smoked Chicken",items:["Chicken"],complete:false},
+{meal:"Chicken Bowls w Black Beans & Rice",items:["Chicken","Rice","Beans"],complete:true},
+
+// Pork
+{meal:"Pork Chops",items:["Pork chops"],complete:false},
+{meal:"Pork Tenderloin",items:["Pork"],complete:false},
+{meal:"BBQ Pork",items:["Pork","BBQ sauce"],complete:true},
+{meal:"Sausage",items:["Sausage"],complete:false},
+{meal:"Fried Potatoes w Jalapeno Sausage",items:["Sausage","Potatoes"],complete:false},
+
+// Pasta / Italian
+{meal:"Spaghetti w Meat Sauce",items:["Ground beef","Pasta","Sauce"],complete:false},
+{meal:"Spaghetti w Meatballs",items:["Meatballs","Pasta","Sauce"],complete:false},
+{meal:"Lasagna",items:["Ground beef","Pasta","Cheese"],complete:false},
+{meal:"Stuffed Shells",items:["Pasta","Cheese"],complete:false},
+{meal:"Shrimp Alfredo",items:["Shrimp","Pasta","Alfredo sauce"],complete:false},
+{meal:"Shrimp Pasta",items:["Shrimp","Pasta"],complete:false},
+
+// Mexican / quick
+{meal:"Tacos",items:["Ground beef","Taco shells"],complete:false},
 {meal:"Fajitas",items:["Chicken","Peppers","Tortillas"],complete:false},
-{meal:"Ribs",items:["Ribs","BBQ sauce"],complete:false},
-{meal:"Chili",items:["Ground beef","Beans","Tomato sauce"],complete:true}
+{meal:"Chicken Quesadillas",items:["Chicken","Tortillas","Cheese"],complete:false},
+
+// Sandwiches / quick
+{meal:"Sloppy Joes",items:["Ground beef","Buns"],complete:false},
+{meal:"BLTs",items:["Bacon","Bread","Lettuce","Tomatoes"],complete:false},
+{meal:"Philly Cheesesteaks",items:["Steak","Bread","Cheese"],complete:false},
+{meal:"Hot Dogs",items:["Hot dogs","Buns"],complete:false},
+{meal:"Chili Dogs",items:["Hot dogs","Chili"],complete:false},
+{meal:"Hamburger Helper",items:["Ground beef","Pasta mix"],complete:false},
+
+// Seafood
+{meal:"Shrimp Boil",items:["Shrimp","Corn","Potatoes"],complete:true},
+{meal:"Steamed Shrimp",items:["Shrimp"],complete:false},
+{meal:"Salmon",items:["Salmon"],complete:false},
+
+// Rice / Asian
+{meal:"Hibachi",items:["Chicken","Rice"],complete:false},
+{meal:"Chicken & Yellow Rice",items:["Chicken","Rice"],complete:true},
+
+// Comfort / slow
+{meal:"Roast",items:["Beef roast","Potatoes","Carrots"],complete:false},
+{meal:"Chicken & Dumplings",items:["Chicken","Dumplings"],complete:true},
+{meal:"Chili",items:["Ground beef","Beans"],complete:true},
+{meal:"Gumbo",items:["Sausage","Chicken","Rice"],complete:true},
+{meal:"Jambalaya",items:["Sausage","Chicken","Rice"],complete:true},
+{meal:"Veggie Soup",items:["Vegetables"],complete:true},
+{meal:"Hamburger Soup",items:["Ground beef","Vegetables"],complete:true},
+{meal:"Loaded Potato Soup",items:["Potatoes","Cheese"],complete:true},
+{meal:"Chicken Pot Pie",items:["Chicken","Vegetables"],complete:false},
+{meal:"French Onion Chicken",items:["Chicken","Onion soup mix"],complete:false},
+
+// Steak / grill
+{meal:"Steak",items:["Steak"],complete:false},
+{meal:"Ribs",items:["Ribs","BBQ sauce"],complete:false}
+
 ]
 
-// You can expand this list later with all your meals
+// ================= SIDES =================
 
 const SIDES=[
 {name:"Mashed Potatoes",items:["Potatoes","Butter","Milk"]},
 {name:"Mac & Cheese",items:["Macaroni","Cheese"]},
 {name:"Broccoli",items:["Broccoli"]},
 {name:"Mexican Rice",items:["Rice"]},
-{name:"Pasta Salad",items:["Pasta","Dressing"]}
+{name:"Black Beans",items:["Beans"]},
+{name:"Baked Beans",items:["Baked beans"]},
+{name:"Cornbread",items:["Cornbread mix"]},
+{name:"Pasta Salad",items:["Pasta","Dressing"]},
+{name:"Coleslaw",items:["Coleslaw mix"]},
+{name:"Asparagus",items:["Asparagus"]},
+{name:"Brussels Sprouts",items:["Brussels sprouts"]},
+{name:"Sweet Potatoes",items:["Sweet potatoes"]},
+{name:"French Fries",items:["Potatoes"]},
+{name:"Tater Tots",items:["Potatoes"]},
+{name:"Dirty Rice",items:["Rice"]},
+{name:"Wild Rice",items:["Rice"]},
+{name:"Side Salad",items:["Lettuce","Tomatoes"]}
 ]
+
+// ================= TAKEOUT =================
 
 const TAKEOUT=[
-"Chick-fil-A","McDonald's","Chinese","Wendy's"
+"McDonald's","Chick-fil-A","Chili's","Wendy's","Joey's",
+"Subs","Publix Chicken","Chinese","Mexican Food Truck","Slim Chickens"
 ]
 
-// ===================== STATE =====================
+// ================= STATE =================
 
 let currentPlan=[]
 let locked={}
 
-// store last 24 meals (≈4 weeks)
+// ================= MEMORY =================
+
 function getHistory(){
 return JSON.parse(localStorage.getItem("mealHistory")||"[]")
 }
@@ -72,7 +153,7 @@ function saveHistory(h){
 localStorage.setItem("mealHistory",JSON.stringify(h))
 }
 
-// ===================== HELPERS =====================
+// ================= HELPERS =================
 
 function r(arr){
 return arr[Math.floor(Math.random()*arr.length)]
@@ -96,9 +177,10 @@ options=MEALS
 let chosen=r(options)
 used.push(chosen.meal)
 return chosen
+
 }
 
-// ===================== GENERATE =====================
+// ================= GENERATE =================
 
 function generate(){
 
@@ -109,19 +191,15 @@ let history=getHistory()
 function add(day){
 
 if(locked[day] && currentPlan.length){
-
 let existing=currentPlan.find(d=>d.day===day)
-
 if(existing){
 plan.push(existing)
 used.push(existing.meal)
 return
 }
-
 }
 
 let meal=pickMeal(used,history)
-
 let side=null
 
 if(!meal.complete){
@@ -133,7 +211,7 @@ day,
 meal:meal.meal,
 mealItems:meal.items,
 side:side?.name,
-sideItems:side?.items || []
+sideItems:side?.items||[]
 })
 
 }
@@ -144,30 +222,44 @@ add("Saturday")
 add("Sunday")
 add("Monday")
 
-plan.push({
-day:"Tuesday",
-takeout:r(TAKEOUT)
-})
+plan.push({day:"Tuesday",takeout:r(TAKEOUT)})
 
 add("Wednesday")
 
 currentPlan=plan
 
-// save history (only meals)
-let newMeals=plan
-.filter(d=>!d.takeout)
-.map(d=>d.meal)
-
+let newMeals=plan.filter(d=>!d.takeout).map(d=>d.meal)
 history.push(...newMeals)
 history=history.slice(-24)
-
 saveHistory(history)
 
 render()
 
 }
 
-// ===================== RENDER =====================
+// ================= GROUPING =================
+
+function categorize(item){
+
+item=item.toLowerCase()
+
+if(item.includes("beef")||item.includes("chicken")||item.includes("pork")||item.includes("steak")||item.includes("shrimp")||item.includes("sausage"))
+return "Meat"
+
+if(item.includes("lettuce")||item.includes("tomato")||item.includes("potato")||item.includes("broccoli")||item.includes("corn")||item.includes("carrot"))
+return "Produce"
+
+if(item.includes("cheese")||item.includes("milk"))
+return "Dairy"
+
+if(item.includes("pasta")||item.includes("rice")||item.includes("bread")||item.includes("beans")||item.includes("sauce"))
+return "Pantry"
+
+return "Other"
+
+}
+
+// ================= RENDER =================
 
 function render(){
 
@@ -184,7 +276,6 @@ html+=`<div class="meal">🍔 ${d.takeout}</div>`
 }else{
 
 html+=`<div class="meal">🍽 ${d.meal}</div>`
-
 grocery.push(...d.mealItems)
 
 if(d.side){
@@ -202,21 +293,30 @@ html+=`</div>`
 
 document.getElementById("planner").innerHTML=html
 
-// REMOVE DUPLICATES
 let unique=[...new Set(grocery)]
+let groups={}
 
-// BUILD LIST
-let list="<ul>"
-unique.forEach(i=>{
+unique.forEach(item=>{
+let cat=categorize(item)
+if(!groups[cat]) groups[cat]=[]
+groups[cat].push(item)
+})
+
+let list=""
+
+for(let cat in groups){
+list+=`<h4>${cat}</h4><ul>`
+groups[cat].forEach(i=>{
 list+=`<li>${i}</li>`
 })
 list+="</ul>"
+}
 
 document.getElementById("grocery").innerHTML=list
 
 }
 
-// ===================== LOCK =====================
+// ================= LOCK =================
 
 function toggleLock(day){
 locked[day]=!locked[day]
