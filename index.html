@@ -5,66 +5,19 @@
 <title>Umphlette Dinner Planner</title>
 
 <style>
-
-body{
-font-family:-apple-system,system-ui;
-background:#f6f7fb;
-padding:16px;
-}
-
-button{
-padding:14px;
-font-size:16px;
-margin-bottom:12px;
-width:100%;
-border-radius:12px;
-border:none;
-background:#2f6fed;
-color:white;
-}
-
-.day{
-background:white;
-border-radius:14px;
-padding:16px;
-margin-bottom:14px;
-border:1px solid #e1e4ea;
-box-shadow:0 4px 10px rgba(0,0,0,.05);
-cursor:pointer;
-}
-
-.meal{
-font-size:18px;
-font-weight:600;
-margin-top:6px;
-}
-
-.side{
-font-size:16px;
-color:#444;
-margin-top:4px;
-}
-
-.lock{
-font-size:12px;
-color:#888;
-margin-top:6px;
-}
-
-.panel{
-background:white;
-border-radius:14px;
-padding:16px;
-border:1px solid #e1e4ea;
-margin-top:20px;
-}
-
+body{font-family:-apple-system;background:#f6f7fb;padding:16px;}
+button{padding:14px;font-size:16px;width:100%;margin-bottom:12px;border-radius:12px;border:none;background:#2f6fed;color:white;}
+.day{background:white;padding:16px;margin-bottom:12px;border-radius:12px;cursor:pointer;}
+.meal{font-weight:600;font-size:18px;}
+.side{color:#444;margin-top:4px;}
+.lock{font-size:12px;color:#888;margin-top:4px;}
+.panel{background:white;padding:16px;border-radius:12px;margin-top:20px;}
 </style>
 </head>
 
 <body>
 
-<h2>Umphlette Dinner Planner</h2>
+<h2>Dinner Planner</h2>
 
 <button onclick="generate()">Generate Week</button>
 
@@ -77,134 +30,83 @@ margin-top:20px;
 
 <script>
 
+// ===================== DATA =====================
+
 const MEALS=[
-
-{meal:"Chicken Wings"},
-{meal:"Meatloaf"},
-{meal:"Cubed Steak"},
-{meal:"Hamburger Steaks"},
-{meal:"Smash Burgers"},
-{meal:"Chicken Parm"},
-{meal:"Grilled Chicken"},
-{meal:"Roast"},
-{meal:"Chicken Quesadillas"},
-{meal:"Tacos"},
-{meal:"Pork Chops"},
-{meal:"Pork Tenderloin"},
-{meal:"Hamburgers"},
-{meal:"Grilled Chicken Sandwiches"},
-{meal:"Alice Springs Chicken"},
-{meal:"Spaghetti w Meat Sauce"},
-{meal:"Spaghetti w Meatballs"},
-{meal:"Sloppy Joes"},
-{meal:"Shrimp Boil",complete:true},
-{meal:"Buffalo Chicken"},
-{meal:"Fajitas"},
-{meal:"Hibachi"},
-{meal:"Chili",complete:true},
-{meal:"Chili Dogs"},
-{meal:"Sausage"},
-{meal:"Chicken & Dumplings",complete:true},
-{meal:"Chicken & Yellow Rice",complete:true},
-{meal:"Chef Salads"},
-{meal:"Veggie Soup",complete:true},
-{meal:"Philly Cheesesteaks"},
-{meal:"Caesar Salad w Grilled Chicken"},
-{meal:"Ribs"},
-{meal:"BBQ Pork",complete:true},
-{meal:"Steak"},
-{meal:"BLTs"},
-{meal:"Hamburger Soup",complete:true},
-{meal:"Chicken Pot Pie"},
-{meal:"French Onion Chicken"},
-{meal:"Loaded Potato Soup",complete:true},
-{meal:"Hot Dogs"},
-{meal:"Hamburger Helper"},
-{meal:"Chicken Alfredo"},
-{meal:"Shrimp Alfredo"},
-{meal:"Shrimp Pasta"},
-{meal:"Salmon"},
-{meal:"Gumbo",complete:true},
-{meal:"Jambalaya",complete:true},
-{meal:"Steamed Shrimp"},
-{meal:"Chicken Bowls w Black Beans & Rice",complete:true},
-{meal:"Fried Potatoes w Jalapeno Sausage"},
-{meal:"Lasagna"},
-{meal:"Stuffed Shells"},
-{meal:"Bruschetta Chicken"},
-{meal:"Lemon Pepper Chicken"},
-{meal:"Smoked Chicken"}
-
+{meal:"Meatloaf",items:["Ground beef","Breadcrumbs"],complete:false},
+{meal:"Tacos",items:["Ground beef","Taco shells"],complete:false},
+{meal:"Chicken Alfredo",items:["Chicken","Pasta","Alfredo sauce"],complete:false},
+{meal:"Shrimp Boil",items:["Shrimp","Corn","Potatoes"],complete:true},
+{meal:"Steak",items:["Steak"],complete:false},
+{meal:"BLTs",items:["Bacon","Bread","Lettuce","Tomatoes"],complete:false},
+{meal:"Fajitas",items:["Chicken","Peppers","Tortillas"],complete:false},
+{meal:"Ribs",items:["Ribs","BBQ sauce"],complete:false},
+{meal:"Chili",items:["Ground beef","Beans","Tomato sauce"],complete:true}
 ]
 
+// You can expand this list later with all your meals
+
 const SIDES=[
-
-"Asparagus",
-"Wild Rice",
-"Broccoli Cheddar Rice",
-"Mexican Rice",
-"Black Beans",
-"Baked Beans",
-"Mac & Cheese",
-"Mashed Potatoes",
-"Brussels Sprouts",
-"Fried Potatoes",
-"Side Salad",
-"Broccoli",
-"Cornbread",
-"Rice & Tomato Gravy",
-"French Fries",
-"Tater Tots",
-"Seasoned Italian Green Beans",
-"Dirty Rice",
-"Coleslaw",
-"Pasta Salad",
-"Sweet Potatoes"
-
+{name:"Mashed Potatoes",items:["Potatoes","Butter","Milk"]},
+{name:"Mac & Cheese",items:["Macaroni","Cheese"]},
+{name:"Broccoli",items:["Broccoli"]},
+{name:"Mexican Rice",items:["Rice"]},
+{name:"Pasta Salad",items:["Pasta","Dressing"]}
 ]
 
 const TAKEOUT=[
-
-"McDonald's",
-"Chick-fil-A",
-"Chili's",
-"Wendy's",
-"Joey's",
-"Subs",
-"Publix Chicken",
-"Chinese",
-"Mexican Food Truck",
-"Slim Chickens"
-
+"Chick-fil-A","McDonald's","Chinese","Wendy's"
 ]
+
+// ===================== STATE =====================
 
 let currentPlan=[]
 let locked={}
+
+// store last 24 meals (≈4 weeks)
+function getHistory(){
+return JSON.parse(localStorage.getItem("mealHistory")||"[]")
+}
+
+function saveHistory(h){
+localStorage.setItem("mealHistory",JSON.stringify(h))
+}
+
+// ===================== HELPERS =====================
 
 function r(arr){
 return arr[Math.floor(Math.random()*arr.length)]
 }
 
-function toggleLock(day){
-locked[day]=!locked[day]
-render()
+function pickMeal(used,history){
+
+let options=MEALS.filter(m=>
+!used.includes(m.meal) &&
+!history.includes(m.meal)
+)
+
+if(options.length===0){
+options=MEALS.filter(m=>!used.includes(m.meal))
 }
 
-function pickMeal(used){
+if(options.length===0){
+options=MEALS
+}
 
-let available=MEALS.filter(m=>!used.includes(m.meal))
-
-if(available.length===0) available=MEALS
-
-let chosen=r(available)
-
+let chosen=r(options)
 used.push(chosen.meal)
-
 return chosen
-
 }
 
-function addDay(plan,used,day){
+// ===================== GENERATE =====================
+
+function generate(){
+
+let used=[]
+let plan=[]
+let history=getHistory()
+
+function add(day){
 
 if(locked[day] && currentPlan.length){
 
@@ -218,7 +120,7 @@ return
 
 }
 
-let meal=pickMeal(used)
+let meal=pickMeal(used,history)
 
 let side=null
 
@@ -227,106 +129,101 @@ side=r(SIDES)
 }
 
 plan.push({
-day:day,
+day,
 meal:meal.meal,
-side:side,
-complete:meal.complete
+mealItems:meal.items,
+side:side?.name,
+sideItems:side?.items || []
 })
 
 }
 
-function generate(){
-
-let plan=[]
-let used=[]
-
-addDay(plan,used,"Thursday")
-addDay(plan,used,"Friday")
-addDay(plan,used,"Saturday")
-addDay(plan,used,"Sunday")
-addDay(plan,used,"Monday")
+add("Thursday")
+add("Friday")
+add("Saturday")
+add("Sunday")
+add("Monday")
 
 plan.push({
 day:"Tuesday",
 takeout:r(TAKEOUT)
 })
 
-addDay(plan,used,"Wednesday")
+add("Wednesday")
 
 currentPlan=plan
+
+// save history (only meals)
+let newMeals=plan
+.filter(d=>!d.takeout)
+.map(d=>d.meal)
+
+history.push(...newMeals)
+history=history.slice(-24)
+
+saveHistory(history)
 
 render()
 
 }
 
+// ===================== RENDER =====================
+
 function render(){
 
 let html=""
-let meals=[]
-let sides=[]
+let grocery=[]
 
 currentPlan.forEach(d=>{
 
-html+="<div class='day' onclick='toggleLock(\""+d.day+"\")'>"
-html+="<h3>"+d.day+"</h3>"
+html+=`<div class="day" onclick="toggleLock('${d.day}')">`
+html+=`<h3>${d.day}</h3>`
 
 if(d.takeout){
-
-html+="<div class='meal'>🍔 "+d.takeout+"</div>"
-
+html+=`<div class="meal">🍔 ${d.takeout}</div>`
 }else{
 
-html+="<div class='meal'>🍽 "+d.meal+"</div>"
+html+=`<div class="meal">🍽 ${d.meal}</div>`
 
-meals.push(d.meal)
+grocery.push(...d.mealItems)
 
 if(d.side){
-html+="<div class='side'>🥗 "+d.side+"</div>"
-sides.push(d.side)
+html+=`<div class="side">🥗 ${d.side}</div>`
+grocery.push(...d.sideItems)
 }
 
 }
 
-if(locked[d.day]){
-html+="<div class='lock'>🔒 Locked</div>"
-}
+if(locked[d.day]) html+=`<div class="lock">🔒 Locked</div>`
 
-html+="</div>"
+html+=`</div>`
 
 })
 
 document.getElementById("planner").innerHTML=html
 
-let list=""
+// REMOVE DUPLICATES
+let unique=[...new Set(grocery)]
 
-if(meals.length){
-
-list+="<h4>Meals</h4><ul>"
-
-meals.forEach(m=>{
-list+="<li>"+m+"</li>"
+// BUILD LIST
+let list="<ul>"
+unique.forEach(i=>{
+list+=`<li>${i}</li>`
 })
-
 list+="</ul>"
-
-}
-
-if(sides.length){
-
-list+="<h4>Sides</h4><ul>"
-
-sides.forEach(s=>{
-list+="<li>"+s+"</li>"
-})
-
-list+="</ul>"
-
-}
 
 document.getElementById("grocery").innerHTML=list
 
 }
 
+// ===================== LOCK =====================
+
+function toggleLock(day){
+locked[day]=!locked[day]
+render()
+}
+
+// INIT
 generate()
 
 </script>
