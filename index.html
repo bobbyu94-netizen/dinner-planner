@@ -318,8 +318,11 @@ function render(){
 onclick="toggleLock('${d.day}')"
 ontouchstart="startPress('${d.day}')"
 ontouchend="endPress()"
+ontouchcancel="endPress()"
 onmousedown="startPress('${d.day}')"
-onmouseup="endPress()">`
+onmouseup="endPress()"
+onmouseleave="endPress()"
+oncontextmenu="return false;">`
     html += `<h3>${d.day}</h3>`;
 
     if (d.takeout) {
