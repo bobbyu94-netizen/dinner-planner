@@ -178,10 +178,11 @@ function canUseProtein(meal, proteinCount){
 
 function pickMeal(usedMeals, history, proteinCount){
   let options = MEALS.filter(m =>
-    !usedMeals.includes(m.meal) &&
-    !history.includes(m.meal) &&
-    canUseProtein(m, proteinCount)
-  );
+  !usedMeals.includes(m.meal) &&
+  !history.includes(m.meal) &&
+  !blocked.includes(m.meal) &&
+  canUseProtein(m, proteinCount)
+)
 
   if (!options.length) {
     options = MEALS.filter(m =>
