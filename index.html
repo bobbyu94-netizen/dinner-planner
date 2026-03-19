@@ -354,15 +354,22 @@ function render(){
 
 function copyShareLink(){
 
-const id = "week_" + Date.now()
+try{
 
-localStorage.setItem(id, JSON.stringify(currentPlan))
+const json = JSON.stringify(currentPlan)
 
-const url = location.origin + location.pathname + "#id=" + id
+// encode safely
+const encoded = btoa(unescape(encodeURIComponent(json)))
+
+const url = location.origin + location.pathname + "#data=" + encoded
 
 navigator.clipboard.writeText(url)
 
-alert("Link copied. Open it on this device or send it 👍")
+alert("Share link copied 👍")
+
+}catch(e){
+alert("Error creating link")
+}
 
 }
 
@@ -371,25 +378,27 @@ function loadSharedWeek(){
 
 const hash = location.hash
 
-if(!hash.startsWith("#id=")) return false
-
-const id = hash.replace("#id=","")
-
-const data = localStorage.getItem(id)
-
-if(!data) return false
+if(!hash.startsWith("#data=")) return false
 
 try{
 
-currentPlan = JSON.parse(data)
+const encoded = hash.replace("#data=","")
 
+const json = decodeURIComponent(escape(atob(encoded)))
+
+const data = JSON.parse(json)
+
+if(Array.isArray(data)){
+currentPlan = data
 render()
-
 return true
+}
 
 }catch(e){
-return false
+console.log("Load failed", e)
 }
+
+return false
 
 }
 
