@@ -423,6 +423,99 @@ function toggleLock(day){
   render();
 }
 
+let pressTimer = null;
+
+function startPress(day){
+  pressTimer = setTimeout(() => {
+    openMenu(day);
+  }, 500);
+}
+
+function endPress(){
+  clearTimeout(pressTimer);
+}
+
+function openMenu(day){
+
+  const choice = prompt(
+`Choose an option:
+
+1 = ⭐ Favorite
+2 = 🚫 Skip (4 weeks)
+3 = 🔄 Regenerate Day`
+  );
+
+  if(choice === "1"){
+    favoriteMeal(day);
+  }
+  else if(choice === "2"){
+    skipMeal(day);
+  }
+  else if(choice === "3"){
+    regenerateDay(day);
+  }
+}
+
+function favoriteMeal(day){
+  const d = currentPlan.find(x => x.day === day);
+  if(!d || d.takeout) return;
+
+  if(!favorites.includes(d.meal)){
+    favorites.push(d.meal);
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }
+
+  alert(d.meal + " added to favorites ⭐");
+}
+
+function skipMeal(day){
+  const d = currentPlan.find(x => x.day === day);
+  if(!d || d.takeout) return;
+
+  if(!blocked.includes(d.meal)){
+    blocked.push(d.meal);
+    localStorage.setItem("blocked", JSON.stringify(blocked));
+  }
+
+  alert(d.meal + " skipped 🚫");
+}
+
+function regenerateDay(day){
+  let history = getHistory();
+  let proteinCount = {};
+
+  currentPlan.forEach(d => {
+    if(d.day !== day && d.meal){
+      let m = MEALS.find(x => x.meal === d.meal);
+      if(m && m.protein !== "mixed"){
+        proteinCount[m.protein] = (proteinCount[m.protein] || 0) + 1;
+      }
+    }
+  });
+
+  let usedMeals = currentPlan.map(d => d.meal).filter(Boolean);
+
+  let meal = pickMeal(usedMeals, history, proteinCount);
+
+  let side = null;
+  if(!meal.complete){
+    side = pickSide(meal.meal, meal.protein);
+  }
+
+  let index = currentPlan.findIndex(d => d.day === day);
+
+  currentPlan[index] = {
+    day,
+    meal: meal.meal,
+    items: meal.items,
+    side,
+    sideItems: side ? (SIDE_ITEMS[side] || []) : [],
+    complete: !!meal.complete
+  };
+
+  render();
+}
+
 if (!loadSharedWeek()) {
   generate();
 }
