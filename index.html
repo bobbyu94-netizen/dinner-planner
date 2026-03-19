@@ -431,41 +431,6 @@ function toggleLock(day){
 }
 
 
-// swap meals
-let temp = currentPlan[fromIndex]
-currentPlan[fromIndex] = currentPlan[toIndex]
-currentPlan[toIndex] = temp
-
-render()
-closeMenu()
-
-}
-
-
-  
-  let usedMeals = currentPlan.map(d => d.meal).filter(Boolean);
-
-  let meal = pickMeal(usedMeals, history, proteinCount);
-
-  let side = null;
-  if(!meal.complete){
-    side = pickSide(meal.meal, meal.protein);
-  }
-
-  let index = currentPlan.findIndex(d => d.day === day);
-
-  currentPlan[index] = {
-    day,
-    meal: meal.meal,
-    items: meal.items,
-    side,
-    sideItems: side ? (SIDE_ITEMS[side] || []) : [],
-    complete: !!meal.complete
-  };
-
-  render();
-}
-
 let pressTimer = null;
 let menuDay = null;
 
