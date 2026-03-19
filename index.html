@@ -199,6 +199,13 @@ function pickMeal(usedMeals, history, proteinCount){
     options = MEALS;
   }
 
+  // Favor favorites
+let favOptions = options.filter(m => favorites.includes(m.meal))
+
+if(favOptions.length && Math.random() < 0.6){
+  options = favOptions
+}
+  
   const chosen = r(options);
   usedMeals.push(chosen.meal);
 
