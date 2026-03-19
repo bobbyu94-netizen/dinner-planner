@@ -25,7 +25,7 @@ ul{margin:8px 0 14px 20px;}
 <h2>Dinner Planner</h2>
 
 <button onclick="generate()">Generate Week</button>
-<button onclick="showFavorites()">Manage Favorites</button>  
+<button onclick="showFavorites()">Manage Favorites</button>
 <button class="secondary" onclick="copyShareLink()">Copy Share Link</button>
 
 <div class="small">Tap any day card to lock or unlock it before generating again.</div>
@@ -430,84 +430,6 @@ function toggleLock(day){
   render();
 }
 
-let pressTimer = null;
-
-function startPress(day){
-  pressTimer = setTimeout(() => {
-    openMenu(day);
-  }, 1000);
-}
-
-function endPress(){
-  clearTimeout(pressTimer);
-}
-
-let menuDay = null
-
-function openMenu(day){
-  menuDay = day
-  document.getElementById("menu").style.display = "block"
-}
-
-function closeMenu(){
-  document.getElementById("menu").style.display = "none"
-}
-
-function favoriteMeal(day){
-  const d = currentPlan.find(x => x.day === day);
-  if(!d || d.takeout) return;
-
-  if(!favorites.includes(d.meal)){
-    favorites.push(d.meal);
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }
-
-  alert(d.meal + " added to favorites ⭐");
-  closeMenu()
-}
-
-function skipMeal(day){
-  const d = currentPlan.find(x => x.day === day);
-  if(!d || d.takeout) return;
-
-  if(!blocked.includes(d.meal)){
-    blocked.push(d.meal);
-    localStorage.setItem("blocked", JSON.stringify(blocked));
-  }
-
-  alert(d.meal + " skipped 🚫");
-  closeMenu()
-}
-
-function regenerateDay(day){
-  let history = getHistory();
-  let proteinCount = {};
-
-  currentPlan.forEach(d => {
-    if(d.day !== day && d.meal){
-      let m = MEALS.find(x => x.meal === d.meal);
-      if(m && m.protein !== "mixed"){
-        proteinCount[m.protein] = (proteinCount[m.protein] || 0) + 1;
-        closeMenu()
-      }
-    }
-  });
-
-function moveMeal(fromDay){
-
-let toDay = prompt("Move to which day? (Thursday–Wednesday)")
-
-if(!toDay) return
-
-toDay = toDay.trim()
-
-let fromIndex = currentPlan.findIndex(d=>d.day===fromDay)
-let toIndex = currentPlan.findIndex(d=>d.day===toDay)
-
-if(fromIndex === -1 || toIndex === -1){
-  alert("Invalid day")
-  return
-}
 
 // swap meals
 let temp = currentPlan[fromIndex]
@@ -519,34 +441,7 @@ closeMenu()
 
 }
 
-function showFavorites(){
 
-let html=""
-
-favorites.forEach(m=>{
-html += `<div style="padding:10px;border-bottom:1px solid #ddd;">
-${m}
-<button onclick="removeFavorite('${m}')">Remove</button>
-</div>`
-})
-
-document.getElementById("favoritesList").innerHTML = html
-document.getElementById("favoritesPanel").style.display = "block"
-
-}
-
-function closeFavorites(){
-document.getElementById("favoritesPanel").style.display = "none"
-}
-
-function removeFavorite(meal){
-
-favorites = favorites.filter(m=>m !== meal)
-localStorage.setItem("favorites", JSON.stringify(favorites))
-
-showFavorites()
-
-}
   
   let usedMeals = currentPlan.map(d => d.meal).filter(Boolean);
 
@@ -571,28 +466,177 @@ showFavorites()
   render();
 }
 
+let pressTimer = null;
+let menuDay = null;
+
+function startPress(day){
+  pressTimer = setTimeout(() => {
+    openMenu(day);
+  }, 1000);
+}
+
+function endPress(){
+  clearTimeout(pressTimer);
+}
+
+function openMenu(day){
+  menuDay = day;
+  document.getElementById("menu").style.display = "block";
+}
+
+function closeMenu(){
+  document.getElementById("menu").style.display = "none";
+}
+
+function favoriteMeal(day){
+  const d = currentPlan.find(x => x.day === day);
+  if(!d || d.takeout) return;
+
+  if(!favorites.includes(d.meal)){
+    favorites.push(d.meal);
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }
+
+  closeMenu();
+  alert(d.meal + " added to favorites ⭐");
+}
+
+function skipMeal(day){
+  const d = currentPlan.find(x => x.day === day);
+  if(!d || d.takeout) return;
+
+  if(!blocked.includes(d.meal)){
+    blocked.push(d.meal);
+    localStorage.setItem("blocked", JSON.stringify(blocked));
+  }
+
+  closeMenu();
+  alert(d.meal + " skipped 🚫");
+}
+
+function regenerateDay(day){
+  let history = getHistory();
+  let proteinCount = {};
+
+  currentPlan.forEach(d => {
+    if(d.day !== day && d.meal){
+      const m = MEALS.find(x => x.meal === d.meal);
+      if(m && m.protein !== "mixed"){
+        proteinCount[m.protein] = (proteinCount[m.protein] || 0) + 1;
+      }
+    }
+  });
+
+  const usedMeals = currentPlan
+    .filter(d => d.day !== day)
+    .map(d => d.meal)
+    .filter(Boolean);
+
+  const meal = pickMeal(usedMeals, history, proteinCount);
+  const side = meal.complete ? null : pickSide(meal.meal, meal.protein);
+
+  const index = currentPlan.findIndex(d => d.day === day);
+
+  currentPlan[index] = {
+    day,
+    meal: meal.meal,
+    items: meal.items,
+    side,
+    sideItems: side ? (SIDE_ITEMS[side] || []) : [],
+    complete: !!meal.complete
+  };
+
+  closeMenu();
+  render();
+}
+
+function moveMeal(fromDay){
+  const toDay = prompt("Move to which day? Enter: Thursday, Friday, Saturday, Sunday, Monday, Tuesday, or Wednesday");
+  if(!toDay) return;
+
+  const cleanedDay = toDay.trim();
+  const fromIndex = currentPlan.findIndex(d => d.day === fromDay);
+  const toIndex = currentPlan.findIndex(d => d.day === cleanedDay);
+
+  if(fromIndex === -1 || toIndex === -1){
+    alert("Invalid day.");
+    return;
+  }
+
+  // keep the day labels fixed, swap only the meal contents
+  const fromEntry = currentPlan[fromIndex];
+  const toEntry = currentPlan[toIndex];
+
+  const fromContent = {
+    takeout: fromEntry.takeout,
+    meal: fromEntry.meal,
+    items: fromEntry.items,
+    side: fromEntry.side,
+    sideItems: fromEntry.sideItems,
+    complete: fromEntry.complete
+  };
+
+  const toContent = {
+    takeout: toEntry.takeout,
+    meal: toEntry.meal,
+    items: toEntry.items,
+    side: toEntry.side,
+    sideItems: toEntry.sideItems,
+    complete: toEntry.complete
+  };
+
+  currentPlan[fromIndex] = { day: fromEntry.day, ...toContent };
+  currentPlan[toIndex] = { day: toEntry.day, ...fromContent };
+
+  closeMenu();
+  render();
+}
+
+function showFavorites(){
+  const panel = document.getElementById("favoritesPanel");
+  const list = document.getElementById("favoritesList");
+
+  if(!favorites.length){
+    list.innerHTML = "<p>No favorites yet.</p>";
+  } else {
+    list.innerHTML = favorites.map(m => `
+      <div style="padding:10px 0;border-bottom:1px solid #eee;">
+        ${m}
+        <button onclick="removeFavorite('${m.replace(/'/g, "\\'")}')" style="margin-top:8px;">Remove</button>
+      </div>
+    `).join("");
+  }
+
+  panel.style.display = "block";
+}
+
+function closeFavorites(){
+  document.getElementById("favoritesPanel").style.display = "none";
+}
+
+function removeFavorite(meal){
+  favorites = favorites.filter(m => m !== meal);
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+  showFavorites();
+}
+  
 if (!loadSharedWeek()) {
   generate();
 }
 </script>
 
-<div id="menu" style="display:none;position:fixed;bottom:0;left:0;width:100%;background:white;border-top-left-radius:16px;border-top-right-radius:16px;padding:16px;box-shadow:0 -4px 10px rgba(0,0,0,.2);">
+<div id="menu" style="display:none;position:fixed;left:0;right:0;bottom:0;background:white;border-top-left-radius:16px;border-top-right-radius:16px;padding:16px;box-shadow:0 -4px 16px rgba(0,0,0,.2);z-index:1000;">
+  <div onclick="favoriteMeal(menuDay)" style="padding:14px;border-bottom:1px solid #eee;">⭐ Favorite</div>
+  <div onclick="skipMeal(menuDay)" style="padding:14px;border-bottom:1px solid #eee;">🚫 Skip</div>
+  <div onclick="regenerateDay(menuDay)" style="padding:14px;border-bottom:1px solid #eee;">🔄 Regenerate</div>
+  <div onclick="moveMeal(menuDay)" style="padding:14px;border-bottom:1px solid #eee;">🔀 Move to another day</div>
+  <div onclick="closeMenu()" style="padding:14px;color:red;">Cancel</div>
+</div>
 
-<div onclick="favoriteMeal(menuDay)" style="padding:14px;">⭐ Favorite</div>
-<div onclick="skipMeal(menuDay)" style="padding:14px;">🚫 Skip</div>
-<div onclick="regenerateDay(menuDay)" style="padding:14px;">🔄 Regenerate</div>
-<div onclick="moveMeal(menuDay)" style="padding:14px;">🔀 Move to another day</div>
-<div onclick="closeMenu()" style="padding:14px;color:red;">Cancel</div>
-
-</div>  
-
-<div id="favoritesPanel" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:white;padding:20px;overflow:auto;">
-
-<h3>Favorites</h3>
-<div id="favoritesList"></div>
-
-<button onclick="closeFavorites()">Close</button>
-
+<div id="favoritesPanel" style="display:none;position:fixed;inset:0;background:white;padding:20px;overflow:auto;z-index:1001;">
+  <h3>Favorites</h3>
+  <div id="favoritesList"></div>
+  <button onclick="closeFavorites()">Close</button>
 </div>
   
 </body>
