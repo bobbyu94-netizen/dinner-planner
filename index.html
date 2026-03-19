@@ -34,10 +34,7 @@ ul{margin:8px 0 14px 20px;}
 </div>
 
 <script>
-// ================= FULL MEAL LIST =================
-
 const MEALS = [
-  // ground beef
   {meal:"Meatloaf", protein:"ground_beef", items:["Ground beef","Breadcrumbs"]},
   {meal:"Hamburger Steaks", protein:"ground_beef", items:["Ground beef"]},
   {meal:"Smash Burgers", protein:"ground_beef", items:["Ground beef","Buns"]},
@@ -49,13 +46,11 @@ const MEALS = [
   {meal:"Hamburger Soup", protein:"ground_beef", items:["Ground beef","Mixed vegetables"], complete:true},
   {meal:"Lasagna", protein:"ground_beef", items:["Ground beef","Pasta","Cheese"]},
 
-  // beef
   {meal:"Cubed Steak", protein:"beef", items:["Cubed steak"]},
   {meal:"Roast", protein:"beef", items:["Beef roast","Potatoes","Carrots"]},
   {meal:"Steak", protein:"beef", items:["Steak"]},
   {meal:"Philly Cheesesteaks", protein:"beef", items:["Steak","Bread","Cheese"]},
 
-  // chicken
   {meal:"Chicken Wings", protein:"chicken", items:["Chicken wings"]},
   {meal:"Chicken Parm", protein:"chicken", items:["Chicken","Marinara","Cheese"]},
   {meal:"Grilled Chicken", protein:"chicken", items:["Chicken"]},
@@ -74,7 +69,6 @@ const MEALS = [
   {meal:"Chicken Bowls w Black Beans & Rice", protein:"chicken", items:["Chicken","Rice","Black beans"], complete:true},
   {meal:"Caesar Salad w Grilled Chicken", protein:"chicken", items:["Chicken","Lettuce","Caesar dressing"]},
 
-  // pork
   {meal:"Pork Chops", protein:"pork", items:["Pork chops"]},
   {meal:"Pork Tenderloin", protein:"pork", items:["Pork tenderloin"]},
   {meal:"BBQ Pork", protein:"pork", items:["Pork","BBQ sauce"], complete:true},
@@ -84,14 +78,12 @@ const MEALS = [
   {meal:"Hot Dogs", protein:"pork", items:["Hot dogs","Buns"]},
   {meal:"Chili Dogs", protein:"pork", items:["Hot dogs","Chili"]},
 
-  // seafood
   {meal:"Shrimp Boil", protein:"seafood", items:["Shrimp","Corn","Potatoes"], complete:true},
   {meal:"Steamed Shrimp", protein:"seafood", items:["Shrimp"]},
   {meal:"Salmon", protein:"seafood", items:["Salmon"]},
   {meal:"Shrimp Alfredo", protein:"seafood", items:["Shrimp","Pasta","Alfredo sauce"]},
   {meal:"Shrimp Pasta", protein:"seafood", items:["Shrimp","Pasta"]},
 
-  // mixed / not counted
   {meal:"Chili", protein:"mixed", items:["Ground beef","Beans"], complete:true},
   {meal:"Gumbo", protein:"mixed", items:["Chicken","Sausage","Rice"], complete:true},
   {meal:"Jambalaya", protein:"mixed", items:["Chicken","Sausage","Rice"], complete:true},
@@ -101,12 +93,8 @@ const MEALS = [
   {meal:"Hibachi", protein:"mixed", items:["Chicken","Rice","Vegetables"]},
   {meal:"Chef Salads", protein:"mixed", items:["Lettuce","Ham","Turkey","Eggs"]},
   {meal:"Stuffed Shells", protein:"mixed", items:["Pasta","Cheese"]},
-
-  // other preserved items
   {meal:"BLTs", protein:"mixed", items:["Bacon","Bread","Lettuce","Tomatoes"]}
 ];
-
-// ================= SIDES =================
 
 const SIDE_ITEMS = {
   "Asparagus":["Asparagus"],
@@ -132,7 +120,6 @@ const SIDE_ITEMS = {
   "Sweet Potatoes":["Sweet potatoes"]
 };
 
-// smart pairing by protein/type
 const SIDE_GROUPS = {
   ground_beef:["Mac & Cheese","French Fries","Tater Tots","Pasta Salad","Side Salad"],
   beef:["Mashed Potatoes","Asparagus","Sweet Potatoes","Seasoned Italian Green Beans","Side Salad"],
@@ -142,7 +129,6 @@ const SIDE_GROUPS = {
   mixed:[]
 };
 
-// specific overrides where a meal has better side fits than generic protein logic
 const SIDE_OVERRIDES = {
   "Tacos":["Mexican Rice","Black Beans"],
   "Fajitas":["Mexican Rice","Black Beans"],
@@ -163,19 +149,13 @@ const SIDE_OVERRIDES = {
   "Meatloaf":["Mashed Potatoes","Seasoned Italian Green Beans","Mac & Cheese"]
 };
 
-// ================= TAKEOUT =================
-
 const TAKEOUT = [
   "McDonald's","Chick-fil-A","Chili's","Wendy's","Joey's",
   "Subs","Publix Chicken","Chinese","Mexican Food Truck","Slim Chickens"
 ];
 
-// ================= STATE =================
-
 let currentPlan = [];
 let locked = {};
-
-// ================= MEMORY =================
 
 function getHistory(){
   return JSON.parse(localStorage.getItem("mealHistory") || "[]");
@@ -184,10 +164,8 @@ function saveHistory(h){
   localStorage.setItem("mealHistory", JSON.stringify(h));
 }
 
-// ================= HELPERS =================
-
 function r(arr){
-  return arr[Math.floor(Math.random()*arr.length)];
+  return arr[Math.floor(Math.random() * arr.length)];
 }
 
 function canUseProtein(meal, proteinCount){
@@ -232,8 +210,6 @@ function pickSide(mealName, protein){
   if (!pool.length) return null;
   return r(pool);
 }
-
-// ================= GENERATE =================
 
 function generate(){
   const usedMeals = [];
@@ -291,8 +267,6 @@ function generate(){
   render();
 }
 
-// ================= GROUPING =================
-
 function categorize(item){
   const s = item.toLowerCase();
 
@@ -323,8 +297,6 @@ function categorize(item){
 
   return "Other";
 }
-
-// ================= RENDER =================
 
 function render(){
   let html = "";
@@ -380,22 +352,24 @@ function render(){
   document.getElementById("grocery").innerHTML = list || "<div class='small'>No items yet.</div>";
 }
 
-// ================= SHARE =================
-
 function copyShareLink(){
-  const payload = encodeURIComponent(btoa(JSON.stringify(currentPlan)));
-  const url = `${location.origin}${location.pathname}?week=${payload}`;
-  navigator.clipboard.writeText(url);
-  alert("Share link copied. Send it to Erica.");
+  try {
+    const payload = encodeURIComponent(JSON.stringify(currentPlan));
+    const url = `${location.origin}${location.pathname}#week=${payload}`;
+    navigator.clipboard.writeText(url);
+    alert("Share link copied. Send it to Erica.");
+  } catch (e) {
+    alert("Could not create share link.");
+  }
 }
 
 function loadSharedWeek(){
-  const params = new URLSearchParams(location.search);
-  const encoded = params.get("week");
-  if (!encoded) return false;
+  const hash = location.hash || "";
+  if (!hash.startsWith("#week=")) return false;
 
   try {
-    const decoded = JSON.parse(atob(decodeURIComponent(encoded)));
+    const encoded = hash.slice(6);
+    const decoded = JSON.parse(decodeURIComponent(encoded));
     if (Array.isArray(decoded) && decoded.length) {
       currentPlan = decoded;
       render();
@@ -406,14 +380,11 @@ function loadSharedWeek(){
   return false;
 }
 
-// ================= LOCK =================
-
 function toggleLock(day){
   locked[day] = !locked[day];
   render();
 }
 
-// INIT
 if (!loadSharedWeek()) {
   generate();
 }
