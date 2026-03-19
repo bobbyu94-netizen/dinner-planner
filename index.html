@@ -353,31 +353,44 @@ function render(){
 }
 
 function copyShareLink(){
-  try {
-    const payload = encodeURIComponent(JSON.stringify(currentPlan));
-    const url = `${location.origin}${location.pathname}#week=${payload}`;
-    navigator.clipboard.writeText(url);
-    alert("Share link copied. Send it to Erica.");
-  } catch (e) {
-    alert("Could not create share link.");
-  }
+
+const id = "week_" + Date.now()
+
+localStorage.setItem(id, JSON.stringify(currentPlan))
+
+const url = location.origin + location.pathname + "#id=" + id
+
+navigator.clipboard.writeText(url)
+
+alert("Link copied. Open it on this device or send it 👍")
+
 }
 
+
 function loadSharedWeek(){
-  const hash = location.hash || "";
-  if (!hash.startsWith("#week=")) return false;
 
-  try {
-    const encoded = hash.slice(6);
-    const decoded = JSON.parse(decodeURIComponent(encoded));
-    if (Array.isArray(decoded) && decoded.length) {
-      currentPlan = decoded;
-      render();
-      return true;
-    }
-  } catch (e) {}
+const hash = location.hash
 
-  return false;
+if(!hash.startsWith("#id=")) return false
+
+const id = hash.replace("#id=","")
+
+const data = localStorage.getItem(id)
+
+if(!data) return false
+
+try{
+
+currentPlan = JSON.parse(data)
+
+render()
+
+return true
+
+}catch(e){
+return false
+}
+
 }
 
 function toggleLock(day){
