@@ -157,6 +157,9 @@ const TAKEOUT = [
 let currentPlan = [];
 let locked = {};
 
+let favorites = JSON.parse(localStorage.getItem("favorites") || "[]")
+let blocked = JSON.parse(localStorage.getItem("blocked") || "[]")
+
 function getHistory(){
   return JSON.parse(localStorage.getItem("mealHistory") || "[]");
 }
