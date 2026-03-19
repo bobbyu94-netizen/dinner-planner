@@ -3,322 +3,420 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Dinner Planner</title>
-
 <style>
-body{font-family:-apple-system;background:#f6f7fb;padding:16px;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui;background:#f6f7fb;padding:16px;color:#111827;}
 button{padding:14px;width:100%;margin-bottom:10px;border:none;border-radius:12px;background:#2f6fed;color:white;font-size:16px;}
-.day{background:white;padding:16px;margin-bottom:12px;border-radius:12px;cursor:pointer;}
+button.secondary{background:white;color:#111827;border:1px solid #d1d5db;}
+.day{background:white;padding:16px;margin-bottom:12px;border-radius:12px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.05);}
 .meal{font-weight:600;font-size:18px;}
 .side{color:#444;margin-top:4px;}
 .lock{font-size:12px;color:#888;margin-top:4px;}
-.panel{background:white;padding:16px;border-radius:12px;margin-top:20px;}
+.panel{background:white;padding:16px;border-radius:12px;margin-top:20px;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+.small{font-size:13px;color:#6b7280;margin-top:4px;}
+h2,h3,h4{margin:0 0 10px 0;}
+ul{margin:8px 0 14px 20px;}
 </style>
 </head>
-
 <body>
 
 <h2>Dinner Planner</h2>
 
 <button onclick="generate()">Generate Week</button>
-<button onclick="copyWeek()">Copy Week</button>
+<button class="secondary" onclick="copyShareLink()">Copy Share Link</button>
+
+<div class="small">Tap any day card to lock or unlock it before generating again.</div>
 
 <div id="planner"></div>
 
 <div class="panel">
-<h3>Shopping List</h3>
-<div id="grocery"></div>
+  <h3>Shopping List</h3>
+  <div id="grocery"></div>
 </div>
 
 <script>
+// ================= FULL MEAL LIST =================
 
-// ================= MEALS =================
+const MEALS = [
+  // ground beef
+  {meal:"Meatloaf", protein:"ground_beef", items:["Ground beef","Breadcrumbs"]},
+  {meal:"Hamburger Steaks", protein:"ground_beef", items:["Ground beef"]},
+  {meal:"Smash Burgers", protein:"ground_beef", items:["Ground beef","Buns"]},
+  {meal:"Hamburgers", protein:"ground_beef", items:["Ground beef","Buns"]},
+  {meal:"Tacos", protein:"ground_beef", items:["Ground beef","Taco shells"]},
+  {meal:"Spaghetti w Meat Sauce", protein:"ground_beef", items:["Ground beef","Pasta","Pasta sauce"]},
+  {meal:"Sloppy Joes", protein:"ground_beef", items:["Ground beef","Buns","Sloppy joe sauce"]},
+  {meal:"Hamburger Helper", protein:"ground_beef", items:["Ground beef","Pasta mix"]},
+  {meal:"Hamburger Soup", protein:"ground_beef", items:["Ground beef","Mixed vegetables"], complete:true},
+  {meal:"Lasagna", protein:"ground_beef", items:["Ground beef","Pasta","Cheese"]},
 
-const MEALS=[
+  // beef
+  {meal:"Cubed Steak", protein:"beef", items:["Cubed steak"]},
+  {meal:"Roast", protein:"beef", items:["Beef roast","Potatoes","Carrots"]},
+  {meal:"Steak", protein:"beef", items:["Steak"]},
+  {meal:"Philly Cheesesteaks", protein:"beef", items:["Steak","Bread","Cheese"]},
 
-// Ground Beef
-{meal:"Meatloaf",protein:"ground_beef",items:["Ground beef","Breadcrumbs"]},
-{meal:"Hamburger Steaks",protein:"ground_beef",items:["Ground beef"]},
-{meal:"Smash Burgers",protein:"ground_beef",items:["Ground beef","Buns"]},
-{meal:"Hamburgers",protein:"ground_beef",items:["Ground beef","Buns"]},
-{meal:"Tacos",protein:"ground_beef",items:["Ground beef","Taco shells"]},
-{meal:"Spaghetti w Meat Sauce",protein:"ground_beef",items:["Ground beef","Pasta","Sauce"]},
-{meal:"Sloppy Joes",protein:"ground_beef",items:["Ground beef","Buns"]},
-{meal:"Chili Dogs",protein:"ground_beef",items:["Hot dogs","Chili"]},
-{meal:"Hamburger Helper",protein:"ground_beef",items:["Ground beef","Pasta mix"]},
-{meal:"Hamburger Soup",protein:"ground_beef",items:["Ground beef","Vegetables"],complete:true},
+  // chicken
+  {meal:"Chicken Wings", protein:"chicken", items:["Chicken wings"]},
+  {meal:"Chicken Parm", protein:"chicken", items:["Chicken","Marinara","Cheese"]},
+  {meal:"Grilled Chicken", protein:"chicken", items:["Chicken"]},
+  {meal:"Chicken Quesadillas", protein:"chicken", items:["Chicken","Tortillas","Cheese"]},
+  {meal:"Grilled Chicken Sandwiches", protein:"chicken", items:["Chicken","Buns"]},
+  {meal:"Alice Springs Chicken", protein:"chicken", items:["Chicken","Bacon","Cheese"]},
+  {meal:"Buffalo Chicken", protein:"chicken", items:["Chicken","Buffalo sauce"]},
+  {meal:"Fajitas", protein:"chicken", items:["Chicken","Peppers","Tortillas"]},
+  {meal:"Chicken & Yellow Rice", protein:"chicken", items:["Chicken","Rice"], complete:true},
+  {meal:"Chicken Pot Pie", protein:"chicken", items:["Chicken","Vegetables"]},
+  {meal:"French Onion Chicken", protein:"chicken", items:["Chicken","Onion soup mix"]},
+  {meal:"Chicken Alfredo", protein:"chicken", items:["Chicken","Pasta","Alfredo sauce"]},
+  {meal:"Bruschetta Chicken", protein:"chicken", items:["Chicken","Tomatoes"]},
+  {meal:"Lemon Pepper Chicken", protein:"chicken", items:["Chicken"]},
+  {meal:"Smoked Chicken", protein:"chicken", items:["Chicken"]},
+  {meal:"Chicken Bowls w Black Beans & Rice", protein:"chicken", items:["Chicken","Rice","Black beans"], complete:true},
+  {meal:"Caesar Salad w Grilled Chicken", protein:"chicken", items:["Chicken","Lettuce","Caesar dressing"]},
 
-// Beef
-{meal:"Cubed Steak",protein:"beef",items:["Cubed steak"]},
-{meal:"Roast",protein:"beef",items:["Beef roast","Potatoes","Carrots"]},
-{meal:"Steak",protein:"beef",items:["Steak"]},
-{meal:"Philly Cheesesteaks",protein:"beef",items:["Steak","Bread","Cheese"]},
+  // pork
+  {meal:"Pork Chops", protein:"pork", items:["Pork chops"]},
+  {meal:"Pork Tenderloin", protein:"pork", items:["Pork tenderloin"]},
+  {meal:"BBQ Pork", protein:"pork", items:["Pork","BBQ sauce"], complete:true},
+  {meal:"Ribs", protein:"pork", items:["Ribs","BBQ sauce"]},
+  {meal:"Sausage", protein:"pork", items:["Sausage"]},
+  {meal:"Fried Potatoes w Jalapeno Sausage", protein:"pork", items:["Sausage","Potatoes"]},
+  {meal:"Hot Dogs", protein:"pork", items:["Hot dogs","Buns"]},
+  {meal:"Chili Dogs", protein:"pork", items:["Hot dogs","Chili"]},
 
-// Chicken
-{meal:"Chicken Wings",protein:"chicken",items:["Chicken wings"]},
-{meal:"Chicken Parm",protein:"chicken",items:["Chicken","Marinara","Cheese"]},
-{meal:"Grilled Chicken",protein:"chicken",items:["Chicken"]},
-{meal:"Chicken Quesadillas",protein:"chicken",items:["Chicken","Tortillas","Cheese"]},
-{meal:"Grilled Chicken Sandwiches",protein:"chicken",items:["Chicken","Buns"]},
-{meal:"Alice Springs Chicken",protein:"chicken",items:["Chicken","Bacon","Cheese"]},
-{meal:"Buffalo Chicken",protein:"chicken",items:["Chicken","Buffalo sauce"]},
-{meal:"Fajitas",protein:"chicken",items:["Chicken","Peppers","Tortillas"]},
-{meal:"Chicken & Yellow Rice",protein:"chicken",items:["Chicken","Rice"],complete:true},
-{meal:"Chicken Pot Pie",protein:"chicken",items:["Chicken","Vegetables"]},
-{meal:"French Onion Chicken",protein:"chicken",items:["Chicken","Onion mix"]},
-{meal:"Chicken Alfredo",protein:"chicken",items:["Chicken","Pasta","Alfredo sauce"]},
-{meal:"Bruschetta Chicken",protein:"chicken",items:["Chicken","Tomatoes"]},
-{meal:"Lemon Pepper Chicken",protein:"chicken",items:["Chicken"]},
-{meal:"Smoked Chicken",protein:"chicken",items:["Chicken"]},
-{meal:"Chicken Bowls w Black Beans & Rice",protein:"chicken",items:["Chicken","Rice","Beans"],complete:true},
+  // seafood
+  {meal:"Shrimp Boil", protein:"seafood", items:["Shrimp","Corn","Potatoes"], complete:true},
+  {meal:"Steamed Shrimp", protein:"seafood", items:["Shrimp"]},
+  {meal:"Salmon", protein:"seafood", items:["Salmon"]},
+  {meal:"Shrimp Alfredo", protein:"seafood", items:["Shrimp","Pasta","Alfredo sauce"]},
+  {meal:"Shrimp Pasta", protein:"seafood", items:["Shrimp","Pasta"]},
 
-// Pork
-{meal:"Pork Chops",protein:"pork",items:["Pork chops"]},
-{meal:"Pork Tenderloin",protein:"pork",items:["Pork"]},
-{meal:"BBQ Pork",protein:"pork",items:["Pork","BBQ sauce"],complete:true},
-{meal:"Ribs",protein:"pork",items:["Ribs","BBQ sauce"]},
-{meal:"Sausage",protein:"pork",items:["Sausage"]},
-{meal:"Fried Potatoes w Jalapeno Sausage",protein:"pork",items:["Sausage","Potatoes"]},
+  // mixed / not counted
+  {meal:"Chili", protein:"mixed", items:["Ground beef","Beans"], complete:true},
+  {meal:"Gumbo", protein:"mixed", items:["Chicken","Sausage","Rice"], complete:true},
+  {meal:"Jambalaya", protein:"mixed", items:["Chicken","Sausage","Rice"], complete:true},
+  {meal:"Chicken & Dumplings", protein:"mixed", items:["Chicken","Dumplings"], complete:true},
+  {meal:"Veggie Soup", protein:"mixed", items:["Mixed vegetables"], complete:true},
+  {meal:"Loaded Potato Soup", protein:"mixed", items:["Potatoes","Cheese"], complete:true},
+  {meal:"Hibachi", protein:"mixed", items:["Chicken","Rice","Vegetables"]},
+  {meal:"Chef Salads", protein:"mixed", items:["Lettuce","Ham","Turkey","Eggs"]},
+  {meal:"Stuffed Shells", protein:"mixed", items:["Pasta","Cheese"]},
 
-// Seafood
-{meal:"Shrimp Boil",protein:"seafood",items:["Shrimp","Corn","Potatoes"],complete:true},
-{meal:"Steamed Shrimp",protein:"seafood",items:["Shrimp"]},
-{meal:"Salmon",protein:"seafood",items:["Salmon"]},
-{meal:"Shrimp Alfredo",protein:"seafood",items:["Shrimp","Pasta"]},
-{meal:"Shrimp Pasta",protein:"seafood",items:["Shrimp","Pasta"]},
-
-// Mixed (not counted)
-{meal:"Chili",protein:"mixed",items:["Ground beef","Beans"],complete:true},
-{meal:"Gumbo",protein:"mixed",items:["Chicken","Sausage","Rice"],complete:true},
-{meal:"Jambalaya",protein:"mixed",items:["Chicken","Sausage","Rice"],complete:true},
-{meal:"Chicken & Dumplings",protein:"mixed",items:["Chicken","Dumplings"],complete:true},
-{meal:"Veggie Soup",protein:"mixed",items:["Vegetables"],complete:true},
-{meal:"Loaded Potato Soup",protein:"mixed",items:["Potatoes","Cheese"],complete:true},
-
-// Other
-{meal:"BLTs",protein:"mixed",items:["Bacon","Bread","Lettuce","Tomatoes"]},
-{meal:"Chef Salads",protein:"mixed",items:["Lettuce","Ham","Turkey","Eggs"]},
-{meal:"Caesar Salad w Grilled Chicken",protein:"chicken",items:["Chicken","Lettuce"]},
-{meal:"Hot Dogs",protein:"pork",items:["Hot dogs","Buns"]},
-{meal:"Lasagna",protein:"ground_beef",items:["Ground beef","Pasta","Cheese"]},
-{meal:"Stuffed Shells",protein:"mixed",items:["Pasta","Cheese"]}
-
-]
+  // other preserved items
+  {meal:"BLTs", protein:"mixed", items:["Bacon","Bread","Lettuce","Tomatoes"]}
+];
 
 // ================= SIDES =================
 
-const SIDE_GROUPS={
-beef:["Mashed Potatoes","Asparagus","Sweet Potatoes"],
-ground_beef:["Mac & Cheese","French Fries","Tater Tots"],
-chicken:["Rice","Broccoli","Side Salad"],
-pork:["Coleslaw","Baked Beans","Mac & Cheese"],
-seafood:["Cornbread","Rice","Asparagus"],
-mixed:[]
-}
+const SIDE_ITEMS = {
+  "Asparagus":["Asparagus"],
+  "Wild Rice":["Rice"],
+  "Broccoli Cheddar Rice":["Rice","Cheese","Broccoli"],
+  "Mexican Rice":["Rice"],
+  "Black Beans":["Beans"],
+  "Baked Beans":["Baked beans"],
+  "Mac & Cheese":["Macaroni","Cheese"],
+  "Mashed Potatoes":["Potatoes","Butter","Milk"],
+  "Brussels Sprouts":["Brussels sprouts"],
+  "Fried Potatoes":["Potatoes"],
+  "Side Salad":["Lettuce","Tomatoes"],
+  "Broccoli":["Broccoli"],
+  "Cornbread":["Cornbread mix"],
+  "Rice & Tomato Gravy":["Rice","Tomato sauce"],
+  "French Fries":["Potatoes"],
+  "Tater Tots":["Potatoes"],
+  "Seasoned Italian Green Beans":["Green beans"],
+  "Dirty Rice":["Rice"],
+  "Coleslaw":["Coleslaw mix"],
+  "Pasta Salad":["Pasta","Dressing"],
+  "Sweet Potatoes":["Sweet potatoes"]
+};
 
-const SIDE_ITEMS={
-"Mashed Potatoes":["Potatoes","Butter","Milk"],
-"Asparagus":["Asparagus"],
-"Sweet Potatoes":["Sweet potatoes"],
-"Mac & Cheese":["Macaroni","Cheese"],
-"French Fries":["Potatoes"],
-"Tater Tots":["Potatoes"],
-"Rice":["Rice"],
-"Broccoli":["Broccoli"],
-"Side Salad":["Lettuce","Tomatoes"],
-"Coleslaw":["Coleslaw mix"],
-"Baked Beans":["Baked beans"],
-"Cornbread":["Cornbread mix"]
-}
+// smart pairing by protein/type
+const SIDE_GROUPS = {
+  ground_beef:["Mac & Cheese","French Fries","Tater Tots","Pasta Salad","Side Salad"],
+  beef:["Mashed Potatoes","Asparagus","Sweet Potatoes","Seasoned Italian Green Beans","Side Salad"],
+  chicken:["Rice & Tomato Gravy","Broccoli","Side Salad","Mexican Rice","Pasta Salad","Wild Rice"],
+  pork:["Coleslaw","Baked Beans","Mac & Cheese","Sweet Potatoes","Mashed Potatoes","Fried Potatoes"],
+  seafood:["Asparagus","Wild Rice","Cornbread","Broccoli","Pasta Salad"],
+  mixed:[]
+};
+
+// specific overrides where a meal has better side fits than generic protein logic
+const SIDE_OVERRIDES = {
+  "Tacos":["Mexican Rice","Black Beans"],
+  "Fajitas":["Mexican Rice","Black Beans"],
+  "Chicken Quesadillas":["Mexican Rice","Black Beans"],
+  "Spaghetti w Meat Sauce":["Pasta Salad","Side Salad","Broccoli"],
+  "Chicken Alfredo":["Broccoli","Side Salad","Pasta Salad"],
+  "Shrimp Alfredo":["Broccoli","Side Salad"],
+  "Shrimp Pasta":["Broccoli","Side Salad"],
+  "Ribs":["Baked Beans","Coleslaw","Mac & Cheese"],
+  "BBQ Pork":["Coleslaw","Baked Beans"],
+  "Hot Dogs":["French Fries","Baked Beans","Coleslaw"],
+  "Chili Dogs":["French Fries","Coleslaw"],
+  "Philly Cheesesteaks":["French Fries","Tater Tots","Side Salad"],
+  "BLTs":["Pasta Salad","French Fries","Tater Tots"],
+  "Salmon":["Asparagus","Wild Rice","Broccoli"],
+  "Steak":["Mashed Potatoes","Asparagus","Sweet Potatoes"],
+  "Roast":["Mashed Potatoes","Seasoned Italian Green Beans","Sweet Potatoes"],
+  "Meatloaf":["Mashed Potatoes","Seasoned Italian Green Beans","Mac & Cheese"]
+};
 
 // ================= TAKEOUT =================
 
-const TAKEOUT=["Chick-fil-A","McDonald's","Chinese","Wendy's"]
+const TAKEOUT = [
+  "McDonald's","Chick-fil-A","Chili's","Wendy's","Joey's",
+  "Subs","Publix Chicken","Chinese","Mexican Food Truck","Slim Chickens"
+];
 
 // ================= STATE =================
 
-let currentPlan=[]
-let locked={}
+let currentPlan = [];
+let locked = {};
 
-// ================= HISTORY =================
+// ================= MEMORY =================
 
 function getHistory(){
-return JSON.parse(localStorage.getItem("mealHistory")||"[]")
+  return JSON.parse(localStorage.getItem("mealHistory") || "[]");
 }
-
 function saveHistory(h){
-localStorage.setItem("mealHistory",JSON.stringify(h))
+  localStorage.setItem("mealHistory", JSON.stringify(h));
 }
 
 // ================= HELPERS =================
 
-function r(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function r(arr){
+  return arr[Math.floor(Math.random()*arr.length)];
+}
+
+function canUseProtein(meal, proteinCount){
+  if (meal.protein === "mixed") return true;
+  return (proteinCount[meal.protein] || 0) < 3;
+}
+
+function pickMeal(usedMeals, history, proteinCount){
+  let options = MEALS.filter(m =>
+    !usedMeals.includes(m.meal) &&
+    !history.includes(m.meal) &&
+    canUseProtein(m, proteinCount)
+  );
+
+  if (!options.length) {
+    options = MEALS.filter(m =>
+      !usedMeals.includes(m.meal) &&
+      canUseProtein(m, proteinCount)
+    );
+  }
+
+  if (!options.length) {
+    options = MEALS.filter(m => !usedMeals.includes(m.meal));
+  }
+
+  if (!options.length) {
+    options = MEALS;
+  }
+
+  const chosen = r(options);
+  usedMeals.push(chosen.meal);
+
+  if (chosen.protein !== "mixed") {
+    proteinCount[chosen.protein] = (proteinCount[chosen.protein] || 0) + 1;
+  }
+
+  return chosen;
+}
+
+function pickSide(mealName, protein){
+  const pool = SIDE_OVERRIDES[mealName] || SIDE_GROUPS[protein] || [];
+  if (!pool.length) return null;
+  return r(pool);
+}
 
 // ================= GENERATE =================
 
 function generate(){
+  const usedMeals = [];
+  const history = getHistory();
+  const proteinCount = {};
+  const plan = [];
 
-let used=[]
-let history=getHistory()
-let proteinCount={}
-let plan=[]
+  function add(day){
+    if (locked[day] && currentPlan.length) {
+      const existing = currentPlan.find(d => d.day === day);
+      if (existing) {
+        plan.push(existing);
+        if (!existing.takeout && existing.meal) {
+          usedMeals.push(existing.meal);
+        }
+        return;
+      }
+    }
 
-function canUse(meal){
+    const meal = pickMeal(usedMeals, history, proteinCount);
+    const side = meal.complete ? null : pickSide(meal.meal, meal.protein);
 
-if(meal.protein==="mixed") return true
+    plan.push({
+      day,
+      meal: meal.meal,
+      items: meal.items,
+      side,
+      sideItems: side ? (SIDE_ITEMS[side] || []) : [],
+      complete: !!meal.complete
+    });
+  }
 
-let count=proteinCount[meal.protein]||0
+  add("Thursday");
+  add("Friday");
+  add("Saturday");
+  add("Sunday");
+  add("Monday");
 
-return count<3
+  if (locked["Tuesday"] && currentPlan.length) {
+    const existing = currentPlan.find(d => d.day === "Tuesday");
+    if (existing) plan.push(existing);
+    else plan.push({day:"Tuesday", takeout:r(TAKEOUT)});
+  } else {
+    plan.push({day:"Tuesday", takeout:r(TAKEOUT)});
+  }
 
+  add("Wednesday");
+
+  currentPlan = plan;
+
+  const newMeals = plan.filter(d => !d.takeout).map(d => d.meal);
+  const newHistory = history.concat(newMeals).slice(-24);
+  saveHistory(newHistory);
+
+  render();
 }
 
-function pickMeal(){
+// ================= GROUPING =================
 
-let options=MEALS.filter(m=>
-!used.includes(m.meal) &&
-!history.includes(m.meal) &&
-canUse(m)
-)
+function categorize(item){
+  const s = item.toLowerCase();
 
-if(!options.length){
-options=MEALS.filter(m=>canUse(m))
-}
+  if (
+    s.includes("beef") || s.includes("chicken") || s.includes("pork") ||
+    s.includes("steak") || s.includes("shrimp") || s.includes("sausage") ||
+    s.includes("salmon") || s.includes("ribs") || s.includes("hot dogs") ||
+    s.includes("ham") || s.includes("turkey")
+  ) return "Meat";
 
-let chosen=r(options)
+  if (
+    s.includes("lettuce") || s.includes("tomato") || s.includes("potato") ||
+    s.includes("broccoli") || s.includes("corn") || s.includes("carrot") ||
+    s.includes("asparagus") || s.includes("sprouts") || s.includes("beans") ||
+    s.includes("green beans") || s.includes("vegetables")
+  ) return "Produce";
 
-used.push(chosen.meal)
+  if (
+    s.includes("cheese") || s.includes("milk") || s.includes("butter") ||
+    s.includes("alfredo")
+  ) return "Dairy";
 
-if(chosen.protein!=="mixed"){
-proteinCount[chosen.protein]=(proteinCount[chosen.protein]||0)+1
-}
+  if (
+    s.includes("pasta") || s.includes("rice") || s.includes("bread") ||
+    s.includes("shells") || s.includes("sauce") || s.includes("dressing") ||
+    s.includes("breadcrumbs") || s.includes("mix") || s.includes("dumplings")
+  ) return "Pantry";
 
-return chosen
-
-}
-
-function add(day){
-
-if(locked[day] && currentPlan.length){
-let existing=currentPlan.find(d=>d.day===day)
-if(existing){
-plan.push(existing)
-return
-}
-}
-
-let meal=pickMeal()
-
-let side=null
-
-if(!meal.complete){
-let group=SIDE_GROUPS[meal.protein]||[]
-if(group.length){
-side=r(group)
-}
-}
-
-plan.push({
-day,
-meal:meal.meal,
-items:meal.items,
-side,
-sideItems:side?SIDE_ITEMS[side]:[]
-})
-
-}
-
-add("Thursday")
-add("Friday")
-add("Saturday")
-add("Sunday")
-add("Monday")
-
-plan.push({day:"Tuesday",takeout:r(TAKEOUT)})
-
-add("Wednesday")
-
-currentPlan=plan
-
-let newMeals=plan.filter(d=>!d.takeout).map(d=>d.meal)
-history.push(...newMeals)
-history=history.slice(-24)
-saveHistory(history)
-
-render()
-
+  return "Other";
 }
 
 // ================= RENDER =================
 
 function render(){
+  let html = "";
+  const grocery = [];
 
-let html=""
-let grocery=[]
+  currentPlan.forEach(d => {
+    html += `<div class="day" onclick="toggleLock('${d.day}')">`;
+    html += `<h3>${d.day}</h3>`;
 
-currentPlan.forEach(d=>{
+    if (d.takeout) {
+      html += `<div class="meal">🍔 ${d.takeout}</div>`;
+    } else {
+      html += `<div class="meal">🍽 ${d.meal}</div>`;
+      grocery.push(...d.items);
 
-html+=`<div class="day" onclick="toggleLock('${d.day}')">`
-html+=`<h3>${d.day}</h3>`
+      if (d.side) {
+        html += `<div class="side">🥗 ${d.side}</div>`;
+        grocery.push(...d.sideItems);
+      }
+    }
 
-if(d.takeout){
-html+=`<div class="meal">🍔 ${d.takeout}</div>`
-}else{
-html+=`<div class="meal">🍽 ${d.meal}</div>`
-grocery.push(...d.items)
+    if (locked[d.day]) {
+      html += `<div class="lock">🔒 Locked</div>`;
+    }
 
-if(d.side){
-html+=`<div class="side">🥗 ${d.side}</div>`
-grocery.push(...d.sideItems)
-}
-}
+    html += `</div>`;
+  });
 
-if(locked[d.day]) html+=`<div class="lock">🔒 Locked</div>`
+  document.getElementById("planner").innerHTML = html;
 
-html+=`</div>`
+  const unique = [...new Set(grocery)];
+  const groups = {};
 
-})
+  unique.forEach(item => {
+    const cat = categorize(item);
+    if (!groups[cat]) groups[cat] = [];
+    groups[cat].push(item);
+  });
 
-document.getElementById("planner").innerHTML=html
+  const order = ["Produce","Meat","Dairy","Pantry","Other"];
+  let list = "";
 
-let unique=[...new Set(grocery)]
+  order.forEach(cat => {
+    if (!groups[cat] || !groups[cat].length) return;
+    groups[cat].sort((a,b) => a.localeCompare(b));
+    list += `<h4>${cat}</h4><ul>`;
+    groups[cat].forEach(i => {
+      list += `<li>${i}</li>`;
+    });
+    list += `</ul>`;
+  });
 
-let list="<ul>"
-unique.forEach(i=>list+=`<li>${i}</li>`)
-list+="</ul>"
-
-document.getElementById("grocery").innerHTML=list
-
+  document.getElementById("grocery").innerHTML = list || "<div class='small'>No items yet.</div>";
 }
 
 // ================= SHARE =================
 
-function copyWeek(){
-
-let text="Dinner Plan:\n\n"
-
-currentPlan.forEach(d=>{
-if(d.takeout){
-text+=`${d.day}: ${d.takeout}\n`
-}else{
-text+=`${d.day}: ${d.meal}${d.side?" + "+d.side:""}\n`
+function copyShareLink(){
+  const payload = encodeURIComponent(btoa(JSON.stringify(currentPlan)));
+  const url = `${location.origin}${location.pathname}?week=${payload}`;
+  navigator.clipboard.writeText(url);
+  alert("Share link copied. Send it to Erica.");
 }
-})
 
-navigator.clipboard.writeText(text)
+function loadSharedWeek(){
+  const params = new URLSearchParams(location.search);
+  const encoded = params.get("week");
+  if (!encoded) return false;
 
-alert("Copied! Send it to Erica 👍")
+  try {
+    const decoded = JSON.parse(atob(decodeURIComponent(encoded)));
+    if (Array.isArray(decoded) && decoded.length) {
+      currentPlan = decoded;
+      render();
+      return true;
+    }
+  } catch (e) {}
 
+  return false;
 }
 
 // ================= LOCK =================
 
 function toggleLock(day){
-locked[day]=!locked[day]
-render()
+  locked[day] = !locked[day];
+  render();
 }
 
-generate()
-
+// INIT
+if (!loadSharedWeek()) {
+  generate();
+}
 </script>
 
 </body>
