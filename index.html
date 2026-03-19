@@ -515,19 +515,72 @@ function regenerateDay(day){
   render();
 }
 
-function moveMeal(fromDay){
-  const toDay = prompt("Move to which day? Enter: Thursday, Friday, Saturday, Sunday, Monday, Tuesday, or Wednesday");
-  if(!toDay) return;
+let moveFromDay = null;
 
-  const cleanedDay = toDay.trim();
-  const fromIndex = currentPlan.findIndex(d => d.day === fromDay);
-  const toIndex = currentPlan.findIndex(d => d.day === cleanedDay);
+function moveMeal(fromDay){
+  moveFromDay = fromDay;
+
+  const days = currentPlan.map(d => d.day);
+
+  let html = "";
+
+  days.forEach(day => {
+    if(day === fromDay) return;
+
+    html += `<div style="padding:14px;border-bottom:1px solid #eee;cursor:pointer;"
+    onclick="confirmMove('${day}')">
+    ${day}
+    </div>`;
+  });
+
+  document.getElementById("moveList").innerHTML = html;
+  document.getElementById("movePanel").style.display = "block";
+
+  closeMenu();
+}
+
+function confirmMove(toDay){
+
+  const fromIndex = currentPlan.findIndex(d => d.day === moveFromDay);
+  const toIndex = currentPlan.findIndex(d => d.day === toDay);
 
   if(fromIndex === -1 || toIndex === -1){
-    alert("Invalid day.");
+    alert("Invalid move");
     return;
   }
 
+  const fromEntry = currentPlan[fromIndex];
+  const toEntry = currentPlan[toIndex];
+
+  const fromContent = {
+    takeout: fromEntry.takeout,
+    meal: fromEntry.meal,
+    items: fromEntry.items,
+    side: fromEntry.side,
+    sideItems: fromEntry.sideItems,
+    complete: fromEntry.complete
+  };
+
+  const toContent = {
+    takeout: toEntry.takeout,
+    meal: toEntry.meal,
+    items: toEntry.items,
+    side: toEntry.side,
+    sideItems: toEntry.sideItems,
+    complete: toEntry.complete
+  };
+
+  currentPlan[fromIndex] = { day: fromEntry.day, ...toContent };
+  currentPlan[toIndex] = { day: toEntry.day, ...fromContent };
+
+  closeMove();
+  render();
+}
+
+function closeMove(){
+  document.getElementById("movePanel").style.display = "none";
+}
+  
   // keep the day labels fixed, swap only the meal contents
   const fromEntry = currentPlan[fromIndex];
   const toEntry = currentPlan[toIndex];
@@ -602,6 +655,15 @@ if (!loadSharedWeek()) {
   <h3>Favorites</h3>
   <div id="favoritesList"></div>
   <button onclick="closeFavorites()">Close</button>
+</div>
+
+<div id="movePanel" style="display:none;position:fixed;inset:0;background:white;padding:20px;z-index:1002;overflow:auto;">
+
+<h3>Move meal to:</h3>
+<div id="moveList"></div>
+
+<button onclick="closeMove()">Cancel</button>
+
 </div>
   
 </body>
