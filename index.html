@@ -581,35 +581,7 @@ function closeMove(){
   document.getElementById("movePanel").style.display = "none";
 }
   
-  // keep the day labels fixed, swap only the meal contents
-  const fromEntry = currentPlan[fromIndex];
-  const toEntry = currentPlan[toIndex];
-
-  const fromContent = {
-    takeout: fromEntry.takeout,
-    meal: fromEntry.meal,
-    items: fromEntry.items,
-    side: fromEntry.side,
-    sideItems: fromEntry.sideItems,
-    complete: fromEntry.complete
-  };
-
-  const toContent = {
-    takeout: toEntry.takeout,
-    meal: toEntry.meal,
-    items: toEntry.items,
-    side: toEntry.side,
-    sideItems: toEntry.sideItems,
-    complete: toEntry.complete
-  };
-
-  currentPlan[fromIndex] = { day: fromEntry.day, ...toContent };
-  currentPlan[toIndex] = { day: toEntry.day, ...fromContent };
-
-  closeMenu();
-  render();
-}
-
+  
 function showFavorites(){
   const panel = document.getElementById("favoritesPanel");
   const list = document.getElementById("favoritesList");
