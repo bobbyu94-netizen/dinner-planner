@@ -329,17 +329,26 @@ onmouseleave="endPress()"
 oncontextmenu="return false;">`
     html += `<h3>${d.day}</h3>`;
 
-    if (d.takeout) {
-      html += `<div class="meal">🍔 ${d.takeout}</div>`;
-    } else {
-      html += `<div class="meal">🍽 ${d.meal}</div>`;
-      grocery.push(...d.items);
+  if (d.dateNight) {
+  html += `<div class="meal">❤️ Date Night</div>`;
+}
+else if (d.takeout) {
+  html += `<div class="meal">🍔 ${d.takeout}</div>`;
+}
+else {
+  html += `<div class="meal">🍽 ${d.meal}</div>`;
 
-      if (d.side) {
-        html += `<div class="side">🥗 ${d.side}</div>`;
-        grocery.push(...d.sideItems);
-      }
+  if(d.items){
+    grocery.push(...d.items);
+  }
+
+  if (d.side) {
+    html += `<div class="side">🥗 ${d.side}</div>`;
+    if(d.sideItems){
+      grocery.push(...d.sideItems);
     }
+  }
+}
 
     if (locked[d.day]) {
       html += `<div class="lock">🔒 Locked</div>`;
@@ -609,6 +618,21 @@ function removeFavorite(meal){
   localStorage.setItem("favorites", JSON.stringify(favorites));
   showFavorites();
 }
+
+  function setDateNight(day){
+
+  const index = currentPlan.findIndex(d => d.day === day);
+
+  if(index === -1) return;
+
+  currentPlan[index] = {
+    day,
+    dateNight: true
+  };
+
+  closeMenu();
+  render();
+}
   
 if (!loadSharedWeek()) {
   generate();
@@ -620,6 +644,7 @@ if (!loadSharedWeek()) {
   <div onclick="skipMeal(menuDay)" style="padding:14px;border-bottom:1px solid #eee;">🚫 Skip</div>
   <div onclick="regenerateDay(menuDay)" style="padding:14px;border-bottom:1px solid #eee;">🔄 Regenerate</div>
   <div onclick="moveMeal(menuDay)" style="padding:14px;border-bottom:1px solid #eee;">🔀 Move to another day</div>
+  <div onclick="setDateNight(menuDay)" style="padding:14px;border-bottom:1px solid #eee;">❤️ Date Night</div>
   <div onclick="closeMenu()" style="padding:14px;color:red;">Cancel</div>
 </div>
 
