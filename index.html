@@ -26,6 +26,7 @@ ul{margin:8px 0 14px 20px;}
 
 <button onclick="generate()">Generate Week</button>
 <button onclick="showFavorites()">Manage Favorites</button>
+<button onclick="exportToCalendar()">Add Week to Calendar</button>  
 <button class="secondary" onclick="copyShareLink()">Copy Share Link</button>
 
 <div class="small">Tap any day card to lock or unlock it before generating again.</div>
@@ -52,9 +53,7 @@ const MEALS = [
 
   {meal:"Cubed Steak", protein:"beef", items:["Cubed steak"]},
   {meal:"Roast", protein:"beef", items:["Beef roast","Potatoes","Carrots"]},
-  {meal:"Roast Beef Pussy", protein:"beef", items:["Large Labia","Potatoes","Carrots"]},
   {meal:"Steak", protein:"beef", items:["Steak"]},
-  {meal:"Tube Steak", protein:"beef", items:["Weiner"]},
   {meal:"Philly Cheesesteaks", protein:"beef", items:["Steak","Bread","Cheese"]},
 
   {meal:"Chicken Wings", protein:"chicken", items:["Chicken wings"]},
@@ -621,6 +620,90 @@ function removeFavorite(meal){
   showFavorites();
 }
 
+  function exportToCalendar(){
+
+let events = ""
+
+const startDate = getNextThursday()
+
+const dayOrder = ["Thursday","Friday","Saturday","Sunday","Monday","Tuesday","Wednesday"]
+
+currentPlan.forEach(d => {
+
+  let title = ""
+
+  if(d.dateNight){
+    title = "❤️ Date Night"
+  }
+  else if(d.takeout){
+    title = "Takeout: " + d.takeout
+  }
+  else{
+    title = d.meal
+    if(d.side){
+      title += " + " + d.side
+    }
+  }
+
+  const offset = dayOrder.indexOf(d.day)
+  const eventDate = new Date(startDate)
+  eventDate.setDate(startDate.getDate() + offset)
+
+  // Set 6 PM start
+  eventDate.setHours(18,0,0)
+
+  const endDate = new Date(eventDate)
+  endDate.setHours(19,0,0)
+
+  const start = formatICSDate(eventDate)
+  const end = formatICSDate(endDate)
+
+  events += `
+BEGIN:VEVENT
+SUMMARY:${title}
+DTSTART:${start}
+DTEND:${end}
+END:VEVENT
+`
+})
+
+const calendar = `BEGIN:VCALENDAR
+VERSION:2.0
+${events}
+END:VCALENDAR`
+
+const blob = new Blob([calendar], { type: "text/calendar" })
+const url = URL.createObjectURL(blob)
+
+const a = document.createElement("a")
+a.href = url
+a.download = "meal-plan.ics"
+a.click()
+
+URL.revokeObjectURL(url)
+
+}
+
+function getNextThursday(){
+
+const today = new Date()
+const day = today.getDay() // 0 = Sunday
+
+const THURSDAY = 4
+
+let diff = THURSDAY - day
+
+if(diff <= 0){
+  diff += 7
+}
+
+const nextThursday = new Date(today)
+nextThursday.setDate(today.getDate() + diff)
+nextThursday.setHours(0,0,0,0)
+
+return nextThursday
+}
+  
   function setDateNight(day){
 
   const index = currentPlan.findIndex(d => d.day === day);
