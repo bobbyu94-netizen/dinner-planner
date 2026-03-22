@@ -704,6 +704,10 @@ nextThursday.setHours(0,0,0,0)
 return nextThursday
 }
   
+  function formatICSDate(date){
+return date.toISOString().replace(/[-:]/g,"").split(".")[0] + "Z"
+}
+  
   function setDateNight(day){
 
   const index = currentPlan.findIndex(d => d.day === day);
