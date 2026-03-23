@@ -729,16 +729,26 @@ function closePantry(){
 
 function addPantryItem(){
 
-  const input = document.getElementById("pantryInput")
-  const value = input.value.trim()
+  const input = document.getElementById("pantryInput");
 
-  if(!value) return
+  if(!input){
+    alert("Pantry input not found");
+    return;
+  }
 
-  pantry.push(value)
-  localStorage.setItem("pantry", JSON.stringify(pantry))
+  const value = input.value ? input.value.trim() : "";
 
-  input.value = ""
-  showPantry()
+  if(!value){
+    alert("Please enter an item");
+    return;
+  }
+
+  pantry.push(value);
+  localStorage.setItem("pantry", JSON.stringify(pantry));
+
+  input.value = "";
+
+  showPantry();
 }
 
 function removePantryItem(item){
