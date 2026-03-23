@@ -731,24 +731,23 @@ function addPantryItem(){
 
   const input = document.getElementById("pantryInput");
 
-  if(!input){
-    alert("Pantry input not found");
-    return;
-  }
+  setTimeout(() => {
 
-  const value = input.value ? input.value.trim() : "";
+    const value = input.value.trim();
 
-  if(!value){
-    alert("Please enter an item");
-    return;
-  }
+    if(!value){
+      alert("Please enter an item");
+      return;
+    }
 
-  pantry.push(value);
-  localStorage.setItem("pantry", JSON.stringify(pantry));
+    pantry.push(value);
+    localStorage.setItem("pantry", JSON.stringify(pantry));
 
-  input.value = "";
+    input.value = "";
 
-  showPantry();
+    showPantry();
+
+  }, 50);
 }
 
 function removePantryItem(item){
