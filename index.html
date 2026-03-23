@@ -27,6 +27,7 @@ ul{margin:8px 0 14px 20px;}
 <button onclick="generate()">Generate Week</button>
 <button onclick="showFavorites()">Manage Favorites</button>
 <button onclick="exportToCalendar()">Add Week to Calendar</button>  
+<button onclick="showPantry()">Manage Pantry</button>
 <button class="secondary" onclick="copyShareLink()">Copy Share Link</button>
 
 <div class="small">Tap any day card to lock or unlock it before generating again.</div>
@@ -164,6 +165,8 @@ let locked = {};
 
 let favorites = JSON.parse(localStorage.getItem("favorites") || "[]")
 let blocked = JSON.parse(localStorage.getItem("blocked") || "[]")
+
+let pantry = JSON.parse(localStorage.getItem("pantry") || "[]")
 
 function getHistory(){
   return JSON.parse(localStorage.getItem("mealHistory") || "[]");
@@ -704,7 +707,48 @@ nextThursday.setHours(0,0,0,0)
 return nextThursday
 }
   
-  function formatICSDate(date){
+ function showPantry(){
+
+  let html = ""
+
+  pantry.forEach(item => {
+    html += `<div style="padding:10px;border-bottom:1px solid #eee;">
+      ${item}
+      <button onclick="removePantryItem('${item}')">Remove</button>
+    </div>`
+  })
+
+  document.getElementById("pantryList").innerHTML = html
+  document.getElementById("pantryPanel").style.display = "block"
+}
+
+function closePantry(){
+  document.getElementById("pantryPanel").style.display = "none"
+}
+
+function addPantryItem(){
+
+  const input = document.getElementById("pantryInput")
+  const value = input.value.trim()
+
+  if(!value) return
+
+  pantry.push(value)
+  localStorage.setItem("pantry", JSON.stringify(pantry))
+
+  input.value = ""
+  showPantry()
+}
+
+function removePantryItem(item){
+
+  pantry = pantry.filter(i => i !== item)
+  localStorage.setItem("pantry", JSON.stringify(pantry))
+
+  showPantry()
+}
+  
+   function formatICSDate(date){
 return date.toISOString().replace(/[-:]/g,"").split(".")[0] + "Z"
 }
   
@@ -735,6 +779,20 @@ if (!loadSharedWeek()) {
   <div onclick="moveMeal(menuDay)" style="padding:14px;border-bottom:1px solid #eee;">🔀 Move to another day</div>
   <div onclick="setDateNight(menuDay)" style="padding:14px;border-bottom:1px solid #eee;">❤️ Date Night</div>
   <div onclick="closeMenu()" style="padding:14px;color:red;">Cancel</div>
+</div>
+
+<div id="pantryPanel" style="display:none;position:fixed;inset:0;background:white;padding:20px;overflow:auto;z-index:1003;">
+
+<h3>Pantry</h3>
+
+<input id="pantryInput" placeholder="Add item (e.g. Chicken)" style="width:100%;padding:10px;margin-bottom:10px;" />
+
+<button onclick="addPantryItem()">Add Item</button>
+
+<div id="pantryList"></div>
+
+<button onclick="closePantry()">Close</button>
+
 </div>
 
 <div id="favoritesPanel" style="display:none;position:fixed;inset:0;background:white;padding:20px;overflow:auto;z-index:1001;">
