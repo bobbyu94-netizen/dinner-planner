@@ -27,7 +27,7 @@ ul{margin:8px 0 14px 20px;}
 <button onclick="generate()">Generate Week</button>
 <button onclick="showFavorites()">Manage Favorites</button>
 <button onclick="exportToCalendar()">Add Week to Calendar</button>  
-<button onclick="showPantry()">Manage Pantry</button>
+<button ontouchstart="addPantryItem()" onclick="return false;">Add Item</button>
 <button class="secondary" onclick="copyShareLink()">Copy Share Link</button>
 
 <div class="small">Tap any day card to lock or unlock it before generating again.</div>
@@ -731,23 +731,19 @@ function addPantryItem(){
 
   const input = document.getElementById("pantryInput");
 
-  setTimeout(() => {
+  const value = input.value.trim();
 
-    const value = input.value.trim();
+  if(!value){
+    alert("Please enter an item");
+    return;
+  }
 
-    if(!value){
-      alert("Please enter an item");
-      return;
-    }
+  pantry.push(value);
+  localStorage.setItem("pantry", JSON.stringify(pantry));
 
-    pantry.push(value);
-    localStorage.setItem("pantry", JSON.stringify(pantry));
+  input.value = "";
 
-    input.value = "";
-
-    showPantry();
-
-  }, 50);
+  showPantry();
 }
 
 function removePantryItem(item){
