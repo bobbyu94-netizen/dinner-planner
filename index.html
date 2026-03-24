@@ -27,7 +27,7 @@ ul{margin:8px 0 14px 20px;}
 <button onclick="generate()">Generate Week</button>
 <button onclick="showFavorites()">Manage Favorites</button>
 <button onclick="exportToCalendar()">Add Week to Calendar</button>  
-<button ontouchstart="addPantryItem()" onclick="return false;">Add Item</button>
+<button onclick="addPantryItem()">Add Typed Item</button>
 <button class="secondary" onclick="copyShareLink()">Copy Share Link</button>
 
 <div class="small">Tap any day card to lock or unlock it before generating again.</div>
@@ -721,6 +721,11 @@ function showPantry(){
 
   document.getElementById("pantryList").innerHTML = html
   document.getElementById("pantryPanel").style.display = "block"
+
+  // 👇 ADD THIS
+  setTimeout(() => {
+    document.getElementById("pantryInput").focus();
+  }, 100);
 }
 
 function closePantry(){
@@ -791,9 +796,10 @@ if (!loadSharedWeek()) {
 
 <h3>Pantry</h3>
 
-<input id="pantryInput" type="text" autocomplete="off"
-placeholder="Add item (e.g. Chicken)"
-style="width:100%;padding:10px;margin-bottom:10px;" />
+<input id="pantryInput"
+placeholder="Type item here first (e.g. Chicken)"
+style="width:100%;padding:14px;margin-bottom:10px;font-size:16px;border:2px solid #2f6fed;border-radius:10px;"
+>
 
 <button onclick="addPantryItem()">Add Item</button>
 
