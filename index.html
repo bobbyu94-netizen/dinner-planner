@@ -41,19 +41,19 @@ ul{margin:8px 0 14px 20px;}
 
 <script>
 const MEALS = [
-  {meal:"Meatloaf", protein:"ground_beef", items:["Ground beef","Breadcrumbs"]},
-  {meal:"Hamburger Steaks", protein:"ground_beef", items:["Ground beef"]},
-  {meal:"Smash Burgers", protein:"ground_beef", items:["Ground beef","Buns"]},
+  {meal:"Meatloaf", protein:"ground_beef", items:["Ground beef","Breadcrumbs"], leftovers:true},
+  {meal:"Hamburger Steaks", protein:"ground_beef", items:["Ground beef"], leftovers:true},
+  {meal:"Smash Burgers", protein:"ground_beef", items:["Ground beef","Buns"], leftovers:true},
   {meal:"Hamburgers", protein:"ground_beef", items:["Ground beef","Buns"]},
-  {meal:"Tacos", protein:"ground_beef", items:["Ground beef","Taco shells"]},
-  {meal:"Spaghetti w Meat Sauce", protein:"ground_beef", items:["Ground beef","Pasta","Pasta sauce"]},
+  {meal:"Tacos", protein:"ground_beef", items:["Ground beef","Taco shells"], leftovers:true},
+  {meal:"Spaghetti w Meat Sauce", protein:"ground_beef", items:["Ground beef","Pasta","Pasta sauce"], leftovers:true},
   {meal:"Sloppy Joes", protein:"ground_beef", items:["Ground beef","Buns","Sloppy joe sauce"]},
-  {meal:"Hamburger Helper", protein:"ground_beef", items:["Ground beef","Pasta mix"]},
-  {meal:"Hamburger Soup", protein:"ground_beef", items:["Ground beef","Mixed vegetables"], complete:true},
-  {meal:"Lasagna", protein:"ground_beef", items:["Ground beef","Pasta","Cheese"]},
+  {meal:"Hamburger Helper", protein:"ground_beef", items:["Ground beef","Pasta mix"], leftovers:true},
+  {meal:"Hamburger Soup", protein:"ground_beef", items:["Ground beef","Mixed vegetables"], complete:true, leftovers:true},
+  {meal:"Lasagna", protein:"ground_beef", items:["Ground beef","Pasta","Cheese"], leftovers:true},
 
   {meal:"Cubed Steak", protein:"beef", items:["Cubed steak"]},
-  {meal:"Roast", protein:"beef", items:["Beef roast","Potatoes","Carrots"]},
+  {meal:"Roast", protein:"beef", items:["Beef roast","Potatoes","Carrots"], leftovers:true},
   {meal:"Steak", protein:"beef", items:["Steak"]},
   {meal:"Philly Cheesesteaks", protein:"beef", items:["Steak","Bread","Cheese"]},
 
@@ -155,12 +155,23 @@ const SIDE_OVERRIDES = {
   "Meatloaf":["Mashed Potatoes","Seasoned Italian Green Beans","Mac & Cheese"]
 };
 
-const TAKEOUT = [
+const LUNCHES = [
+  "Sandwiches",
+  "Chicken Nuggets",
+  "Party Pizza",
+  "Frozen BBQ",
+  "Fish Sticks",
+  "Something in a Can",
+  "Quick Leftovers"
+];
+  
+  const TAKEOUT = [
   "McDonald's","Chick-fil-A","Chili's","Wendy's","Joey's",
   "Subs","Publix Chicken","Chinese","Mexican Food Truck","Slim Chickens"
 ];
 
 let currentPlan = [];
+let lunchPlan = [];  
 let locked = {};
 
 let favorites = JSON.parse(localStorage.getItem("favorites") || "[]")
@@ -306,6 +317,7 @@ function generate(){
   add("Wednesday");
 
   currentPlan = plan;
+  generateLunches();
 
   const newMeals = plan.filter(d => !d.takeout).map(d => d.meal);
   const newHistory = history.concat(newMeals).slice(-24);
@@ -360,6 +372,11 @@ onmouseup="endPress()"
 onmouseleave="endPress()"
 oncontextmenu="return false;">`
     html += `<h3>${d.day}</h3>`;
+    const lunch = lunchPlan.find(l => l.day === d.day);
+
+if(lunch){
+  html += `<div class="side">🥪 ${lunch.meal}</div>`;
+}
 
   if (d.dateNight) {
   html += `<div class="meal">❤️ Date Night</div>`;
@@ -735,7 +752,31 @@ nextThursday.setHours(0,0,0,0)
 return nextThursday
 }
   
+function generateLunches(){
 
+  lunchPlan = [];
+
+  for(let i = 0; i < currentPlan.length; i++){
+
+    const today = currentPlan[i];
+    const nextDay = currentPlan[i+1];
+
+    if(!nextDay) continue;
+
+    if(today.leftovers){
+      lunchPlan.push({
+        day: nextDay.day,
+        meal: "Leftovers: " + today.meal
+      });
+    } else {
+      lunchPlan.push({
+        day: nextDay.day,
+        meal: pickLunch()
+      });
+    }
+  }
+}
+  
 function showPantry(){
 
   let html = ""
@@ -790,6 +831,10 @@ function removePantryItem(item){
    function formatICSDate(date){
 return date.toISOString().replace(/[-:]/g,"").split(".")[0] + "Z"
 }
+  
+function pickLunch(){
+  return r(LUNCHES);
+}  
   
   function setDateNight(day){
 
