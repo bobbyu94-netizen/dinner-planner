@@ -335,15 +335,15 @@ function categorize(item){
   if (
     s.includes("beef") || s.includes("chicken") || s.includes("pork") ||
     s.includes("steak") || s.includes("shrimp") || s.includes("sausage") ||
-    s.includes("salmon") || s.includes("ribs") || s.includes("hot dogs") ||
-    s.includes("ham") || s.includes("turkey") || s.includes ("bacon")
+    s.includes("salmon") || s.includes("ribs") || s.includes("hot dogs") || 
+    s.includes("turkey") || s.includes ("bacon")
   ) return "Meat";
 
   if (
     s.includes("lettuce") || s.includes("tomato") || s.includes("potato") ||
     s.includes("broccoli") || s.includes("corn") || s.includes("carrot") ||
     s.includes("asparagus") || s.includes("sprouts") || s.includes("beans") ||
-    s.includes("green beans") || s.includes("vegetables") || s.includes("onions") || s.includes("mushrooms") || s.includes("noodles")
+    s.includes("green beans") || s.includes("vegetables") || s.includes("onions") || s.includes("mushrooms") 
   ) return "Produce";
 
   if (
@@ -354,7 +354,7 @@ function categorize(item){
   if (
     s.includes("pasta") || s.includes("rice") || s.includes("bread") ||
     s.includes("shells") || s.includes("sauce") || s.includes("dressing") || s.includes("chili") ||
-    s.includes("breadcrumbs") || s.includes("mix") || s.includes("dumplings") || s.includes("buns") || s.includes("mac") || s.includes("kit") || s.includes("gravy")
+    s.includes("breadcrumbs") || s.includes("mix") || s.includes("dumplings") || s.includes("buns") || s.includes("mac") || s.includes("kit") || s.includes("gravy") || s.includes("noodles")
   ) return "Pantry";
 
   if (
@@ -425,7 +425,7 @@ html += `</div>`;
     groups[cat].push(item);
   });
 
-  const order = ["Produce","Meat","Dairy","Pantry","Other"];
+  const order = ["Produce","Meat","Dairy","Pantry","Frozen","Other"];
   let list = "";
 
   order.forEach(cat => {
