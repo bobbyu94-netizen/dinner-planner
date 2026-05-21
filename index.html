@@ -343,7 +343,7 @@ function categorize(item){
     s.includes("lettuce") || s.includes("tomato") || s.includes("potato") ||
     s.includes("broccoli") || s.includes("corn") || s.includes("carrot") ||
     s.includes("asparagus") || s.includes("sprouts") || s.includes("beans") ||
-    s.includes("green beans") || s.includes("vegetables")
+    s.includes("green beans") || s.includes("vegetables") || s.includes("onions") || s.includes("mushrooms") || s.includes("noodles")
   ) return "Produce";
 
   if (
@@ -354,7 +354,7 @@ function categorize(item){
   if (
     s.includes("pasta") || s.includes("rice") || s.includes("bread") ||
     s.includes("shells") || s.includes("sauce") || s.includes("dressing") ||
-    s.includes("breadcrumbs") || s.includes("mix") || s.includes("dumplings")
+    s.includes("breadcrumbs") || s.includes("mix") || s.includes("dumplings") || s.includes("buns")
   ) return "Pantry";
 
   return "Other";
