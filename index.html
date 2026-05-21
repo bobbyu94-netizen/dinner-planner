@@ -23,16 +23,18 @@ ul{margin:8px 0 14px 20px;}
 <body>
 
 
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
 
-  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
-  <h2 style="margin:0;">Dinner Planner</h2>
-  <button onclick="showMainMenu()" style="width:auto;padding:10px 14px;font-size:22px;background:white;color:#111827;border:1px solid #d1d5db;">⋮</button>
+  <button onclick="generate()" style="margin:0;flex:1;">
+    Generate Week
+  </button>
+
+  <button onclick="showMainMenu()" style="width:auto;padding:10px 14px;font-size:22px;background:white;color:#111827;border:1px solid #d1d5db;">
+    ⋮
+  </button>
+
 </div>
-
-<button onclick="generate()">Generate Week</button>
-
-<div class="small">Tap any day card to lock or unlock it before generating again.</div>
-
+  
 <div id="planner"></div>
 
 <div class="panel">
