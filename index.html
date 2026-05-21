@@ -367,7 +367,10 @@ function render(){
   currentPlan.forEach(d => {
   html += `<div class="day" style="display:flex;justify-content:space-between;gap:10px;">`
 html += `<div style="flex:1;">`
-    html += `<h3>${d.day}</h3>`;
+    html += `<div style="display:flex;align-items:center;gap:8px;">
+  <h3 style="margin:0;">${d.day}</h3>
+  ${locked[d.day] ? `<span class="lock">🔒 Locked</span>` : ""}
+</div>`;
     const lunch = lunchPlan.find(l => l.day === d.day);
 
 if(lunch){
@@ -394,9 +397,7 @@ else {
     }
   }
 }
-if (locked[d.day]) {
-  html += `<div class="lock">🔒 Locked</div>`;
-}
+
 
 html += `</div>`
 
