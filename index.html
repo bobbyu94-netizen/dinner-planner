@@ -492,18 +492,9 @@ function toggleLock(day){
 }
 
 
-let pressTimer = null;
+
 let menuDay = null;
 
-function startPress(day){
-  pressTimer = setTimeout(() => {
-    openMenu(day);
-  }, 1000);
-}
-
-function endPress(){
-  clearTimeout(pressTimer);
-}
 
 function openMenu(day){
   menuDay = day;
