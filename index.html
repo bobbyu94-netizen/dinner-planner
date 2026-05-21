@@ -22,15 +22,14 @@ ul{margin:8px 0 14px 20px;}
 </head>
 <body>
 
-<h2>Dinner Planner</h2>
+
+
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+  <h2 style="margin:0;">Dinner Planner</h2>
+  <button onclick="showMainMenu()" style="width:auto;padding:10px 14px;font-size:22px;background:white;color:#111827;border:1px solid #d1d5db;">⋮</button>
+</div>
 
 <button onclick="generate()">Generate Week</button>
-<button onclick="showFavorites()">Manage Favorites</button>
-<label class="small">Calendar start date:</label>
-<input id="calendarStartDate" type="date" style="width:100%;padding:12px;margin-bottom:10px;border-radius:10px;border:1px solid #d1d5db;font-size:16px;">  
-<button onclick="exportToCalendar()">Add Week to Calendar</button>  
-<button onclick="showPantry()">Manage Pantry</button>
-<button class="secondary" onclick="copyShareLink()">Copy Share Link</button>
 
 <div class="small">Tap any day card to lock or unlock it before generating again.</div>
 
@@ -860,12 +859,28 @@ function pickLunch(){
   render();
 }
   
-if (!loadSharedWeek()) {
+function showMainMenu(){
+  document.getElementById("mainMenuPanel").style.display = "block";
+}
+
+function hideMainMenu(){
+  document.getElementById("mainMenuPanel").style.display = "none";
+}
+  
+  if (!loadSharedWeek()) {
   generate();
 }
 </script>
 
-<div id="menu" style="display:none;position:fixed;left:0;right:0;bottom:0;background:white;border-top-left-radius:16px;border-top-right-radius:16px;padding:16px;box-shadow:0 -4px 16px rgba(0,0,0,.2);z-index:1000;">
+<div id="mainMenuPanel" style="display:none;position:fixed;right:12px;top:60px;background:white;border-radius:14px;padding:10px;box-shadow:0 4px 16px rgba(0,0,0,.2);z-index:1004;min-width:220px;">
+  <div onclick="hideMainMenu(); showFavorites();" style="padding:14px;border-bottom:1px solid #eee;">⭐ Manage Favorites</div>
+  <div onclick="hideMainMenu(); showPantry();" style="padding:14px;border-bottom:1px solid #eee;">🥫 Manage Pantry</div>
+  <div onclick="hideMainMenu(); exportToCalendar();" style="padding:14px;border-bottom:1px solid #eee;">📅 Add Week to Calendar</div>
+  <div onclick="hideMainMenu(); copyShareLink();" style="padding:14px;border-bottom:1px solid #eee;">🔗 Copy Share Link</div>
+  <div onclick="hideMainMenu();" style="padding:14px;color:red;">Close</div>
+</div>
+  
+  <div id="menu" style="display:none;position:fixed;left:0;right:0;bottom:0;background:white;border-top-left-radius:16px;border-top-right-radius:16px;padding:16px;box-shadow:0 -4px 16px rgba(0,0,0,.2);z-index:1000;">
   <div onclick="favoriteMeal(menuDay)" style="padding:14px;border-bottom:1px solid #eee;">⭐ Favorite</div>
   <div onclick="skipMeal(menuDay)" style="padding:14px;border-bottom:1px solid #eee;">🚫 Skip</div>
   <div onclick="regenerateDay(menuDay)" style="padding:14px;border-bottom:1px solid #eee;">🔄 Regenerate</div>
