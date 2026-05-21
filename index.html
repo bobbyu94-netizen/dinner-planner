@@ -365,15 +365,8 @@ function render(){
   const grocery = [];
 
   currentPlan.forEach(d => {
-    html += `<div class="day"
-onclick="toggleLock('${d.day}')"
-ontouchstart="startPress('${d.day}')"
-ontouchend="endPress()"
-ontouchcancel="endPress()"
-onmousedown="startPress('${d.day}')"
-onmouseup="endPress()"
-onmouseleave="endPress()"
-oncontextmenu="return false;">`
+  html += `<div class="day" style="display:flex;justify-content:space-between;gap:10px;">`
+html += `<div style="flex:1;">`
     html += `<h3>${d.day}</h3>`;
     const lunch = lunchPlan.find(l => l.day === d.day);
 
@@ -401,12 +394,19 @@ else {
     }
   }
 }
+if (locked[d.day]) {
+  html += `<div class="lock">🔒 Locked</div>`;
+}
 
-    if (locked[d.day]) {
-      html += `<div class="lock">🔒 Locked</div>`;
-    }
+html += `</div>`
 
-    html += `</div>`;
+html += `<div style="display:flex;flex-direction:column;width:44px;">
+  <button onclick="toggleLock('${d.day}')" style="height:50%;padding:0;margin:0 0 6px 0;background:white;color:#111827;border:1px solid #d1d5db;">${locked[d.day] ? "🔒" : "🔓"}</button>
+  <button onclick="openMenu('${d.day}')" style="height:50%;padding:0;margin:0;background:white;color:#111827;border:1px solid #d1d5db;font-size:20px;">⋮</button>
+</div>`
+
+html += `</div>`;
+   
   });
 
   document.getElementById("planner").innerHTML = html;
