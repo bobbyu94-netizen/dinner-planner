@@ -736,6 +736,8 @@ a.href = url
 a.download = "meal-plan.ics"
 a.click()
 
+hideCalendarPanel();
+
 URL.revokeObjectURL(url)
 
 }
@@ -867,6 +869,14 @@ function hideMainMenu(){
   document.getElementById("mainMenuPanel").style.display = "none";
 }
   
+ function showCalendarPanel(){
+  document.getElementById("calendarPanel").style.display = "block";
+}
+
+function hideCalendarPanel(){
+  document.getElementById("calendarPanel").style.display = "none";
+}
+  
   if (!loadSharedWeek()) {
   generate();
 }
@@ -875,7 +885,7 @@ function hideMainMenu(){
 <div id="mainMenuPanel" style="display:none;position:fixed;right:12px;top:60px;background:white;border-radius:14px;padding:10px;box-shadow:0 4px 16px rgba(0,0,0,.2);z-index:1004;min-width:220px;">
   <div onclick="hideMainMenu(); showFavorites();" style="padding:14px;border-bottom:1px solid #eee;">⭐ Manage Favorites</div>
   <div onclick="hideMainMenu(); showPantry();" style="padding:14px;border-bottom:1px solid #eee;">🥫 Manage Pantry</div>
-  <div onclick="hideMainMenu(); exportToCalendar();" style="padding:14px;border-bottom:1px solid #eee;">📅 Add Week to Calendar</div>
+  <div onclick="hideMainMenu(); showCalendarPanel();" style="padding:14px;border-bottom:1px solid #eee;">📅 Add Week to Calendar</div>
   <div onclick="hideMainMenu(); copyShareLink();" style="padding:14px;border-bottom:1px solid #eee;">🔗 Copy Share Link</div>
   <div onclick="hideMainMenu();" style="padding:14px;color:red;">Close</div>
 </div>
@@ -889,6 +899,17 @@ function hideMainMenu(){
   <div onclick="closeMenu()" style="padding:14px;color:red;">Cancel</div>
 </div>
 
+<div id="calendarPanel" style="display:none;position:fixed;inset:0;background:white;padding:20px;overflow:auto;z-index:1005;">
+  <h3>Add Week to Calendar</h3>
+
+  <label class="small">Choose the Thursday start date:</label>
+  <input id="calendarStartDate" type="date" style="width:100%;padding:12px;margin:10px 0;border-radius:10px;border:1px solid #d1d5db;font-size:16px;">
+
+  <button onclick="exportToCalendar()">Export to Calendar</button>
+  <button class="secondary" onclick="hideCalendarPanel()">Cancel</button>
+</div>
+
+  
 <div id="pantryPanel" style="display:none;position:fixed;inset:0;background:white;padding:20px;overflow:auto;z-index:1003;">
 
 <h3>Pantry</h3>
