@@ -49,8 +49,8 @@ const MEALS = [
   {meal:"Smash Burgers", protein:"ground_beef", items:["Ground beef","Buns","Onions","Cheese"], leftovers:true},
   {meal:"Cheeseburgers", protein:"ground_beef", items:["Ground beef","Buns","Onions","Cheese"]},
   {meal:"Tacos", protein:"ground_beef", items:["Ground beef","Taco Kit","Onions","Tomatoes","Lettuce"], leftovers:true},
-  {meal:"Spaghetti w Meat Sauce", protein:"ground_beef", items:["Ground beef","Spaghetti Noodles","Pasta sauce"], leftovers:true},
-  {meal:"Sloppy Joes", protein:"ground_beef", items:["Ground beef","Buns","Manwhich"]},
+  {meal:"Spaghetti w Meat Sauce", protein:"ground_beef", items:["Ground beef","Spaghetti noodles","Pasta sauce"], leftovers:true},
+  {meal:"Sloppy Joes", protein:"ground_beef", items:["Ground beef","Hamburger buns","Manwhich"]},
   {meal:"Hamburger Helper", protein:"ground_beef", items:["Ground beef","Hamburger Helper","Milk"], leftovers:true},
   {meal:"Hamburger Soup", protein:"ground_beef", items:["Ground beef","Mixed vegetables"], complete:true, leftovers:true},
   {meal:"Lasagna", protein:"ground_beef", items:["Ground beef","Pasta","Cheese","Pasta sauce"], leftovers:true},
@@ -82,7 +82,7 @@ const MEALS = [
   {meal:"Pork Tenderloin", protein:"pork", items:["Pork tenderloin"]},
   {meal:"BBQ Pork", protein:"pork", items:["Pork","BBQ sauce"], complete:true},
   {meal:"Ribs", protein:"pork", items:["Ribs","BBQ sauce"]},
-  {meal:"Sausage", protein:"pork", items:["Sausage"]},
+  {meal:"Smoked Sausage", protein:"pork", items:["Smoked sausage"]},
   {meal:"Fried Potatoes w Sausage", protein:"pork", items:["Sausage","Potatoes","Onions"]},
   {meal:"Hot Dogs", protein:"pork", items:["Hot dogs","Buns","Cheese","Onions"]},
   {meal:"Chili Dogs", protein:"pork", items:["Hot dogs","Chili","Cheese","Onions"]},
@@ -112,16 +112,16 @@ const SIDE_ITEMS = {
   "Mexican Rice":["Rice"],
   "Black Beans":["Beans"],
   "Baked Beans":["Baked beans"],
-  "Mac & Cheese":["Macaroni","Cheese"],
+  "Mac & Cheese":["Velvetta mac"],
   "Mashed Potatoes":["Potatoes","Butter","Milk"],
   "Brussels Sprouts":["Brussels sprouts"],
-  "Fried Potatoes":["Potatoes"],
+  "Fried Potatoes":["Potatoes","Onions"],
   "Side Salad":["Lettuce","Tomatoes"],
   "Broccoli":["Broccoli"],
   "Cornbread":["Cornbread mix"],
-  "Rice & Tomato Gravy":["Rice","Tomato sauce"],
-  "French Fries":["Potatoes"],
-  "Tater Tots":["Potatoes"],
+  "Rice & Tomato Gravy":["Rice","Tomato sauce","Bacon"],
+  "French Fries":["Frozen French fries"],
+  "Tater Tots":["Frozen tater tots"],
   "Seasoned Italian Green Beans":["Green beans"],
   "Dirty Rice":["Rice"],
   "Coleslaw":["Coleslaw mix"],
@@ -336,7 +336,7 @@ function categorize(item){
     s.includes("beef") || s.includes("chicken") || s.includes("pork") ||
     s.includes("steak") || s.includes("shrimp") || s.includes("sausage") ||
     s.includes("salmon") || s.includes("ribs") || s.includes("hot dogs") ||
-    s.includes("ham") || s.includes("turkey")
+    s.includes("ham") || s.includes("turkey") || s.includes ("bacon")
   ) return "Meat";
 
   if (
@@ -353,9 +353,13 @@ function categorize(item){
 
   if (
     s.includes("pasta") || s.includes("rice") || s.includes("bread") ||
-    s.includes("shells") || s.includes("sauce") || s.includes("dressing") ||
-    s.includes("breadcrumbs") || s.includes("mix") || s.includes("dumplings") || s.includes("buns")
+    s.includes("shells") || s.includes("sauce") || s.includes("dressing") || s.includes("chili")
+    s.includes("breadcrumbs") || s.includes("mix") || s.includes("dumplings") || s.includes("buns") || s.includes("mac") || s.includes("kit")
   ) return "Pantry";
+
+  if (
+    s.includes("frozen")
+    ) return "Frozen";
 
   return "Other";
 }
