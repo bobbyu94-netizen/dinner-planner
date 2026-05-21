@@ -45,20 +45,20 @@ ul{margin:8px 0 7px 10px;}
 <script>
 const MEALS = [
   {meal:"Meatloaf", protein:"ground_beef", items:["Ground beef","Breadcrumbs"], leftovers:true},
-  {meal:"Hamburger Steaks", protein:"ground_beef", items:["Ground beef","Onions","Gravy"], leftovers:true},
+  {meal:"Hamburger Steak", protein:"ground_beef", items:["Ground beef","Onions","Gravy"], leftovers:true},
   {meal:"Smash Burgers", protein:"ground_beef", items:["Ground beef","Buns","Onions","Cheese"], leftovers:true},
   {meal:"Cheeseburgers", protein:"ground_beef", items:["Ground beef","Buns","Onions","Cheese"]},
   {meal:"Tacos", protein:"ground_beef", items:["Ground beef","Taco Kit","Onions","Tomatoes","Lettuce"], leftovers:true,complete:true},
   {meal:"Spaghetti w Meat Sauce", protein:"ground_beef", items:["Ground beef","Spaghetti noodles","Pasta sauce"], leftovers:true},
-  {meal:"Sloppy Joes", protein:"ground_beef", items:["Ground beef","Hamburger buns","Manwhich"]},
-  {meal:"Hamburger Helper", protein:"ground_beef", items:["Ground beef","Hamburger Helper","Milk"], leftovers:true},
+  {meal:"Sloppy Joes", protein:"ground_beef", items:["Ground beef","Hamburger buns","Canned Manwhich"]},
+  {meal:"Hamburger Helper", protein:"ground_beef", items:["Ground beef","Hamburger Helper box","Milk"], leftovers:true},
   {meal:"Hamburger Soup", protein:"ground_beef", items:["Ground beef","Mixed vegetables"], complete:true, leftovers:true},
   {meal:"Lasagna", protein:"ground_beef", items:["Ground beef","Pasta","Cheese","Pasta sauce"], leftovers:true},
 
   {meal:"Cubed Steak", protein:"beef", items:["Cubed steak"]},
   {meal:"Roast", protein:"beef", items:["Beef roast","Potatoes","Carrots","Onions","Ranch dressing packet","Pepperoncinnis"], leftovers:true},
   {meal:"Steak", protein:"beef", items:["Steak"]},
-  {meal:"Philly Cheesesteaks", protein:"beef", items:["Steak","Bread","Cheese","Onions","Mushrooms"]},
+  {meal:"Philly Cheesesteaks", protein:"beef", items:["Steak","French bread","Cheese","Onions","Mushrooms"]},
 
   {meal:"Chicken Wings", protein:"chicken", items:["Chicken wings"]},
   {meal:"Chicken Parm", protein:"chicken", items:["Chicken","Marinara","Cheese"]},
@@ -83,7 +83,7 @@ const MEALS = [
   {meal:"BBQ Pork", protein:"pork", items:["Pork","BBQ sauce"], complete:true},
   {meal:"Ribs", protein:"pork", items:["Ribs","BBQ sauce"]},
   {meal:"Smoked Sausage", protein:"pork", items:["Smoked sausage"]},
-  {meal:"Fried Potatoes w Sausage", protein:"pork", items:["Sausage","Potatoes","Onions"]},
+  {meal:"Fried Potatoes w Sausage", protein:"pork", items:["Sausage","Potatoes","Onions"], complete:true},
   {meal:"Hot Dogs", protein:"pork", items:["Hot dogs","Buns","Cheese","Onions"]},
   {meal:"Chili Dogs", protein:"pork", items:["Hot dogs","Chili","Cheese","Onions"]},
 
@@ -120,7 +120,9 @@ const SIDE_ITEMS = {
   "Side Salad":["Lettuce","Tomatoes"],
   "Garlic Bread":["Frozen garlic bread"],
   "Broccoli":["Broccoli"],
+  "Biscuits":["Canned biscuits"],
   "Cornbread":["Cornbread mix"],
+  "Spaghetti":["Spaghetti noodles"],
   "Rice & Tomato Gravy":["Rice","Tomato sauce","Bacon"],
   "French Fries":["Frozen French fries"],
   "Tater Tots":["Frozen tater tots"],
@@ -155,7 +157,14 @@ const SIDE_OVERRIDES = {
   "Philly Cheesesteaks":["French Fries","Tater Tots"],
   "BLTs":["French Fries","Tater Tots"],
   "Salmon":["Asparagus","Wild Rice","Broccoli"],
-  "Steak":["Baked Potatoes","Asparagus","Sweet Potatoes"],
+  "Steak":["Baked Potatoes"],
+  "Hamburger Steak":["Mashed Potatoes"],
+  "Hamburger Helper":["Biscuits"],
+  "Smash Burgers":["French fries"],
+  "Chicken Wings":["French fries","Tater Tots"],
+  "Lasagn":["Garlic Bread"],
+  "Chicken Parm":["Spaghetti"],
+  "Smoked Sausage":["Pasta Salad"],
   "Roast":["Mashed Potatoes"],
   "Meatloaf":["Mashed Potatoes","Seasoned Italian Green Beans","Mac & Cheese"]
 };
@@ -360,7 +369,7 @@ function categorize(item){
   if (
     s.includes("pasta") || s.includes("rice") || s.includes("bread") ||
     s.includes("shells") || s.includes("sauce") || s.includes("dressing") || s.includes("chili") ||
-    s.includes("breadcrumbs") || s.includes("mix") || s.includes("dumplings") || s.includes("buns") || s.includes("mac") || s.includes("kit") || s.includes("gravy") || s.includes("noodles")
+    s.includes("breadcrumbs") || s.includes("mix") || s.includes("dumplings") || s.includes("buns") || s.includes("mac") || s.includes("kit") || s.includes("gravy") || s.includes("noodles") || s.includes("canned") || s.includes("box")
   ) return "Pantry";
 
   
