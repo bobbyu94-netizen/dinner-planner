@@ -26,6 +26,8 @@ ul{margin:8px 0 14px 20px;}
 
 <button onclick="generate()">Generate Week</button>
 <button onclick="showFavorites()">Manage Favorites</button>
+<label class="small">Calendar start date:</label>
+<input id="calendarStartDate" type="date" style="width:100%;padding:12px;margin-bottom:10px;border-radius:10px;border:1px solid #d1d5db;font-size:16px;">  
 <button onclick="exportToCalendar()">Add Week to Calendar</button>  
 <button onclick="showPantry()">Manage Pantry</button>
 <button class="secondary" onclick="copyShareLink()">Copy Share Link</button>
@@ -672,7 +674,14 @@ function removeFavorite(meal){
 
 let events = ""
 
-const startDate = getNextThursday()
+const startInput = document.getElementById("calendarStartDate").value
+
+if(!startInput){
+  alert("Please choose the Thursday start date first.")
+  return
+}
+
+const startDate = new Date(startInput + "T00:00:00")
 
 const dayOrder = ["Thursday","Friday","Saturday","Sunday","Monday","Tuesday","Wednesday"]
 
