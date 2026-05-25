@@ -50,7 +50,7 @@ const MEALS = [
   {meal:"Cheeseburgers", protein:"ground_beef", items:["Ground beef","Buns","Onions","American cheese"]},
   {meal:"Tacos", protein:"ground_beef", items:["Ground beef","Taco Kit","Onions","Tomatoes","Lettuce","Cheddar cheese"], leftovers:true,complete:true},
   {meal:"Spaghetti w Meat Sauce", protein:"ground_beef", items:["Ground beef","Spaghetti noodles","Pasta sauce"], leftovers:true},
-  {meal:"Sloppy Joes", protein:"ground_beef", items:["Ground beef","Hamburger buns","Canned Manwhich"]},
+  {meal:"Sloppy Joes", protein:"ground_beef", items:["Ground beef","Hamburger buns","Canned Manwhich"], leftovers:true},
   {meal:"Hamburger Helper", protein:"ground_beef", items:["Ground beef","Hamburger Helper box","Milk"], leftovers:true},
   {meal:"Hamburger Soup", protein:"ground_beef", items:["Ground beef","Mixed vegetables"], complete:true, leftovers:true},
   {meal:"Lasagna", protein:"ground_beef", items:["Ground beef","Pasta","Mozzarella cheese","Pasta sauce"], leftovers:true},
@@ -61,29 +61,29 @@ const MEALS = [
   {meal:"Philly Cheesesteaks", protein:"beef", items:["Steak","French bread","White American cheese","Onions","Mushrooms"]},
 
   {meal:"Chicken Wings", protein:"chicken", items:["Chicken wings"]},
-  {meal:"Chicken Parm", protein:"chicken", items:["Chicken","Marinara","Mozzarella cheese"]},
-  {meal:"Grilled Chicken", protein:"chicken", items:["Chicken"]},
+  {meal:"Chicken Parm", protein:"chicken", items:["Chicken","Marinara","Mozzarella cheese"], leftovers:true},
+  {meal:"Grilled Chicken", protein:"chicken", items:["Chicken"], leftovers:true},
   {meal:"Chicken Quesadillas", protein:"chicken", items:["Chicken","Tortillas","Cheese"]},
   {meal:"Grilled Chicken Sandwiches", protein:"chicken", items:["Chicken","Buns"]},
   {meal:"Alice Springs Chicken", protein:"chicken", items:["Chicken","Bacon","Cheese"]},
   {meal:"Buffalo Chicken", protein:"chicken", items:["Chicken","Buffalo sauce"]},
-  {meal:"Chicken Fajitas", protein:"chicken", items:["Chicken","Peppers","Tortillas"]},
+  {meal:"Chicken Fajitas", protein:"chicken", items:["Chicken","Peppers","Tortillas"], leftovers:true},
   {meal:"Chicken & Yellow Rice", protein:"chicken", items:["Chicken","Rice"], complete:true},
   {meal:"Chicken Pot Pie", protein:"chicken", items:["Chicken","Vegetables"], complete:true},
   {meal:"French Onion Chicken", protein:"chicken", items:["Chicken","Onion soup mix"]},
   {meal:"Chicken Alfredo", protein:"chicken", items:["Chicken","Pasta","Alfredo sauce"]},
   {meal:"Bruschetta Chicken", protein:"chicken", items:["Chicken","Tomatoes"]},
   {meal:"Lemon Pepper Chicken", protein:"chicken", items:["Chicken"]},
-  {meal:"Smoked Chicken", protein:"chicken", items:["Chicken"]},
+  {meal:"Smoked Chicken", protein:"chicken", items:["Chicken"], leftovers:true},
   {meal:"Chicken Bowls", protein:"chicken", items:["Chicken","Lettuce","Rice","Black beans","Cheddar cheese","Salsa"], complete:true},
   {meal:"Chicken Caesar Salad", protein:"chicken", items:["Chicken","Lettuce","Caesar dressing"], complete:true},
 
-  {meal:"Pork Chops", protein:"pork", items:["Pork chops"]},
-  {meal:"Pork Tenderloin", protein:"pork", items:["Pork tenderloin"]},
-  {meal:"BBQ Pork", protein:"pork", items:["Pork","BBQ sauce"], complete:true},
-  {meal:"Ribs", protein:"pork", items:["Ribs","BBQ sauce"]},
+  {meal:"Pork Chops", protein:"pork", items:["Pork chops"], leftovers:true},
+  {meal:"Pork Tenderloin", protein:"pork", items:["Pork tenderloin"], leftovers:true},
+  {meal:"BBQ Pork", protein:"pork", items:["Pork","BBQ sauce"], leftovers:true, complete:true},
+  {meal:"Ribs", protein:"pork", items:["Ribs","BBQ sauce"], leftovers:true},
   {meal:"Smoked Sausage", protein:"pork", items:["Smoked sausage"]},
-  {meal:"Fried Potatoes w Sausage", protein:"pork", items:["Sausage","Potatoes","Onions"], complete:true},
+  {meal:"Fried Potatoes w Sausage", protein:"pork", items:["Sausage","Potatoes","Onions"], leftovers:true, complete:true},
   {meal:"Hot Dogs", protein:"pork", items:["Hot dogs","Buns","American cheese","Onions"]},
   {meal:"Chili Dogs", protein:"pork", items:["Hot dogs","Chili","American cheese","Onions"]},
 
@@ -93,15 +93,15 @@ const MEALS = [
   {meal:"Shrimp Alfredo", protein:"seafood", items:["Shrimp","Pasta","Alfredo sauce"]},
   {meal:"Shrimp Pasta", protein:"seafood", items:["Shrimp","Pasta"]},
 
-  {meal:"Chili", protein:"mixed", items:["Ground beef","Beans"], complete:true},
-  {meal:"Gumbo", protein:"mixed", items:["Chicken","Sausage","Rice","Green Peppers","Celery","Onions","Chicken Broth"], complete:true},
-  {meal:"Jambalaya", protein:"mixed", items:["Chicken","Sausage","Rice"], complete:true},
-  {meal:"Chicken & Dumplings", protein:"mixed", items:["Chicken","Dumplings"], complete:true},
-  {meal:"Veggie Soup", protein:"mixed", items:["Mixed vegetables"], complete:true},
-  {meal:"Loaded Potato Soup", protein:"mixed", items:["Potatoes","Cheese"], complete:true},
-  {meal:"Hibachi", protein:"mixed", items:["Chicken","Rice","Squash","Zuchinni"]},
+  {meal:"Chili", protein:"mixed", items:["Ground beef","Beans"], leftovers:true, complete:true},
+  {meal:"Gumbo", protein:"mixed", items:["Chicken","Sausage","Rice","Green Peppers","Celery","Onions","Chicken Broth"], leftovers:true, complete:true},
+  {meal:"Jambalaya", protein:"mixed", items:["Chicken","Sausage","Rice"], leftovers:true, complete:true},
+  {meal:"Chicken & Dumplings", protein:"mixed", items:["Chicken","Dumplings"], leftovers:true, complete:true},
+  {meal:"Veggie Soup", protein:"mixed", items:["Mixed vegetables"], leftovers:true, complete:true},
+  {meal:"Loaded Potato Soup", protein:"mixed", items:["Potatoes","Cheese"], leftovers:true, complete:true},
+  {meal:"Hibachi", protein:"mixed", items:["Chicken","Rice","Squash","Zuchinni"], leftovers:true, complete:true},
   {meal:"Chef Salads", protein:"mixed", items:["Lettuce","Ham","Turkey","Eggs","Onions","Cucumbers","Tomatoes"]},
-  {meal:"Stuffed Shells", protein:"mixed", items:["Pasta","Cheese"]},
+  {meal:"Stuffed Shells", protein:"mixed", items:["Pasta","Cheese"], leftovers:true},
   {meal:"BLTs", protein:"mixed", items:["Bacon","Bread","Lettuce","Tomatoes"]}
 ];
 
@@ -177,7 +177,6 @@ const LUNCHES = [
   "Frozen BBQ",
   "Fish Sticks",
   "Something in a Can",
-  "Quick Leftovers"
 ];
   
   const TAKEOUT = [
@@ -312,6 +311,7 @@ function generate(){
       side,
       sideItems: side ? (SIDE_ITEMS[side] || []) : [],
       complete: !!meal.complete
+      leftovers: !!meal.leftovers,
     });
   }
 
