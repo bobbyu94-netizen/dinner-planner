@@ -989,6 +989,54 @@ function hideMainMenu(){
 function hideCalendarPanel(){
   document.getElementById("calendarPanel").style.display = "none";
 }
+
+  function showMealPreferences(){
+
+  const proteins = [
+    ["ground_beef", "Ground Beef"],
+    ["beef", "Beef"],
+    ["chicken", "Chicken"],
+    ["pork", "Pork"],
+    ["seafood", "Seafood"],
+    ["mixed", "Mixed"]
+  ];
+
+  let html = "";
+
+  proteins.forEach(p => {
+    const checked = enabledProteins.includes(p[0]) ? "checked" : "";
+
+    html += `
+      <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
+        <input type="checkbox" value="${p[0]}" ${checked}>
+        ${p[1]}
+      </label>
+    `;
+  });
+
+  document.getElementById("proteinOptions").innerHTML = html;
+  document.getElementById("mealPreferencesPanel").style.display = "block";
+}
+
+function hideMealPreferences(){
+  document.getElementById("mealPreferencesPanel").style.display = "none";
+}
+
+function saveMealPreferences(){
+
+  const checked = document.querySelectorAll("#proteinOptions input:checked");
+
+  enabledProteins = Array.from(checked).map(x => x.value);
+
+  if(!enabledProteins.length){
+    alert("Please leave at least one protein enabled.");
+    return;
+  }
+
+  localStorage.setItem("enabledProteins", JSON.stringify(enabledProteins));
+
+  hideMealPreferences();
+}
   
   if (!loadSharedWeek()) {
   generate();
@@ -1000,6 +1048,7 @@ function hideCalendarPanel(){
   <div onclick="hideMainMenu(); showPantry();" style="padding:14px;border-bottom:1px solid #eee;">🥫 Manage Pantry</div>
   <div onclick="hideMainMenu(); showCalendarPanel();" style="padding:14px;border-bottom:1px solid #eee;">📅 Add Week to Calendar</div>
   <div onclick="hideMainMenu(); copyShareLink();" style="padding:14px;border-bottom:1px solid #eee;">🔗 Copy Share Link</div>
+  <div onclick="hideMainMenu(); showMealPreferences();" style="padding:14px;border-bottom:1px solid #eee;">⚙️ Meal Preferences</div>
   <div onclick="hideMainMenu();" style="padding:14px;color:red;">Close</div>
 </div>
   
@@ -1022,6 +1071,15 @@ function hideCalendarPanel(){
   <button class="secondary" onclick="hideCalendarPanel()">Cancel</button>
 </div>
 
+  <div id="mealPreferencesPanel" style="display:none;position:fixed;inset:0;background:white;padding:20px;overflow:auto;z-index:1006;">
+  <h3>Meal Preferences</h3>
+  <p class="small">Choose which proteins the planner can use.</p>
+
+  <div id="proteinOptions"></div>
+
+  <button onclick="saveMealPreferences()">Save Preferences</button>
+  <button class="secondary" onclick="hideMealPreferences()">Cancel</button>
+</div>
   
 <div id="pantryPanel" style="display:none;position:fixed;inset:0;background:white;padding:20px;overflow:auto;z-index:1003;">
 
