@@ -220,6 +220,8 @@ let enabledProteins = JSON.parse(
   "mixed"
 ];
 
+let dietRestrictions = JSON.parse(localStorage.getItem("dietRestrictions") || "[]");
+  
 function getHistory(){
   return JSON.parse(localStorage.getItem("mealHistory") || "[]");
 }
@@ -236,10 +238,39 @@ function canUseProtein(meal, proteinCount){
   return (proteinCount[meal.protein] || 0) < 3;
 }
 
+const RESTRICTED_INGREDIENTS = {
+  no_pork:["pork","bacon","ham","sausage","hot dogs","ribs","andouille"],
+  no_red_meat:["ground beef","beef","steak","roast","cubed steak"],
+  no_seafood:["shrimp","salmon","fish","crab","seafood"]
+};
+
+function containsRestrictedIngredient(items){
+  if(!items) return false;
+
+  return items.some(item => {
+    const s = item.toLowerCase();
+
+    return dietRestrictions.some(rule => {
+      const blocked = RESTRICTED_INGREDIENTS[rule] || [];
+      return blocked.some(word => s.includes(word));
+    });
+  });
+}
+
+function mealAllowedByDiet(meal){
+  return !containsRestrictedIngredient(meal.items);
+}
+
+function sideAllowedByDiet(sideName){
+  const items = SIDE_ITEMS[sideName] || [];
+  return !containsRestrictedIngredient(items);
+}
+  
 function pickMeal(usedMeals, history, proteinCount){
 
   let options = MEALS.filter(m =>
     enabledProteins.includes(m.protein) &&
+    mealAllowedByDiet(m) &&
     !usedMeals.includes(m.meal) &&
     !history.includes(m.meal) &&
     !blocked.includes(m.meal) &&
@@ -249,6 +280,7 @@ function pickMeal(usedMeals, history, proteinCount){
   if (!options.length) {
     options = MEALS.filter(m =>
       enabledProteins.includes(m.protein) &&
+      mealAllowedByDiet(m) &&
       !usedMeals.includes(m.meal) &&
       canUseProtein(m, proteinCount)
     );
@@ -256,12 +288,14 @@ function pickMeal(usedMeals, history, proteinCount){
 
   if (!options.length) {
     options = MEALS.filter(m => enabledProteins.includes(m.protein) &&
+      mealAllowedByDiet(m) &&
       !usedMeals.includes(m.meal));
   }
 
   if (!options.length) {
   options = MEALS.filter(m =>
     enabledProteins.includes(m.protein)
+    mealAllowedByDiet(m) &&
   );
 }
 
@@ -310,8 +344,13 @@ function pickMeal(usedMeals, history, proteinCount){
 }
 
 function pickSide(mealName, protein){
-  const pool = SIDE_OVERRIDES[mealName] || SIDE_GROUPS[protein] || [];
+
+  let pool = SIDE_OVERRIDES[mealName] || SIDE_GROUPS[protein] || [];
+
+  pool = pool.filter(side => sideAllowedByDiet(side));
+
   if (!pool.length) return null;
+
   return r(pool);
 }
 
