@@ -292,10 +292,10 @@ function pickMeal(usedMeals, history, proteinCount){
       !usedMeals.includes(m.meal));
   }
 
-  if (!options.length) {
+ if (!options.length) {
   options = MEALS.filter(m =>
-    enabledProteins.includes(m.protein)
-    mealAllowedByDiet(m) &&
+    enabledProteins.includes(m.protein) &&
+    mealAllowedByDiet(m)
   );
 }
 
