@@ -209,6 +209,17 @@ let blocked = JSON.parse(localStorage.getItem("blocked") || "[]")
 
 let pantry = JSON.parse(localStorage.getItem("pantry") || "[]")
 
+let enabledProteins = JSON.parse(
+  localStorage.getItem("enabledProteins")
+) || [
+  "ground_beef",
+  "beef",
+  "chicken",
+  "pork",
+  "seafood",
+  "mixed"
+];
+
 function getHistory(){
   return JSON.parse(localStorage.getItem("mealHistory") || "[]");
 }
@@ -228,6 +239,7 @@ function canUseProtein(meal, proteinCount){
 function pickMeal(usedMeals, history, proteinCount){
 
   let options = MEALS.filter(m =>
+    enabledProteins.includes(m.protein) &&
     !usedMeals.includes(m.meal) &&
     !history.includes(m.meal) &&
     !blocked.includes(m.meal) &&
