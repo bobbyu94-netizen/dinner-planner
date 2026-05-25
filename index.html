@@ -48,7 +48,7 @@ const MEALS = [
   {meal:"Hamburger Steak", protein:"ground_beef", items:["Ground beef","Onions","Gravy"], leftovers:true},
   {meal:"Smash Burgers", protein:"ground_beef", items:["Ground beef","Buns","Onions","American cheese"], leftovers:true},
   {meal:"Cheeseburgers", protein:"ground_beef", items:["Ground beef","Buns","Onions","American cheese"]},
-  {meal:"Tacos", protein:"ground_beef", items:["Ground beef","Taco Kit","Onions","Tomatoes","Lettuce","Cheddar cheese"], leftovers:true,complete:true},
+  {meal:"Tacos", protein:"ground_beef", items:["Ground beef","Taco Kit","Onions","Tomatoes","Lettuce","Cheddar cheese"], leftovers:true, complete:true},
   {meal:"Spaghetti w Meat Sauce", protein:"ground_beef", items:["Ground beef","Spaghetti noodles","Pasta sauce"], leftovers:true},
   {meal:"Sloppy Joes", protein:"ground_beef", items:["Ground beef","Hamburger buns","Canned Manwhich"], leftovers:true},
   {meal:"Hamburger Helper", protein:"ground_beef", items:["Ground beef","Hamburger Helper box","Milk"], leftovers:true},
@@ -56,7 +56,7 @@ const MEALS = [
   {meal:"Lasagna", protein:"ground_beef", items:["Ground beef","Pasta","Mozzarella cheese","Pasta sauce"], leftovers:true},
 
   {meal:"Cubed Steak", protein:"beef", items:["Cubed steak"]},
-  {meal:"Roast", protein:"beef", items:["Beef roast","Potatoes","Carrots","Onions","Ranch dressing packet","Pepperoncinnis"], leftovers:true},
+  {meal:"Roast", protein:"beef", items:["Beef roast","Potatoes","Carrots","Onions","Ranch dressing packet","Pepperoncinis"], leftovers:true},
   {meal:"Steak", protein:"beef", items:["Steak"]},
   {meal:"Philly Cheesesteaks", protein:"beef", items:["Steak","French bread","White American cheese","Onions","Mushrooms"]},
 
@@ -99,7 +99,7 @@ const MEALS = [
   {meal:"Chicken & Dumplings", protein:"mixed", items:["Chicken","Dumplings"], leftovers:true, complete:true},
   {meal:"Veggie Soup", protein:"mixed", items:["Mixed vegetables"], leftovers:true, complete:true},
   {meal:"Loaded Potato Soup", protein:"mixed", items:["Potatoes","Cheese"], leftovers:true, complete:true},
-  {meal:"Hibachi", protein:"mixed", items:["Chicken","Rice","Squash","Zuchinni"], leftovers:true, complete:true},
+  {meal:"Hibachi", protein:"mixed", items:["Chicken","Rice","Squash","Zuccini"], leftovers:true, complete:true},
   {meal:"Chef Salads", protein:"mixed", items:["Lettuce","Ham","Turkey","Eggs","Onions","Cucumbers","Tomatoes"]},
   {meal:"Stuffed Shells", protein:"mixed", items:["Pasta","Cheese"], leftovers:true},
   {meal:"BLTs", protein:"mixed", items:["Bacon","Bread","Lettuce","Tomatoes"]}
@@ -310,7 +310,7 @@ function generate(){
       items: meal.items,
       side,
       sideItems: side ? (SIDE_ITEMS[side] || []) : [],
-      complete: !!meal.complete
+      complete: !!meal.complete,
       leftovers: !!meal.leftovers,
     });
   }
