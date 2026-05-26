@@ -52,11 +52,11 @@ const MEALS = [
   {meal:"Spaghetti w Meat Sauce", protein:"ground_beef", items:["Ground beef","Spaghetti noodles","Pasta sauce"], leftovers:true},
   {meal:"Sloppy Joes", protein:"ground_beef", items:["Ground beef","Hamburger buns","Canned Manwhich"], leftovers:true},
   {meal:"Hamburger Helper", protein:"ground_beef", items:["Ground beef","Hamburger Helper box","Milk"], leftovers:true},
-  {meal:"Hamburger Soup", protein:"ground_beef", items:["Ground beef","Mixed vegetables"], complete:true, leftovers:true},
-  {meal:"Lasagna", protein:"ground_beef", items:["Ground beef","Pasta","Mozzarella Cheese","Pasta Sauce","Ricotta cheese","Sharp chedder cheese"], leftovers:true},
+  {meal:"Hamburger Soup", protein:"ground_beef", items:["Ground beef","Mixed vegetables"], complete:true, leftovers:2},
+  {meal:"Lasagna", protein:"ground_beef", items:["Ground beef","Pasta","Mozzarella Cheese","Pasta Sauce","Ricotta cheese","Sharp chedder cheese"], leftovers:2},
   {meal:"Shepherd's Pie", protein:"ground_beef", items:["Ground beef","Potatoes","Onions","Brown gravy"], complete:true, leftovers:true},
   {meal:"Stuffed Peppers", protein:"ground_beef", items:["Ground beef","Bell peppers","Rice","Tomato sauce"],complete:true, leftovers:true},
-  {meal:"Baked Ziti", protein:"ground_beef", items:["Ground beef","Pasta","Mozzarella Cheese","Pasta Sauce"], leftovers:true},
+  {meal:"Baked Ziti", protein:"ground_beef", items:["Ground beef","Pasta","Mozzarella Cheese","Pasta Sauce"], leftovers:2},
 
   {meal:"Cubed Steak", protein:"beef", items:["Cubed steak"]},
   {meal:"Roast", protein:"beef", items:["Beef Chuck Roast","Potatoes","Carrots","Onions","Ranch dressing packet","Pepperoncinis","Brown gravy packet","Au jus packet"], leftovers:true},
@@ -86,7 +86,7 @@ const MEALS = [
   {meal:"Buffalo Chicken Wraps", protein:"chicken", items:["Chicken","Buffalo sauce","Lettuce","Ranch","Tortillas"]},
   {meal:"Tuscan Chicken", protein:"chicken", items:["Chicken","Spinach","Heavy whipping cream","Parmasean cheese","Sun dried tomatoes"], leftovers:true, complete:true},
   {meal:"Chicken Enchiladas", protein:"chicken", items:["Chicken","Tortillas","Enchilada sauce","Cheddar cheese"], leftovers:true},
-  {meal:"Chicken & Dumplings", protein:"chicken", items:["Chicken","Biscuits","Cream soup"], leftovers:true, complete:true},
+  {meal:"Chicken & Dumplings", protein:"chicken", items:["Chicken","Biscuits","Cream soup"], leftovers:true, complete:2},
 
   {meal:"Pork Chops", protein:"pork", items:["Pork chops"], leftovers:true},
   {meal:"Pork Tenderloin", protein:"pork", items:["Pork tenderloin"], leftovers:true},
@@ -109,9 +109,9 @@ const MEALS = [
   {meal:"Fried Catfish", protein:"seafood", items:["Catfish","Breading","Oil"], leftovers:false},
 
   {meal:"Chili", protein:"mixed", items:["Ground beef","Beans","Diced tomatoes",":Chili seasoning"], leftovers:true, complete:true},
-  {meal:"Gumbo", protein:"mixed", items:["Chicken","Sausage","Rice","Green Peppers","Celery","Onions","Chicken Broth"], leftovers:true, complete:true},
+  {meal:"Gumbo", protein:"mixed", items:["Chicken","Sausage","Rice","Green Peppers","Celery","Onions","Chicken Broth"], leftovers:2, complete:true},
   {meal:"Jambalaya", protein:"mixed", items:["Chicken","Sausage","Rice"], leftovers:true, complete:true},
-  {meal:"Chicken & Dumplings", protein:"mixed", items:["Chicken","Dumplings"], leftovers:true, complete:true},
+  {meal:"Chicken & Dumplings", protein:"mixed", items:["Chicken","Dumplings"], leftovers:true, complete:2},
   {meal:"Veggie Soup", protein:"mixed", items:["Mixed vegetables"], leftovers:true, complete:true},
   {meal:"Loaded Potato Soup", protein:"mixed", items:["Potatoes","Cheese"], leftovers:true, complete:true},
   {meal:"Hibachi", protein:"mixed", items:["Chicken","Rice","Squash","Zuccini","Onions","Yum Yum sauce"], leftovers:true, complete:true},
@@ -389,7 +389,7 @@ function generate(){
       side,
       sideItems: side ? (SIDE_ITEMS[side] || []) : [],
       complete: !!meal.complete,
-      leftovers: !!meal.leftovers,
+      leftovers: !!meal.leftovers ||0,
     });
   }
 
