@@ -877,23 +877,30 @@ function generateLunches(){
 
   lunchPlan = [];
 
+  let leftoverQueue = [];
+
   for(let i = 0; i < currentPlan.length; i++){
 
     const today = currentPlan[i];
-    const nextDay = currentPlan[i+1];
 
-    if(!nextDay) continue;
-
-    if(today.leftovers){
+    // choose today's lunch
+    if(leftoverQueue.length){
       lunchPlan.push({
-        day: nextDay.day,
-        meal: "Leftovers: " + today.meal
+        day: today.day,
+        meal: "Leftovers: " + leftoverQueue.shift()
       });
     } else {
       lunchPlan.push({
-        day: nextDay.day,
+        day: today.day,
         meal: pickLunch()
       });
+    }
+
+    // after dinner, add leftovers for future lunches
+    if(today.leftovers && today.meal){
+      for(let x = 0; x < today.leftovers; x++){
+        leftoverQueue.push(today.meal);
+      }
     }
   }
 }
