@@ -389,7 +389,7 @@ function generate(){
       side,
       sideItems: side ? (SIDE_ITEMS[side] || []) : [],
       complete: !!meal.complete,
-      leftovers: !!meal.leftovers ||0,
+      leftovers: meal.leftovers ||0,
     });
   }
 
