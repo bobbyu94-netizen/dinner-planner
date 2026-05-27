@@ -231,7 +231,8 @@ let dietRestrictions = JSON.parse(localStorage.getItem("dietRestrictions") || "[
 
   const DEFAULT_PLANNER_SETTINGS = {
   lunchesEnabled: true,
-  takeoutDay: "Tuesday"
+  takeoutDay: "Tuesday",
+  takeoutDays: ["Tuesday"]
 };
 
 let plannerSettings = JSON.parse(
@@ -414,7 +415,10 @@ function generate(){
 
 weekDays.forEach(day => {
 
-  if(day === plannerSettings.takeoutDay){
+  const takeoutDays =
+  plannerSettings.takeoutDays || [plannerSettings.takeoutDay || "Tuesday"];
+
+if(takeoutDays.includes(day)){
 
     if (locked[day] && currentPlan.length) {
       const existing = currentPlan.find(d => d.day === day);
@@ -1048,8 +1052,7 @@ function showPlannerSettings(){
   document.getElementById("settingsLunchesEnabled").checked =
     plannerSettings.lunchesEnabled;
   document.getElementById("settingsTakeoutDay").value =
-    plannerSettings.takeoutDay || "Tuesday";
-
+    plannerSettings.takeoutDay || plannerSettings.takeoutDays?.[0] || "Tuesday";
   document.getElementById("plannerSettingsPanel").style.display = "block";
 }
 
@@ -1063,6 +1066,10 @@ function savePlannerSettings(){
     document.getElementById("settingsLunchesEnabled").checked;
   plannerSettings.takeoutDay =
     document.getElementById("settingsTakeoutDay").value;
+
+plannerSettings.takeoutDays = [
+  plannerSettings.takeoutDay
+];
 
   localStorage.setItem(
     "plannerSettings",
