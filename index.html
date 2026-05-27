@@ -228,6 +228,14 @@ let enabledProteins = JSON.parse(
 ];
 
 let dietRestrictions = JSON.parse(localStorage.getItem("dietRestrictions") || "[]");
+
+  const DEFAULT_PLANNER_SETTINGS = {
+  lunchesEnabled: true
+};
+
+let plannerSettings = JSON.parse(
+  localStorage.getItem("plannerSettings")
+) || DEFAULT_PLANNER_SETTINGS;
   
 function getHistory(){
   return JSON.parse(localStorage.getItem("mealHistory") || "[]");
@@ -1013,11 +1021,30 @@ return date.toISOString().replace(/[-:]/g,"").split(".")[0] + "Z"
 }
   
 function showPlannerSettings(){
+
+  document.getElementById("settingsLunchesEnabled").checked =
+    plannerSettings.lunchesEnabled;
+
   document.getElementById("plannerSettingsPanel").style.display = "block";
 }
 
 function hidePlannerSettings(){
   document.getElementById("plannerSettingsPanel").style.display = "none";
+}
+
+function savePlannerSettings(){
+
+  plannerSettings.lunchesEnabled =
+    document.getElementById("settingsLunchesEnabled").checked;
+
+  localStorage.setItem(
+    "plannerSettings",
+    JSON.stringify(plannerSettings)
+  );
+
+  hidePlannerSettings();
+
+  alert("Settings saved 👍");
 }
   
 function pickLunch(){
@@ -1167,7 +1194,13 @@ localStorage.setItem("dietRestrictions", JSON.stringify(dietRestrictions));
     These settings will eventually control week start day, takeout night, lunches, and calendar defaults.
   </p>
 
-  <button onclick="hidePlannerSettings()">Close</button>
+  <label style="display:block;padding:14px 0;border-bottom:1px solid #eee;">
+    <input type="checkbox" id="settingsLunchesEnabled">
+    Enable Lunch Planning
+  </label>
+
+  <button onclick="savePlannerSettings()">Save Settings</button>
+  <button class="secondary" onclick="hidePlannerSettings()">Cancel</button>
 </div>
 
   <div id="mealPreferencesPanel" style="display:none;position:fixed;inset:0;background:white;padding:20px;overflow:auto;z-index:1006;">
