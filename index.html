@@ -230,7 +230,8 @@ let enabledProteins = JSON.parse(
 let dietRestrictions = JSON.parse(localStorage.getItem("dietRestrictions") || "[]");
 
   const DEFAULT_PLANNER_SETTINGS = {
-  lunchesEnabled: true
+  lunchesEnabled: true,
+  takeoutDay: "Tuesday"
 };
 
 let plannerSettings = JSON.parse(
@@ -1029,6 +1030,8 @@ function showPlannerSettings(){
 
   document.getElementById("settingsLunchesEnabled").checked =
     plannerSettings.lunchesEnabled;
+  document.getElementById("settingsTakeoutDay").value =
+    plannerSettings.takeoutDay || "Tuesday";
 
   document.getElementById("plannerSettingsPanel").style.display = "block";
 }
@@ -1041,6 +1044,8 @@ function savePlannerSettings(){
 
   plannerSettings.lunchesEnabled =
     document.getElementById("settingsLunchesEnabled").checked;
+  plannerSettings.takeoutDay =
+    document.getElementById("settingsTakeoutDay").value;
 
   localStorage.setItem(
     "plannerSettings",
@@ -1203,6 +1208,21 @@ localStorage.setItem("dietRestrictions", JSON.stringify(dietRestrictions));
     <input type="checkbox" id="settingsLunchesEnabled">
     Enable Lunch Planning
   </label>
+
+    <label class="small">Takeout Day</label>
+
+<select id="settingsTakeoutDay"
+style="width:100%;padding:12px;margin:10px 0 18px 0;border-radius:10px;border:1px solid #d1d5db;font-size:16px;">
+
+  <option>Monday</option>
+  <option>Tuesday</option>
+  <option>Wednesday</option>
+  <option>Thursday</option>
+  <option>Friday</option>
+  <option>Saturday</option>
+  <option>Sunday</option>
+
+</select>
 
   <button onclick="savePlannerSettings()">Save Settings</button>
   <button class="secondary" onclick="hidePlannerSettings()">Cancel</button>
