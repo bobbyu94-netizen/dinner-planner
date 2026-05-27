@@ -232,7 +232,9 @@ let dietRestrictions = JSON.parse(localStorage.getItem("dietRestrictions") || "[
   const DEFAULT_PLANNER_SETTINGS = {
   lunchesEnabled: true,
   takeoutDay: "Tuesday",
-  takeoutDays: ["Tuesday"]
+  takeoutDays: ["Tuesday"],
+  calendarHour: 18,
+  calendarDurationHours: 1
 };
 
 let plannerSettings = JSON.parse(
@@ -852,10 +854,13 @@ currentPlan.forEach(d => {
   eventDate.setDate(startDate.getDate() + offset)
 
   // Set 6 PM start
-  eventDate.setHours(18,0,0)
+  eventDate.setHours(plannerSettings.calendarHour || 18,0,0)
 
   const endDate = new Date(eventDate)
-  endDate.setHours(19,0,0)
+  endDate.setTime(
+  eventDate.getTime() +
+  ((plannerSettings.calendarDurationHours || 1) * 60 * 60 * 1000)
+)
 
   const start = formatICSDate(eventDate)
   const end = formatICSDate(endDate)
@@ -1051,8 +1056,18 @@ function showPlannerSettings(){
 
   document.getElementById("settingsLunchesEnabled").checked =
     plannerSettings.lunchesEnabled;
-  document.getElementById("settingsTakeoutDay").value =
-    plannerSettings.takeoutDay || plannerSettings.takeoutDays?.[0] || "Tuesday";
+  const savedTakeoutDays =
+  plannerSettings.takeoutDays || [plannerSettings.takeoutDay || "Tuesday"];
+
+document.querySelectorAll(".settingsTakeoutDay").forEach(box => {
+  box.checked = savedTakeoutDays.includes(box.value);
+});
+
+  document.getElementById("settingsCalendarHour").value =
+  plannerSettings.calendarHour ?? 18;
+
+document.getElementById("settingsCalendarDuration").value =
+  plannerSettings.calendarDurationHours ?? 1;
   document.getElementById("plannerSettingsPanel").style.display = "block";
 }
 
@@ -1064,12 +1079,22 @@ function savePlannerSettings(){
 
   plannerSettings.lunchesEnabled =
     document.getElementById("settingsLunchesEnabled").checked;
-  plannerSettings.takeoutDay =
-    document.getElementById("settingsTakeoutDay").value;
+  plannerSettings.takeoutDays = Array.from(
+  document.querySelectorAll(".settingsTakeoutDay:checked")
+).map(box => box.value);
 
-plannerSettings.takeoutDays = [
-  plannerSettings.takeoutDay
-];
+if(!plannerSettings.takeoutDays.length){
+  alert("Please choose at least one takeout day.");
+  return;
+}
+
+plannerSettings.takeoutDay = plannerSettings.takeoutDays[0];
+
+plannerSettings.calendarHour =
+  parseInt(document.getElementById("settingsCalendarHour").value);
+
+plannerSettings.calendarDurationHours =
+  parseFloat(document.getElementById("settingsCalendarDuration").value);
 
   localStorage.setItem(
     "plannerSettings",
@@ -1233,20 +1258,70 @@ localStorage.setItem("dietRestrictions", JSON.stringify(dietRestrictions));
     Enable Lunch Planning
   </label>
 
-    <label class="small">Takeout Day</label>
+   <label class="small">Takeout Days</label>
 
-<select id="settingsTakeoutDay"
+<div style="margin:10px 0 18px 0;border:1px solid #d1d5db;border-radius:10px;overflow:hidden;">
+
+  <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
+    <input type="checkbox" class="settingsTakeoutDay" value="Monday">
+    Monday
+  </label>
+
+  <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
+    <input type="checkbox" class="settingsTakeoutDay" value="Tuesday">
+    Tuesday
+  </label>
+
+  <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
+    <input type="checkbox" class="settingsTakeoutDay" value="Wednesday">
+    Wednesday
+  </label>
+
+  <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
+    <input type="checkbox" class="settingsTakeoutDay" value="Thursday">
+    Thursday
+  </label>
+
+  <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
+    <input type="checkbox" class="settingsTakeoutDay" value="Friday">
+    Friday
+  </label>
+
+  <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
+    <input type="checkbox" class="settingsTakeoutDay" value="Saturday">
+    Saturday
+  </label>
+
+  <label style="display:block;padding:12px;">
+    <input type="checkbox" class="settingsTakeoutDay" value="Sunday">
+    Sunday
+  </label>
+
+</div>
+
+<label class="small">Calendar Dinner Start Time</label>
+
+<select id="settingsCalendarHour"
 style="width:100%;padding:12px;margin:10px 0 18px 0;border-radius:10px;border:1px solid #d1d5db;font-size:16px;">
 
-  <option>Monday</option>
-  <option>Tuesday</option>
-  <option>Wednesday</option>
-  <option>Thursday</option>
-  <option>Friday</option>
-  <option>Saturday</option>
-  <option>Sunday</option>
+  <option value="16">4:00 PM</option>
+  <option value="17">5:00 PM</option>
+  <option value="18">6:00 PM</option>
+  <option value="19">7:00 PM</option>
+  <option value="20">8:00 PM</option>
 
 </select>
+
+<label class="small">Calendar Meal Duration</label>
+
+<select id="settingsCalendarDuration"
+style="width:100%;padding:12px;margin:10px 0 18px 0;border-radius:10px;border:1px solid #d1d5db;font-size:16px;">
+
+  <option value="1">1 hour</option>
+  <option value="1.5">1.5 hours</option>
+  <option value="2">2 hours</option>
+
+</select> 
 
   <button onclick="savePlannerSettings()">Save Settings</button>
   <button class="secondary" onclick="hidePlannerSettings()">Cancel</button>
