@@ -402,21 +402,38 @@ function generate(){
     });
   }
 
-  add("Thursday");
-  add("Friday");
-  add("Saturday");
-  add("Sunday");
-  add("Monday");
+  const weekDays = [
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday"
+];
 
-  if (locked["Tuesday"] && currentPlan.length) {
-    const existing = currentPlan.find(d => d.day === "Tuesday");
-    if (existing) plan.push(existing);
-    else plan.push({day:"Tuesday", takeout:r(TAKEOUT)});
+weekDays.forEach(day => {
+
+  if(day === plannerSettings.takeoutDay){
+
+    if (locked[day] && currentPlan.length) {
+      const existing = currentPlan.find(d => d.day === day);
+
+      if (existing) {
+        plan.push(existing);
+      } else {
+        plan.push({day, takeout:r(TAKEOUT)});
+      }
+
+    } else {
+      plan.push({day, takeout:r(TAKEOUT)});
+    }
+
   } else {
-    plan.push({day:"Tuesday", takeout:r(TAKEOUT)});
+    add(day);
   }
 
-  add("Wednesday");
+});
 
   currentPlan = plan;
 
