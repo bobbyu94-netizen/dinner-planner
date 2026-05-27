@@ -418,7 +418,12 @@ function generate(){
   add("Wednesday");
 
   currentPlan = plan;
+
+if(plannerSettings.lunchesEnabled){
   generateLunches();
+} else {
+  lunchPlan = [];
+}
 
   const newMeals = plan.filter(d => !d.takeout).map(d => d.meal);
   const newHistory = history.concat(newMeals).slice(-24);
