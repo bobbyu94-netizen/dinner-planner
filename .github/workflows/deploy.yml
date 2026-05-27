@@ -1,41 +1,57 @@
 name: Deploy GitHub Pages
 
 on:
-push:
-branches:
-- main
-- ai-testing
+  push:
+    branches:
+      - main
+      - ai-testing
 
 permissions:
-contents: read
-pages: write
-id-token: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-deploy:
-runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-latest
 
-```
-steps:
-  - name: Checkout
-    uses: actions/checkout@v4
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
-  - name: Build Pages Structure
-    run: |
-      mkdir public
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          path: main-site
 
-      # Stable site
-      cp index.html public/index.html
+      - name: Checkout ai-testing
+        uses: actions/checkout@v4
+        with:
+          ref: ai-testing
+          path: testing-site
 
-      # Testing site
-      mkdir -p public/ai-testing
-      git show ai-testing:index.html > public/ai-testing/index.html
+      - name: Build Pages Structure
+        run: |
+          mkdir public
 
-  - name: Upload Pages Artifact
-    uses: actions/upload-pages-artifact@v3
-    with:
-      path: public
+          # Stable site
+          cp main-site/index.html public/index.html
 
-  - name: Deploy to GitHub Pages
-    uses: actions/deploy-pages@v4
-```
+          # Testing site
+          mkdir -p public/ai-testing
+          cp testing-site/index.html public/ai-testing/index.html
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
