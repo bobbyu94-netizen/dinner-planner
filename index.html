@@ -1012,6 +1012,14 @@ function removePantryItem(item){
 return date.toISOString().replace(/[-:]/g,"").split(".")[0] + "Z"
 }
   
+function showPlannerSettings(){
+  document.getElementById("plannerSettingsPanel").style.display = "block";
+}
+
+function hidePlannerSettings(){
+  document.getElementById("plannerSettingsPanel").style.display = "none";
+}
+  
 function pickLunch(){
   return r(LUNCHES);
 }  
@@ -1129,6 +1137,7 @@ localStorage.setItem("dietRestrictions", JSON.stringify(dietRestrictions));
   <div onclick="hideMainMenu(); showCalendarPanel();" style="padding:14px;border-bottom:1px solid #eee;">📅 Add Week to Calendar</div>
   <div onclick="hideMainMenu(); copyShareLink();" style="padding:14px;border-bottom:1px solid #eee;">🔗 Copy Share Link</div>
   <div onclick="hideMainMenu(); showMealPreferences();" style="padding:14px;border-bottom:1px solid #eee;">⚙️ Meal Preferences</div>
+  <div onclick="hideMainMenu(); showPlannerSettings();" style="padding:14px;border-bottom:1px solid #eee;">⚙️ Planner Settings</div>
   <div onclick="hideMainMenu();" style="padding:14px;color:red;">Close</div>
 </div>
   
@@ -1149,6 +1158,16 @@ localStorage.setItem("dietRestrictions", JSON.stringify(dietRestrictions));
 
   <button onclick="exportToCalendar()">Export to Calendar</button>
   <button class="secondary" onclick="hideCalendarPanel()">Cancel</button>
+</div>
+
+  <div id="plannerSettingsPanel" style="display:none;position:fixed;inset:0;background:white;padding:20px;overflow:auto;z-index:1010;">
+  <h3>Planner Settings</h3>
+
+  <p class="small">
+    These settings will eventually control week start day, takeout night, lunches, and calendar defaults.
+  </p>
+
+  <button onclick="hidePlannerSettings()">Close</button>
 </div>
 
   <div id="mealPreferencesPanel" style="display:none;position:fixed;inset:0;background:white;padding:20px;overflow:auto;z-index:1006;">
