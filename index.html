@@ -1074,6 +1074,8 @@ document.querySelectorAll(".settingsTakeoutDay").forEach(box => {
   box.checked = savedTakeoutDays.includes(box.value);
 });
 
+  updateTakeoutDaysSummary();
+  
   document.getElementById("settingsCalendarHour").value =
   plannerSettings.calendarHour ?? 18;
 
@@ -1093,6 +1095,49 @@ function hidePlannerSettings(){
   document.getElementById("plannerSettingsPanel").style.display = "none";
 }
 
+function updateTakeoutDaysSummary(){
+
+  const days =
+    plannerSettings.takeoutDays || [plannerSettings.takeoutDay || "Tuesday"];
+
+  document.getElementById("takeoutDaysSummary").innerText =
+    days.join(", ");
+}
+
+function showTakeoutDaysPanel(){
+
+  const savedTakeoutDays =
+    plannerSettings.takeoutDays || [plannerSettings.takeoutDay || "Tuesday"];
+
+  document.querySelectorAll(".settingsTakeoutDay").forEach(box => {
+    box.checked = savedTakeoutDays.includes(box.value);
+  });
+
+  document.getElementById("takeoutDaysPanel").style.display = "block";
+}
+
+function hideTakeoutDaysPanel(){
+  document.getElementById("takeoutDaysPanel").style.display = "none";
+}
+
+function saveTakeoutDaysSelection(){
+
+  const selected = Array.from(
+    document.querySelectorAll(".settingsTakeoutDay:checked")
+  ).map(box => box.value);
+
+  if(!selected.length){
+    alert("Please choose at least one takeout day.");
+    return;
+  }
+
+  plannerSettings.takeoutDays = selected;
+  plannerSettings.takeoutDay = selected[0];
+
+  updateTakeoutDaysSummary();
+  hideTakeoutDaysPanel();
+}
+  
 function savePlannerSettings(){
 
   plannerSettings.lunchesEnabled =
@@ -1272,6 +1317,59 @@ localStorage.setItem("dietRestrictions", JSON.stringify(dietRestrictions));
   <button class="secondary" onclick="hideCalendarPanel()">Cancel</button>
 </div>
 
+<div id="takeoutDaysPanel"
+style="display:none;position:fixed;inset:0;background:white;padding:20px;overflow:auto;z-index:1011;">
+
+  <h3>Choose Takeout Days</h3>
+
+  <p class="small">
+    Select one or more days for takeout.
+  </p>
+
+  <div style="margin:10px 0 18px 0;border:1px solid #d1d5db;border-radius:10px;overflow:hidden;">
+
+    <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
+      <input type="checkbox" class="settingsTakeoutDay" value="Monday">
+      Monday
+    </label>
+
+    <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
+      <input type="checkbox" class="settingsTakeoutDay" value="Tuesday">
+      Tuesday
+    </label>
+
+    <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
+      <input type="checkbox" class="settingsTakeoutDay" value="Wednesday">
+      Wednesday
+    </label>
+
+    <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
+      <input type="checkbox" class="settingsTakeoutDay" value="Thursday">
+      Thursday
+    </label>
+
+    <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
+      <input type="checkbox" class="settingsTakeoutDay" value="Friday">
+      Friday
+    </label>
+
+    <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
+      <input type="checkbox" class="settingsTakeoutDay" value="Saturday">
+      Saturday
+    </label>
+
+    <label style="display:block;padding:12px;">
+      <input type="checkbox" class="settingsTakeoutDay" value="Sunday">
+      Sunday
+    </label>
+
+  </div>
+
+  <button onclick="saveTakeoutDaysSelection()">Save Takeout Days</button>
+  <button class="secondary" onclick="hideTakeoutDaysPanel()">Cancel</button>
+
+</div>
+  
   <div id="plannerSettingsPanel" style="display:none;position:fixed;inset:0;background:white;padding:20px;overflow:auto;z-index:1010;">
   <h3>Planner Settings</h3>
 
@@ -1284,46 +1382,17 @@ localStorage.setItem("dietRestrictions", JSON.stringify(dietRestrictions));
     Enable Lunch Planning
   </label>
 
-   <label class="small">Takeout Days</label>
+ <label class="small">Takeout Days</label>
 
-<div style="margin:10px 0 18px 0;border:1px solid #d1d5db;border-radius:10px;overflow:hidden;">
-
-  <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
-    <input type="checkbox" class="settingsTakeoutDay" value="Monday">
-    Monday
-  </label>
-
-  <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
-    <input type="checkbox" class="settingsTakeoutDay" value="Tuesday">
+<div style="background:#f9fafb;border:1px solid #d1d5db;border-radius:10px;padding:12px;margin:10px 0 18px 0;">
+  <div id="takeoutDaysSummary" style="margin-bottom:10px;font-weight:600;">
     Tuesday
-  </label>
+  </div>
 
-  <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
-    <input type="checkbox" class="settingsTakeoutDay" value="Wednesday">
-    Wednesday
-  </label>
-
-  <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
-    <input type="checkbox" class="settingsTakeoutDay" value="Thursday">
-    Thursday
-  </label>
-
-  <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
-    <input type="checkbox" class="settingsTakeoutDay" value="Friday">
-    Friday
-  </label>
-
-  <label style="display:block;padding:12px;border-bottom:1px solid #eee;">
-    <input type="checkbox" class="settingsTakeoutDay" value="Saturday">
-    Saturday
-  </label>
-
-  <label style="display:block;padding:12px;">
-    <input type="checkbox" class="settingsTakeoutDay" value="Sunday">
-    Sunday
-  </label>
-
-</div>
+  <button type="button" onclick="showTakeoutDaysPanel()" class="secondary">
+    Choose Takeout Days
+  </button>
+</div>  
 
 <label class="small">Calendar Dinner Start Time</label>
 
