@@ -236,7 +236,8 @@ let dietRestrictions = JSON.parse(localStorage.getItem("dietRestrictions") || "[
   calendarHour: 18,
   calendarDurationHours: 1,
   proteinLimit: 3,
-  historyLength: 24
+  historyLength: 24,
+  weekStartDay: "Thursday"
 };
 
 let plannerSettings = JSON.parse(
@@ -1075,6 +1076,8 @@ document.getElementById("settingsCalendarDuration").value =
 
 document.getElementById("settingsHistoryLength").value =
   plannerSettings.historyLength ?? 24;
+  document.getElementById("settingsWeekStartDay").value =
+  plannerSettings.weekStartDay || "Thursday";
   document.getElementById("plannerSettingsPanel").style.display = "block";
 }
 
@@ -1108,6 +1111,8 @@ plannerSettings.calendarDurationHours =
 
 plannerSettings.historyLength =
   parseInt(document.getElementById("settingsHistoryLength").value);
+  plannerSettings.weekStartDay =
+  document.getElementById("settingsWeekStartDay").value;
 
   localStorage.setItem(
     "plannerSettings",
@@ -1336,6 +1341,20 @@ style="width:100%;padding:12px;margin:10px 0 18px 0;border-radius:10px;border:1p
 
 </select> 
 
+    <label class="small">Week Start Day</label>
+
+<select id="settingsWeekStartDay"
+style="width:100%;padding:12px;margin:10px 0 18px 0;border-radius:10px;border:1px solid #d1d5db;font-size:16px;">
+
+  <option>Monday</option>
+  <option>Tuesday</option>
+  <option>Wednesday</option>
+  <option>Thursday</option>
+  <option>Friday</option>
+  <option>Saturday</option>
+  <option>Sunday</option>
+
+</select>
     <label class="small">Protein Limit Per Week</label>
 
 <input id="settingsProteinLimit"
