@@ -408,15 +408,23 @@ function generate(){
     });
   }
 
-  const weekDays = [
+  const allDays = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
   "Thursday",
   "Friday",
   "Saturday",
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday"
+  "Sunday"
 ];
+
+const startIndex = allDays.indexOf(
+  plannerSettings.weekStartDay || "Thursday"
+);
+
+const weekDays = allDays
+  .slice(startIndex)
+  .concat(allDays.slice(0, startIndex));
 
 weekDays.forEach(day => {
 
