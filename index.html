@@ -234,7 +234,9 @@ let dietRestrictions = JSON.parse(localStorage.getItem("dietRestrictions") || "[
   takeoutDay: "Tuesday",
   takeoutDays: ["Tuesday"],
   calendarHour: 18,
-  calendarDurationHours: 1
+  calendarDurationHours: 1,
+  proteinLimit: 3,
+  historyLength: 24
 };
 
 let plannerSettings = JSON.parse(
@@ -254,7 +256,7 @@ function r(arr){
 
 function canUseProtein(meal, proteinCount){
   if (meal.protein === "mixed") return true;
-  return (proteinCount[meal.protein] || 0) < 3;
+  return (proteinCount[meal.protein] || 0) < (plannerSettings.proteinLimit || 3);
 }
 
 const RESTRICTED_INGREDIENTS = {
@@ -450,7 +452,7 @@ if(plannerSettings.lunchesEnabled){
 }
 
   const newMeals = plan.filter(d => !d.takeout).map(d => d.meal);
-  const newHistory = history.concat(newMeals).slice(-24);
+  const newHistory = history.concat(newMeals).slice(-(plannerSettings.historyLength || 24));
   saveHistory(newHistory);
 
   render();
@@ -1068,6 +1070,11 @@ document.querySelectorAll(".settingsTakeoutDay").forEach(box => {
 
 document.getElementById("settingsCalendarDuration").value =
   plannerSettings.calendarDurationHours ?? 1;
+  document.getElementById("settingsProteinLimit").value =
+  plannerSettings.proteinLimit ?? 3;
+
+document.getElementById("settingsHistoryLength").value =
+  plannerSettings.historyLength ?? 24;
   document.getElementById("plannerSettingsPanel").style.display = "block";
 }
 
@@ -1095,6 +1102,12 @@ plannerSettings.calendarHour =
 
 plannerSettings.calendarDurationHours =
   parseFloat(document.getElementById("settingsCalendarDuration").value);
+
+  plannerSettings.proteinLimit =
+  parseInt(document.getElementById("settingsProteinLimit").value);
+
+plannerSettings.historyLength =
+  parseInt(document.getElementById("settingsHistoryLength").value);
 
   localStorage.setItem(
     "plannerSettings",
@@ -1322,6 +1335,22 @@ style="width:100%;padding:12px;margin:10px 0 18px 0;border-radius:10px;border:1p
   <option value="2">2 hours</option>
 
 </select> 
+
+    <label class="small">Protein Limit Per Week</label>
+
+<input id="settingsProteinLimit"
+type="number"
+min="1"
+max="7"
+style="width:100%;padding:12px;margin:10px 0 18px 0;border-radius:10px;border:1px solid #d1d5db;font-size:16px;">
+
+<label class="small">Meal History Length</label>
+
+<input id="settingsHistoryLength"
+type="number"
+min="1"
+max="100"
+style="width:100%;padding:12px;margin:10px 0 18px 0;border-radius:10px;border:1px solid #d1d5db;font-size:16px;">
 
   <button onclick="savePlannerSettings()">Save Settings</button>
   <button class="secondary" onclick="hidePlannerSettings()">Cancel</button>
